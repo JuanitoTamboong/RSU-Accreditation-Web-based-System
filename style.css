@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+:root{
+ --signIn-Color:rgb(19,67,36); 
+ --button:#2a8633;
+ --font-color:#fff;
+ --box-shadow:#597d9b;
+ --bg-bx-color:#141a1e56;
+}
+
+.container{
+    position: fixed;
+    display: flex;
+}
+.logo-container{  
+   position: relative;
+   min-width: 50%;
+   min-height: 100vh;
+   background-color: var(--signIn-Color);
+}
+.logo-wrap{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    min-height: 50vh;
+}
+.logo-wrap img{
+    height:150px;
+    object-fit:contain;
+}
+.logo-wrap h3{
+    color: var(--font-color);
+    text-align: center;
+    position: relative;
+    padding-bottom: 150px;
+    text-transform: uppercase;
+    font-size: 16px;
+   
+}
+.login-container{
+    position: relative;
+    min-width: 50%;
+    min-height: 100vh;
+  
+}
+.login-container img{
+   object-fit:contain;
+   
+}
+.login-wrap{
+   overflow: hidden;
+   position:  absolute;
+   top:20%;
+   margin-left: 50%;
+   transform: translate(-50%, -50%);
+   border:  1px solid var(--box-shadow) ;
+   padding: 40px;
+   border-radius: 10px;
+   background-color: var(--bg-bx-color);
+
+}
+.login-text{
+    letter-spacing: 1px;
+    font-size: 18px;
+    padding: 8px;
+    border-radius: 0px 0px 5px 5px ;
+    margin-top: -40px;
+     background-color: var(--signIn-Color);
+}
+.login-text h4{
+ text-align: center;
+ text-transform: uppercase;
+ color: var(--font-color);
+ 
+}
+form{
+    padding-top: 8px;
+    min-width: 100%;
+}
+.signIn{
+    display: grid;
+    padding: 5px;
+    
+}
+.signIn label{
+    text-transform: uppercase;
+    font-size: 13px;
+    color: var(--font-color);
+    padding-bottom: 7px;
+    
+}
+.signIn input[type=text],input[type=password]{
+border: none;
+outline: none;
+padding:8px;
+border-radius: 5px;
+
+}
+.signIn a{
+    font-size: 13px;
+}
+.signIn input[type=button]{
+min-width: 100%;
+ padding: 10px;
+ border-radius: 5px;
+ outline: none;
+ border: none;
+ text-transform: uppercase;
+ font-weight: bold;
+ background-color: var(--button);
+ color: var(--font-color);
+ letter-spacing: 1px;
+ font-size: 12px;
+}
+.signIn,p {
+    padding-top: 10px;
+ color: var(--font-color);
+ font-size: 12px;
+}
