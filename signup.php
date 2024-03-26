@@ -20,14 +20,46 @@ if (mysqli_connect_errno()) {
 // Check if form is submitted
 if (!empty($_POST)) {
     // Validate and sanitize user inputs
-    $username = mysqli_real_escape_string($con, $_POST['username']);
-    $organization = mysqli_real_escape_string($con, $_POST['organization']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    $confirm_password = mysqli_real_escape_string($con, $_POST['confirm_password']);
+    $username = '';
+    $organization = '';
+    $password = '';
+    $confirm_password = '';
+    $keycode = '';
+
+    // Check if variables are set to avoid undefined variable warnings
+    if (isset($_POST['username'])) {
+        $username = mysqli_real_escape_string($con, $_POST['username']);
+    }
+    if (isset($_POST['organization'])) {
+        $organization = mysqli_real_escape_string($con, $_POST['organization']);
+    }
+    if (isset($_POST['password'])) {
+        $password = mysqli_real_escape_string($con, $_POST['password']);
+    }
+    if (isset($_POST['confirm_password'])) {
+        $confirm_password = mysqli_real_escape_string($con, $_POST['confirm_password']);
+    }
+    if (isset($_POST['keycode'])) {
+        $keycode = mysqli_real_escape_string($con, $_POST['keycode']);
+    }
 
     // Ensure passwords match
     if ($password !== $confirm_password) {
         echo 'Passwords do not match!';
+        exit;
+    }
+
+    // Check if provided keycode matches the organization's keycode
+    $check_keycode_query = "SELECT keycode FROM organization_keycodes WHERE organization_name = '$organization'";
+    $result = mysqli_query($con, $check_keycode_query);
+    if (!$result || mysqli_num_rows($result) == 0) {
+        echo 'Invalid organization!';
+        exit;
+    }
+    $row = mysqli_fetch_assoc($result);
+    $correct_keycode = $row['keycode'];
+    if ($keycode !== $correct_keycode) {
+        echo 'Invalid keycode for this organization!';
         exit;
     }
 
@@ -56,64 +88,3 @@ if (!empty($_POST)) {
 // Close database connection
 $con->close();
 ?>
-
-<!--<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="Sign-Up.css">
-  <title>RSU ACCREDITATION SIGN UP</title>
-</head>
-<body>-->
-  <!--Logo with web title-->
-  <!--<div class="container">
-    <div class="logo-container">
-     <div class="logo-wrap">
-      <img src="images/rsu-logo.png" alt="">
-     </div>
-     <div class="logo-wrap">
-       <h3>Student Organizations Accreditation and Reaccreditation </h3>
-     </div>
-    </div>-->
-    <!--sign In  Container-->
-  <!--<div class="login-container">
-      <img src="images/rsu-background.png" alt="">
-      <div class="SignUp-wrap">
-        <div class="SignUp-text">
-        <h4>Create Account</h4>
-        </div>-->
-        <!--Form-->
-       <!-- <form action="signup.php" method="post">
-          <div class="signIn">
-          <label for="username"> Username</label>
-          <input type="text" name="username" id="username" placeholder="Enter your username" required>
-          </div>-->
-          <!--Select Org-->
-          <!--<div class="signIn">
-            <label for="organization">Select Organizations</label>
-            <select id="organization" name="organization" required>
-                <option value="org1">Organization 1</option>
-                <option value="org2">Organization 2</option>
-                <option value="org3">Organization 3</option>
-                <option value="org4">Organization 4</option>
-            </select>
-          </div>
-          <div class="signIn">
-          <label for="password"> Password</label>
-          <input type="password" name="password" id="password" placeholder="Enter your password" required>
-          </div>
-          <div class="signIn">
-            <label for="confirm_password"> Confirm password</label>
-            <input type="password" name="confirm_password" id="confirm_password" placeholder="Enter your password" required>
-            </div>
-          <div class="signIn">
-            <input type="submit" value="Sign Up">
-          </div>
-        </form>-->
-        <!--End of Form-->
-   <!--   </div>
-    </div>
-  </div>
-</body>
-</html>-->
