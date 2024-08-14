@@ -4,49 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <link rel="website icon" href="images/rsu-logo.png">
-  <link rel="fonts " href="https://fonts.googleapis.com/css2">
-  <title> RSU ACCREDITATION LOGIN</title>
+  <script src="main.js" defer type="module"></script>
+  <link rel="icon" href="assets/rsu-logo.png">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <title>OSAS TRANSACTION LOGIN</title>
 </head>
 <body>
-  <!--Logo with web title-->
+  <!-- Logo with web title -->
   <div class="container">
     <div class="logo-container">
-     <div class="logo-wrap">
-      <img src="images/rsu-logo.png" alt="">
-     </div>
-     <div class="logo-wrap">
-       <h3>Student Organizations Accreditation and Reaccreditation </h3>
-     </div>
+      <div class="logo-wrap">
+        <img src="assets/rsu-logo.png" alt="">
+      </div>
+      <div class="logo-wrap">
+        <h3>Design and Development of Systematized OSAS Transactions System</h3>
+      </div>
     </div>
-    <!--sign In  Container-->
+    <!-- Sign In Container -->
     <div class="login-container">
-      <img src="images/rsu-background.png" alt="">
+      <img src="assets/rsu-background.png" alt="">
       <div class="login-wrap">
         <div class="login-text">
-        <h4>Login</h4>
+          <h4>Login</h4>
         </div>
-        <!--Form-->
-        <form action="signin.php" method="post">
+        <!-- Form -->
+        <form action="javascript:void(0);" method="post">
           <div class="signIn">
-          <label for="username"> Username</label>
-          <input type="text" name="username" id="" placeholder="Enter your username" required>
+            <label for="email">Email</label>
+            <input type="text" name="email" id="" placeholder="Enter your email">
           </div>
           <div class="signIn">
-          <label for="password"> password</label>
-          <input type="password" name="password" id="" placeholder="Enter your password" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="" placeholder="Enter your password">
           </div>
           <div class="signIn">
-           <a href="#">Forgot  Password?</a>
+            <input type="submit" value="Sign In">
           </div>
           <div class="signIn">
-            <input type="submit"value="sign in">
+            <a href="#">Forgot Password?</a>
           </div>
           <div class="SignIn">
-           <p>Dont have Account?<a href="SignUp.html"> Sign Up</a></p>
+            <button type="button" id="google-login-btn">Sign in with <i class='bx bxl-google'></i>oogle</button>
           </div>
         </form>
-        <!--End of Form-->
+        <!-- End of Form -->
       </div>
     </div>
   </div>
