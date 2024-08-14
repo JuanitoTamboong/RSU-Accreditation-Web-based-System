@@ -49,7 +49,7 @@
   margin-top: 20px;
 }
 
-/* Login Container Styles */
+/* Login/Sign Up Container Styles */
 .login-container {
   flex: 1;
   display: flex;
@@ -69,7 +69,7 @@
   z-index: -1;
 }
 
-/* Login Wrap Styles */
+/* Login/Sign Up Wrap Styles */
 .login-wrap {
   max-width: 400px;
   width: 100%;
@@ -145,6 +145,7 @@ form {
 
 .signIn p {
   color: var(--font-color);
+  text-align: center;
   font-size: 13px;
   margin-top: 20px;
 }
@@ -154,20 +155,11 @@ form {
   text-decoration: underline;
   margin-left: 5px;
   font-size: 13px;
-  margin-top: -18px;
 }
 
 .signIn p a:hover {
   color: var(--hover-color);
   text-decoration: none;
-}
-
-.signIn a {
-  display: block;
-  text-align: right;
-  font-size: 13px;
-  color: var(--font-color);
-  margin-top: 20px;
 }
 
 button {
@@ -180,6 +172,7 @@ button {
   font-size: 14px;
   text-transform: uppercase;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 button:hover {
