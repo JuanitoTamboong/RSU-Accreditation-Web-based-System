@@ -88,11 +88,5 @@ if (googleLogin) {
         console.log(user);
         window.location.href = "homepage.html";
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(`Error ${errorCode}: ${errorMessage}`);
-        alert('Google sign-in failed. Please try again.');
-      });
   });
 }
