@@ -74,7 +74,7 @@ if (signUpForm) {
         sendEmailVerification(user).then(() => {
           hideLoading();
           alert('Sign up successful! Please check your email for verification.');
-          window.location.href = "index.html"; // Redirect to login page or wherever appropriate
+          window.location.href = "index.html";
         }).catch((error) => {
           hideLoading();
           console.error('Error sending email verification:', error);
@@ -114,8 +114,16 @@ if (signInForm) {
           window.location.href = "homepage.html";
         } else {
           hideLoading();
-          alert('Please verify your email before logging in. A verification email has been sent to your email address.');
+          //alert('Please verify your email before logging in. A verification email has been sent to your email address.');
+          Swal.fire({
+            icon: "info",
+            title: "Please verify your email before logging in. A verification email has been sent to your email address",
+            showConfirmButton: false,
+            customClass: 'swal-wide',
+            timer: 1600
+          });
         }
+
       })
       .catch((error) => {
         hideLoading();
@@ -154,13 +162,27 @@ if (googleLogin) {
           window.location.href = "homepage.html";
         } else {
           hideLoading();
-          alert('Please verify your email before logging in.');
+          //alert('Please verify your email before logging in.');
+          Swal.fire({
+            icon: "info",
+            title: "Please verify your email before logging in",
+            showConfirmButton: false,
+            customClass: 'swal-wide',
+            timer: 1500
+          });
         }
       })
       .catch((error) => {
         hideLoading();
         console.error('Error during Google sign-in:', error);
-        alert('Failed to sign in with Google. Please try again.');
+       // alert('Failed to sign in with Google. Please try again.');
+       Swal.fire({
+        icon: "error",
+        title: "Please verify your email before logging in",
+        showConfirmButton: false,
+        customClass: 'swal-wide',
+        timer: 1500
+      });
       });
   });
 }
