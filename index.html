@@ -22,20 +22,27 @@
     <div class="login-container">
       <img src="assets/rsu-background.png" alt="Background Image">
       <div class="login-wrap">
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading-spinner" style="display:none;">
+          <div class="spinner"></div>
+        </div>
+        <!-- Login Form -->
         <div class="login-text">
           <h4>Login</h4>
         </div>
         <form id="login-form">
-          <div class="signIn">
-            <label for="email">Email</label>
-            <input type="text" name="email" id="email" placeholder="Enter your email">
-          </div>
-          <div class="signIn">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" placeholder="Enter your password">
-          </div>
-          <div class="signIn">
-            <input type="submit" value="Sign In">
+          <div class="form-fields">
+            <div class="signIn">
+              <label for="email">Email</label>
+              <input type="text" name="email" id="email" placeholder="Enter your email">
+            </div>
+            <div class="signIn">
+              <label for="password">Password</label>
+              <input type="password" name="password" id="password" placeholder="Enter your password">
+            </div>
+            <div class="signIn">
+              <input type="submit" value="Sign In">
+            </div>
           </div>
           <div class="signIn">
             <a href="#">Forgot Password?</a>

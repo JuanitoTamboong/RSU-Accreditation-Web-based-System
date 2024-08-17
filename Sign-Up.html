@@ -7,8 +7,6 @@
   <link rel="icon" href="assets/rsu-logo.png">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>OSAS Transaction Sign-Up</title>
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"></script>
   <script type="module" src="main.js"></script>
 </head>
 <body>
@@ -24,6 +22,10 @@
     <div class="login-container">
       <img src="assets/rsu-background.png" alt="Background Image">
       <div class="login-wrap">
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading-spinner" style="display: none;">
+          <div class="spinner"></div>
+        </div>
         <div class="login-text">
           <h4>Sign Up</h4>
         </div>

@@ -16,6 +16,7 @@
   --box-shadow: #597d9b;
   --bg-bx-color: #141a1e56;
   --hover-color: #3aba47;
+  --spinner-color:#3aba478a;
 }
 
 /* Container Styles */
@@ -71,6 +72,7 @@
 
 /* Login Wrap Styles */
 .login-wrap {
+  position: relative; /* Position relative to contain the absolute spinner */
   max-width: 400px;
   width: 100%;
   padding: 30px;
@@ -90,6 +92,11 @@
   color: var(--font-color);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* Form Wrapper Styles */
+.form-fields {
+  position: relative;
 }
 
 /* Form Styles */
@@ -116,16 +123,16 @@ form {
 .signIn input[type="text"],
 .signIn input[type="password"] {
   width: 100%;
-  padding: 10px;
+  padding: 15px; /* Increase padding for larger fields */
   border-radius: 5px;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 16px; /* Increase font size for larger fields */
 }
 
 .signIn input[type="submit"] {
   width: 100%;
-  padding: 10px;
+  padding: 15px; /* Increase padding for larger button */
   border-radius: 5px;
   border: none;
   outline: none;
@@ -134,7 +141,7 @@ form {
   background-color: var(--button);
   color: var(--font-color);
   letter-spacing: 1px;
-  font-size: 14px;
+  font-size: 16px; /* Increase font size for larger button */
   cursor: pointer;
 }
 
@@ -226,6 +233,36 @@ button#facebook-login-btn i {
   color: var(--font-color);
   margin-top: 20px;
 }
+
+/* Loading Spinner Styles */
+.loading-spinner {
+  position: absolute; /* Center the spinner */
+  top: 40%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust position */
+  width: 100px; /* Increase width */
+  height: 100px; /* Increase height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999; /* Ensure it appears above other content */
+}
+
+.spinner {
+  border: 12px solid rgba(0, 0, 0, 0.1); /* Light gray border */
+  border-left: 12px solid var(--spinner-color); /* White border for spinning effect */
+  border-radius: 50%; /* Circular spinner */
+  width: 100px; /* Increase size of the spinner */
+  height: 100px; /* Increase size of the spinner */
+  animation: spin 1s linear infinite; /* Spinning animation */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
