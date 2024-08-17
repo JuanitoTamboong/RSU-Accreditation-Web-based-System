@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8jNuRrOWVRl028FSShTp81BoWLeGRPW8",
@@ -34,8 +34,14 @@ if (signUpForm) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log('User created:', user);
-        window.location.href = "index.html";
+
+        // Send verification email
+        return sendEmailVerification(user)
+          .then(() => {
+            console.log('Verification email sent.');
+            alert('A verification email has been sent to your email address. Please verify your email before logging in.');
+            window.location.href = "index.html"; // Redirect to login page
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -53,7 +59,6 @@ if (signUpForm) {
 
 // Login Functionality
 const signInForm = document.getElementById('login-form');
-
 if (signInForm) {
   signInForm.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -64,8 +69,14 @@ if (signInForm) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log('User signed in:', user);
-        window.location.href = "homepage.html";
+
+        // Check if the user's email is verified
+        if (user.emailVerified) {
+          console.log('User signed in:', user);
+          window.location.href = "homepage.html";
+        } else {
+          alert('Please verify your email before logging in. A verification email has been sent to your email address.');
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -86,7 +97,17 @@ if (googleLogin) {
         const token = credential.accessToken;
         const user = result.user;
         console.log(user);
-        window.location.href = "homepage.html";
+
+        // Check if the user is verified
+        if (user.emailVerified) {
+          window.location.href = "homepage.html";
+        } else {
+          alert('Please verify your email before logging in.');
+        }
       })
+      .catch((error) => {
+        console.error('Error during Google sign-in:', error);
+        alert('Failed to sign in with Google. Please try again.');
+      });
   });
 }

@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="main.js" defer type="module"></script>
-  <script src="server.js"></script>
   <link rel="icon" href="assets/rsu-logo.png">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <title>OSAS Transaction Sign Up</title>
+  <title>OSAS Transaction Sign-Up</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"></script>
+  <script type="module" src="main.js"></script>
 </head>
 <body>
   <div class="container">
@@ -28,10 +29,6 @@
         </div>
         <form id="signup-form">
           <div class="signIn">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" placeholder="Enter your name">
-          </div>
-          <div class="signIn">
             <label for="email">Email</label>
             <input type="text" name="email" id="email" placeholder="Enter your email">
           </div>
@@ -44,10 +41,10 @@
             <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm your password">
           </div>
           <div class="signIn">
-            <input type="submit" value="Submit">
+            <input type="submit" value="Sign Up">
           </div>
           <div class="signIn">
-            <p>Already have an account? <a href="index.html">Login</a></p>
+            <p>Already have an account? <a href="index.html">Log In</a></p>
           </div>
         </form>
       </div>
