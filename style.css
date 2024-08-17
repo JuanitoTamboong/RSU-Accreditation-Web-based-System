@@ -84,9 +84,15 @@
 .login-text {
   text-align: center;
   background-color: var(--signIn-Color);
-  padding: 10px;
-  border-radius: 5px;
+  padding: 25px;
+  border-radius: 10px 10px 0 0; /* Rounded corners on top only */
+  width: calc(100% + 60px); /* Expand width to cover the form width including padding */
+  margin-left: -30px; /* Shift left to cover padding */
+  margin-right: -30px; /* Shift right to cover padding */
+  margin-bottom: 20px;
+  margin-top: -40px;
 }
+
 
 .login-text h4 {
   color: var(--font-color);
