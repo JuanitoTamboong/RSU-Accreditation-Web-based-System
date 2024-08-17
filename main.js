@@ -122,7 +122,14 @@ if (signInForm) {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error(`Error ${errorCode}: ${errorMessage}`);
-        alert('Invalid email or password. Please try again.');
+       // alert('Invalid email or password. Please try again.');
+       Swal.fire({
+         icon: "warning",
+         title: "Invalid email or password. Please try again",
+         showConfirmButton: false,
+         customClass: 'swal-wide',
+         timer: 1500
+       });
       });
   });
 }

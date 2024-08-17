@@ -85,10 +85,10 @@
   text-align: center;
   background-color: var(--signIn-Color);
   padding: 25px;
-  border-radius: 10px 10px 0 0; /* Rounded corners on top only */
-  width: calc(100% + 60px); /* Expand width to cover the form width including padding */
-  margin-left: -30px; /* Shift left to cover padding */
-  margin-right: -30px; /* Shift right to cover padding */
+  border-radius: 10px 10px 0 0;
+  width: calc(100% + 60px);
+  margin-left: -30px; 
+  margin-right: -30px; 
   margin-bottom: 20px;
   margin-top: -40px;
 }
@@ -129,16 +129,16 @@ form {
 .signIn input[type="text"],
 .signIn input[type="password"] {
   width: 100%;
-  padding: 15px; /* Increase padding for larger fields */
+  padding: 15px; 
   border-radius: 5px;
   border: none;
   outline: none;
-  font-size: 16px; /* Increase font size for larger fields */
+  font-size: 16px;
 }
 
 .signIn input[type="submit"] {
   width: 100%;
-  padding: 15px; /* Increase padding for larger button */
+  padding: 15px; 
   border-radius: 5px;
   border: none;
   outline: none;
@@ -147,7 +147,7 @@ form {
   background-color: var(--button);
   color: var(--font-color);
   letter-spacing: 1px;
-  font-size: 16px; /* Increase font size for larger button */
+  font-size: 16px; 
   cursor: pointer;
 }
 
@@ -189,14 +189,14 @@ button {
   border: none;
   background-color: var(--button);
   color: var(--font-color);
-  font-size: 16px; /* Increase font size */
+  font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
 }
 
 button i {
   margin-right: 10px;
-  font-size: 20px; /* Adjust size of icon */
+  font-size: 20px;
 }
 
 button:hover {
@@ -251,7 +251,6 @@ button#facebook-login-btn i {
   display: flex;
   align-items: center;
   justify-content: center;
-
   z-index: 9999; /* Ensure it appears above other content */
 }
 
@@ -267,6 +266,14 @@ button#facebook-login-btn i {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+/* sweet alert size*/
+.swal-wide{
+  width:850px !important;
+  font-size: 9px;
+height: 160px;
+background-color: var(--bg-bx-color);
+color:var(--font-color);
 }
 
 /* Responsive Design */
