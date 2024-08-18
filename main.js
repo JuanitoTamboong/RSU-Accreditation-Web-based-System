@@ -86,7 +86,19 @@ if (signUpForm) {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error(`Error ${errorCode}: ${errorMessage}`);
-        alert('Sign up failed. Please try again.');
+
+        if (errorCode === 'auth/email-already-in-use') {
+         // Swal.fire({
+          //  icon: 'error',
+           // title: 'Email Already Registered',
+           // text: 'The email address is already registered. Please use a different email.',
+          //  customClass: 'swal-wide',
+          //  timer: 2500
+        //  });
+        alert('The email address is already registered. Please use a different email');
+        } else {
+          alert('Sign up failed. Please try again.');
+        }
       });
   });
 }
