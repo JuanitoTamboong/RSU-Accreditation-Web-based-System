@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8jNuRrOWVRl028FSShTp81BoWLeGRPW8",
@@ -59,7 +59,7 @@ if (signUpForm) {
     const { isValid, errors } = validateSignUpForm(email, password, confirmPassword);
     if (!isValid) {
       alert(errors.join('\n'));
-      return; // Stop form submission if validation fails
+      return; 
     }
 
     // Show the loading spinner
@@ -91,6 +91,59 @@ if (signUpForm) {
   });
 }
 
+// Forgot Password
+const forgotPasswordLink = document.getElementById('forgot-password-link');
+
+if (forgotPasswordLink) {
+  forgotPasswordLink.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: 'Enter your email address',
+      input: 'email',
+      inputLabel: 'We will send you a reset link',
+      inputPlaceholder: 'Enter your email address',
+      showCancelButton: true,
+      confirmButtonText: 'Send',
+      customClass: 'swal-wide'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const email = result.value;
+
+        if (email) {
+          // Show loading spinner
+          showLoading();
+
+          // Send password reset email
+          sendPasswordResetEmail(auth, email)
+            .then(() => {
+              hideLoading();
+              Swal.fire({
+                icon: 'success',
+                title: 'Password reset link sent!',
+                text: 'Check your email for the reset link.',
+                customClass: 'swal-wide',
+                timer: 2000
+              });
+            })
+            .catch((error) => {
+              hideLoading();
+              console.error('Error sending reset email:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to send reset email. Please try again.',
+                customClass: 'swal-wide',
+                timer: 2000
+              });
+            });
+        }
+      }
+    });
+  });
+}
+
+
 // Login Functionality
 const signInForm = document.getElementById('login-form');
 if (signInForm) {
@@ -120,7 +173,7 @@ if (signInForm) {
             title: "Please verify your email before logging in. A verification email has been sent to your email address",
             showConfirmButton: false,
             customClass: 'swal-wide',
-            timer: 1600
+            timer: 2600
           });
         }
 
