@@ -1,0 +1,40 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+:root {
+    --signIn-Color: rgb(19, 67, 36);
+    --button: #2a8633;
+    --font-color: #fff;
+    --box-shadow: #597d9b;
+    --bg-bx-color: #141a1e56;
+    --hover-color: #3aba47;
+    --spinner-color:#3aba478a;
+  }
+  
+.top-header {
+    background-color: var(--signIn-Color);
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-header img {
+    height: 90px;
+    width: 90px;
+}
+
+.top-header h2 {
+    text-align: center;
+    color: var(--font-color);  
+    font-size: 30px;
+    margin-top: 10px; /* Add some space between the image and the heading */
+}

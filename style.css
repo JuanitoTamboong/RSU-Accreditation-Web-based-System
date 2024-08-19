@@ -255,12 +255,12 @@ button#facebook-login-btn i {
 }
 
 .spinner {
-  border: 12px solid rgba(0, 0, 0, 0.1); /* Light gray border */
-  border-left: 12px solid var(--spinner-color); /* White border for spinning effect */
-  border-radius: 50%; /* Circular spinner */
-  width: 100px; /* Increase size of the spinner */
-  height: 100px; /* Increase size of the spinner */
-  animation: spin 1s linear infinite; /* Spinning animation */
+  border: 12px solid rgba(0, 0, 0, 0.1);
+  border-left: 12px solid var(--spinner-color);
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 1s linear infinite; 
 }
 
 @keyframes spin {
