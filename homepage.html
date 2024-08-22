@@ -4,14 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="homepage.css">
-    <link rel="website icon" href="assets/rsu-logo.png">
-    <title>SOA</title>
+    <link rel="icon" href="assets/rsu-logo.png">
+    <title>SOA Accreditation Form</title>
 </head>
 <body>
-   <div class="top-header">
-    <img src="assets/rsu-logo.png" alt="">
-    <h2>SOA</h2>
-   </div>
-   
+    <div class="top-header">
+        <img src="assets/rsu-logo.png" alt="RSU Logo">
+        <h2>SOA Accreditation & Reaccreditation Form</h2>
+    </div>
+    
+    <div class="form-container">
+        <form id="application-form">
+            <!-- Representative Information -->
+            <label for="representative-name">Name of Representative:</label>
+            <input type="text" id="representative-name" placeholder="Enter your name" required>
+
+            <label for="representative-position">Position:</label>
+            <input type="text" id="representative-position" placeholder="Enter your position" required>
+
+            <label for="year-course">Year & Course:</label>
+            <input type="text" id="year-course" placeholder="Enter your year & course" required>
+
+            <!-- Organization Information -->
+            <label for="organization-name">Organization Name:</label>
+            <input type="text" id="organization-name" placeholder="Enter organization name" required>
+
+            <label for="accreditation-type">Type of Accreditation:</label>
+            <select id="accreditation-type" required>
+                <option value="">--Select Accreditation Type--</option>
+                <option value="initial">Initial Accreditation</option>
+                <option value="reaccreditation">Reaccreditation</option>
+            </select>
+
+            <!-- Contact Information -->
+            <label for="contact-number">Contact Number:</label>
+            <input type="tel" id="contact-number" placeholder="Enter contact number" required>
+
+            <label for="email-address">Email Address:</label>
+            <input type="email" id="email-address" placeholder="Enter email address" required>
+
+            <!-- Date of Filing -->
+            <label for="date-filing">Date of Filing:</label>
+            <input type="date" id="date-filing" required>
+
+            <!-- Document Upload -->
+            <label for="supporting-documents">Upload Supporting Documents:</label>
+            <input type="file" id="supporting-documents" multiple required>
+
+            <!-- Submission -->
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
