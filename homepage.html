@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="homepage.css">
     <link rel="icon" href="assets/rsu-logo.png">
-    <title>SOA Accreditation Form</title>
+    <title>SOA Application Form</title>
+    <script type="module" src="app.js" defer></script>
 </head>
 <body>
     <div class="top-header">
@@ -16,49 +17,99 @@
     <div class="form-container">
         <form id="application-form">
             <!-- Representative Information -->
-            <label for="representative-name">Name of Representative:</label>
-            <input type="text" id="representative-name" placeholder="Enter your name" required>
-
-            <label for="representative-position">Position:</label>
-            <input type="text" id="representative-position" placeholder="Enter your position" required>
-
-            <label for="year-course">Year & Course:</label>
-            <input type="text" id="year-course" placeholder="Enter your year & course" required>
-
-            <!-- Organization Information -->
-            <label for="organization-name">Organization Name:</label>
-            <input type="text" id="organization-name" placeholder="Enter organization name" required>
-
-            <label for="accreditation-type">Type of Accreditation:</label>
-            <select id="accreditation-type" required>
-                <option value="">--Select Accreditation Type--</option>
-                <option value="initial">Initial Accreditation</option>
-                <option value="reaccreditation">Reaccreditation</option>
-            </select>
-
+            <div class="form-group">
+                <label for="representative-name">Name of Representative:</label>
+                <input type="text" id="representative-name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="representative-position">Position:</label>
+                <input type="text" id="representative-position" placeholder="Enter your position" required>
+            </div>
+            <div class="form-group">
+                <label for="year-course">Year & Course:</label>
+                <input type="text" id="year-course" placeholder="Enter your year & course" required>
+            </div>
+            <div class="form-group">
+                <label for="organization-name">Organization Name:</label>
+                <input type="text" id="organization-name" placeholder="Enter organization name" required>
+            </div>
+            <div class="form-group">
+                <label for="accreditation-type">Type of Accreditation:</label>
+                <select id="accreditation-type" required>
+                    <option value="">--Select Accreditation Type--</option>
+                    <option value="initial">Initial Accreditation</option>
+                    <option value="reaccreditation">Reaccreditation</option>
+                </select>
+            </div>
             <!-- Contact Information -->
-            <label for="contact-number">Contact Number:</label>
-            <input type="tel" id="contact-number" placeholder="Enter contact number" required>
-
-            <label for="email-address">Email Address:</label>
-            <input type="email" id="email-address" placeholder="Enter email address" required>
-
+            <div class="form-group">
+                <label for="contact-number">Contact Number:</label>
+                <input type="tel" id="contact-number" placeholder="Enter contact number" required>
+            </div>
+            <div class="form-group">
+                <label for="email-address">Email Address:</label>
+                <input type="email" id="email-address" placeholder="Enter email address" required>
+            </div>
             <!-- Date of Filing -->
-            <label for="date-filing">Date of Filing:</label>
-            <input type="date" id="date-filing" required>
-
+            <div class="form-group">
+                <label for="date-filing">Date of Filing:</label>
+                <input type="date" id="date-filing" required>
+            </div>
             <!-- Document Upload -->
-            <label for="supporting-documents">Upload Supporting Documents:</label>
-            <input type="file" id="supporting-documents" multiple required>
-
+            <div class="form-group">
+                <label for="supporting-documents">Upload Supporting Documents:</label>
+                <input type="file" id="supporting-documents" multiple required>
+            </div>
             <!-- Submission -->
-            <button type="submit">Submit Application</button>
+            <div class="form-group submit-btn">
+                <button type="submit">Submit Application</button>
+            </div>
         </form>
+        <!-- Checklist Section (Initially hidden) -->
+        <div class="checklist-container" id="checklist-container" style="display: none;">
+            <h3>Checklist of Documents:</h3>
+            <div>
+                <input type="checkbox" id="name-checkbox" disabled>
+                <label for="name-checkbox">Name is provided</label>
+            </div>
+            <div>
+                <input type="checkbox" id="position-checkbox" disabled>
+                <label for="position-checkbox">Position is provided</label>
+            </div>
+            <div>
+                <input type="checkbox" id="course-checkbox" disabled>
+                <label for="course-checkbox">Year & Course is provided</label>
+            </div>
+            <div>
+                <input type="checkbox" id="organization-checkbox" disabled>
+                <label for="organization-checkbox">Organization Name is provided</label>
+            </div>
+            <div>
+                <input type="checkbox" id="accreditation-checkbox" disabled>
+                <label for="accreditation-checkbox">Accreditation Type is selected</label>
+            </div>
+            <div>
+                <input type="checkbox" id="contact-checkbox" disabled>
+                <label for="contact-checkbox">Contact Number is provided</label>
+            </div>
+            <div>
+                <input type="checkbox" id="email-checkbox" disabled>
+                <label for="email-checkbox">Email Address is provided</label>
+            </div>
+            <div>
+                <input type="checkbox" id="date-checkbox" disabled>
+                <label for="date-checkbox">Date of Filing is selected</label>
+            </div>
+            <div>
+                <input type="checkbox" id="document-checkbox" disabled>
+                <label for="document-checkbox">Supporting Documents are uploaded</label>
+            </div>
+        </div>
+        <!-- Document List -->
+        <div id="uploaded-documents">
+            <h3>Uploaded Documents:</h3>
+            <ul id="document-list"></ul>
+        </div>
     </div>
-
-    <!-- Firebase Configuration -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
-    <script type="module" src="app.js"></script>
 </body>
 </html>

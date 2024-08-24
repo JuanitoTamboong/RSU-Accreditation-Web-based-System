@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.top-header {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+.top-header img {
+    height: 40px;
+    margin-right: 1rem;
+}
+
+.top-header h2 {
+    margin: 0;
+}
+
+.applications-container {
+    padding: 2rem;
+}
+
+.application-item {
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.application-info {
+    margin-bottom: 1rem;
+}
+
+.document-links {
+    margin-bottom: 1rem;
+}
+
+.application-actions button {
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.application-actions button:hover {
+    background-color: #ddd;
+}

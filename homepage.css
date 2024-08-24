@@ -1,20 +1,3 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-body{
-
-    background-image: url('assets/rsu-background.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-/* Define color variables */
 :root {
     --signIn-Color: rgb(19, 67, 36);
     --button: #2a8633;
@@ -22,120 +5,194 @@ body{
     --box-shadow: #597d9b;
     --bg-bx-color: #141a1e56;
     --hover-color: #3aba47;
-    --spinner-color: #3aba478a;
-}
-
-/* Top header styles */
-.top-header {
-    background-color: var(--signIn-Color);
-    width: 100%;
-    padding: 20px;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    background-color: #f7f7f7;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.top-header img {
-    height: 90px;
-    width: 90px;
-}
-
-.top-header h2 {
-    text-align: center;
-    color: var(--font-color);
-    font-size: 30px;
-    margin-top: 10px;
-}
-
-/* Form container styles */
-.form-container {
-    background-color: var(--bg-bx-color);
-    padding: 40px;
-    margin: 40px auto;
-    max-width: 500px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 15px var(--box-shadow);
-}
-
-.form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Label and input styles */
-label {
-    color: var(--font-color);
-    font-weight: 500;
-    font-size: 14px;
-}
-
-input[type="text"],
-input[type="date"],
-input[type="email"],
-input[type="tel"],
-input[type="file"],
-select {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
+    min-height: 100vh;
     font-size: 16px;
-    background-color: #fff;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-input[type="file"] {
-    padding: 5px;
-}
-
-input[type="text"]:focus,
-input[type="date"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-select:focus {
-    outline: none;
-    border: 2px solid var(--hover-color);
-}
-
-/* Button styles */
-button {
+  }
+  
+  .top-header {
+    background-color: var(--signIn-Color);
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 4px 10px rgba(var(--box-shadow), 0.1);
+  }
+  
+  .top-header img {
+    height: 70px;
+    margin-right: 10px;
+  }
+  
+  .top-header h2 {
+    color: var(--font-color);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .form-container {
+    background-color: var(--font-color);
+    padding: 30px;
+    margin: 0 auto;
+    max-width: 800px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0px 4px 15px rgba(var(--box-shadow), 0.1);
+  }
+  
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+  }
+  
+  .submit-btn {
+    grid-column: span 2;
+  }
+  
+  .submit-btn button {
+    width: 100%;
     background-color: var(--button);
     color: var(--font-color);
-    padding: 12px;
+    padding: 15px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
+  }
+  
+  .submit-btn button:hover {
     background-color: var(--hover-color);
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .form-container {
-        padding: 20px;
-        margin: 20px;
+  }
+  
+  .checklist-container {
+    margin-top: 20px;
+  }
+  
+  .checklist-container h3 {
+    font-size: 1.125rem;
+    color: var(--signIn-Color);
+    margin-bottom: 10px;
+  }
+  
+  .checklist-container div {
+    margin-bottom: 10px;
+  }
+  
+  .checklist-container input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  #uploaded-documents {
+    margin-top: 20px;
+  }
+  
+  #uploaded-documents h3 {
+    font-size: 1.125rem;
+    color: var(--signIn-Color);
+    margin-bottom: 10px;
+  }
+  
+  #uploaded-documents ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  #uploaded-documents li {
+    margin-bottom: 10px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    form {
+      grid-template-columns: 1fr;
     }
-    
+  
+    .form-group {
+      grid-column: span 1;
+    }
+  
     .top-header h2 {
-        font-size: 24px;
+      font-size: 1.5rem;
     }
-    
-    input[type="text"],
-    input[type="date"],
-    input[type="email"],
-    input[type="tel"],
-    select {
-        font-size: 14px;
+  
+    .form-container {
+      padding: 25px;
     }
-    
-    button {
-        font-size: 14px;
-        padding: 10px;
+  
+    .form-group input, .form-group select {
+      font-size: 1rem;
     }
-}
+  
+    .submit-btn button {
+      font-size: 1rem;
+    }
+  
+    .checklist-container,
+    #uploaded-documents {
+      margin-top: 15px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .top-header h2 {
+      font-size: 1.25rem;
+    }
+  
+    .top-header img {
+      height: 50px;
+    }
+  
+    .form-container {
+      padding: 15px;
+    }
+  
+    .form-group input, .form-group select {
+      padding: 10px;
+      font-size: 1rem;
+    }
+  
+    .submit-btn button {
+      padding: 12px;
+      font-size: 1rem;
+    }
+  
+    .checklist-container,
+    #uploaded-documents {
+      margin-top: 10px;
+    }
+  }
+  
