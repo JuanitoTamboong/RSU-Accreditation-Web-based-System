@@ -18,6 +18,14 @@
         <form id="application-form">
             <!-- Representative Information -->
             <div class="form-group">
+                <label for="accreditation-type">Type of Accreditation:</label>
+                <select id="accreditation-type" required>
+                    <option value="">--Select Accreditation Type--</option>
+                    <option value="initial">Initial Accreditation</option>
+                    <option value="reaccreditation">Reaccreditation</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="representative-name">Name of Representative:</label>
                 <input type="text" id="representative-name" placeholder="Enter your name" required>
             </div>
@@ -32,14 +40,6 @@
             <div class="form-group">
                 <label for="organization-name">Organization Name:</label>
                 <input type="text" id="organization-name" placeholder="Enter organization name" required>
-            </div>
-            <div class="form-group">
-                <label for="accreditation-type">Type of Accreditation:</label>
-                <select id="accreditation-type" required>
-                    <option value="">--Select Accreditation Type--</option>
-                    <option value="initial">Initial Accreditation</option>
-                    <option value="reaccreditation">Reaccreditation</option>
-                </select>
             </div>
             <!-- Contact Information -->
             <div class="form-group">
@@ -60,10 +60,16 @@
                 <label for="supporting-documents">Upload Supporting Documents:</label>
                 <input type="file" id="supporting-documents" multiple required>
             </div>
+            <!--upload Image-->
+            <div class="form-group">
+                <label for="upload-image">Upload Image:</label>
+                <input type="file" id="img" name="img" accept="image/*">
+            </div>
             <!-- Submission -->
             <div class="form-group submit-btn">
                 <button type="submit">Submit Application</button>
             </div>
+            
         </form>
         <!-- Checklist Section (Initially hidden) -->
         <div class="checklist-container" id="checklist-container" style="display: none;">

@@ -163,64 +163,6 @@ input[type="password"]:focus {
   transition: 0.5s ease-out;
 }
 
-
-/* OR Line Styling */
-.or-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 15px 0;
-}
-
-.or-container p {
-  color: var(--font-color);
-  margin: 0 10px;
-  font-size: 13px;
-  text-transform: uppercase;
-}
-
-.or-container .line {
-  border: 0;
-  height: 1px;
-  width: 40%;
-  background-color: var(--font-color);
-}
-
-/* Button and Icon Styles */
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  background-color: var(--button);
-  color: var(--font-color);
-  font-size: 16px;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-button i {
-  margin-right: 10px;
-  font-size: 20px;
-}
-
-button:hover {
-  background-color: var(--hover-color);
-  transition: 0.5s ease-out;
-}
-
-/* Specific Button Styles */
-button#google-login-btn i {
-  color: #113d85; /* Google icon color */
-}
-
-button#facebook-login-btn i {
-  color:#113d85; /* Facebook icon color */
-}
-
 .signIn p {
   color: var(--font-color);
   font-size: 13px;

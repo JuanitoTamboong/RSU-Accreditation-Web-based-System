@@ -176,7 +176,7 @@ if (signInForm) {
         if (user.emailVerified) {
           console.log('User signed in:', user);
           hideLoading();
-          window.location.href = "homepage.html";
+          window.location.href = "welcome.html";
         } else {
           hideLoading();
           //alert('Please verify your email before logging in. A verification email has been sent to your email address.');
@@ -224,7 +224,7 @@ if (googleLogin) {
         // Check if the user is verified
         if (user.emailVerified) {
           hideLoading();
-          window.location.href = "homepage.html";
+          window.location.href = "welcome.html";
         } else {
           hideLoading();
           //alert('Please verify your email before logging in.');
