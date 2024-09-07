@@ -34,11 +34,17 @@ html, body {
 
 /* Logo styling */
 .logo img {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     filter: drop-shadow(1px 2px #000);
+    margin-left: 180px;
+    object-fit: contain;
+    padding-bottom: 20px;
 }
-
+.logo h2{
+    color: var(--button);
+    text-align: center;
+}
 /* Flex container for guidelines and image */
 .guide-container {
     display: flex;
@@ -60,7 +66,12 @@ html, body {
     padding: 20px;
     border-radius: 10px;
 }
-
+.guide img{
+    height: 70px;
+    width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(1px 1px #000);
+}
 .guide h2 {
     margin-bottom: 20px;
     color: var(--signIn-Color);
@@ -149,6 +160,19 @@ button:hover {
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
+    .logo img {
+        height: 100px;
+        width: 100%;
+        object-fit: contain;
+        margin: 0;
+        padding: 0;
+
+    }
+    .logo h2{
+        padding-top: 20px;
+        font-size: 17px;
+
+    }
     .guide-container {
         flex-direction: column; /* Stack containers vertically on smaller screens */
         align-items: stretch; /* Full-width items */
