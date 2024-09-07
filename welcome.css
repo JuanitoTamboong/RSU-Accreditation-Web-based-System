@@ -129,14 +129,14 @@ button {
     border: none;
     outline: none;
     border-radius: 5px;
+    color: var(--font-color);
+    text-transform: uppercase;
+    font-weight: 500;
 }
 
 button a {
     font-size: 18px;
     text-decoration: none;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--font-color);
 }
 
 button:hover {
