@@ -21,8 +21,8 @@
                 <label for="accreditation-type">Type of Accreditation:</label>
                 <select id="accreditation-type" required>
                     <option value="">--Select Accreditation Type--</option>
-                    <option value="initial">Initial Accreditation</option>
-                    <option value="reaccreditation">Reaccreditation</option>
+                    <option value="initial">New Organization</option>
+                    <option value="reaccreditation">Re Accreditation</option>
                 </select>
             </div>
             <div class="form-group">
@@ -34,17 +34,16 @@
                 <input type="text" id="representative-position" placeholder="Enter your position" required>
             </div>
             <div class="form-group">
-                <label for="year-course">Year & Course:</label>
-                <input type="text" id="year-course" placeholder="Enter your year & course" required>
+                <label for="year-course"> School Year</label>
+                <input type="text" id="school-year" placeholder="Enter your school year" required>
+            </div>
+            <div class="form-group">
+                <label for="year-course">Course</label>
+                <input type="text" id="course" placeholder="Enter yourcourse" required>
             </div>
             <div class="form-group">
                 <label for="organization-name">Organization Name:</label>
                 <input type="text" id="organization-name" placeholder="Enter organization name" required>
-            </div>
-            <!-- Contact Information -->
-            <div class="form-group">
-                <label for="contact-number">Contact Number:</label>
-                <input type="tel" id="contact-number" placeholder="Enter contact number" required>
             </div>
             <div class="form-group">
                 <label for="email-address">Email Address:</label>
@@ -69,53 +68,7 @@
             <div class="form-group submit-btn">
                 <button type="submit">Submit Application</button>
             </div>
-            
         </form>
-        <!-- Checklist Section (Initially hidden) -->
-        <div class="checklist-container" id="checklist-container" style="display: none;">
-            <h3>Checklist of Documents:</h3>
-            <div>
-                <input type="checkbox" id="name-checkbox" disabled>
-                <label for="name-checkbox">Name is provided</label>
-            </div>
-            <div>
-                <input type="checkbox" id="position-checkbox" disabled>
-                <label for="position-checkbox">Position is provided</label>
-            </div>
-            <div>
-                <input type="checkbox" id="course-checkbox" disabled>
-                <label for="course-checkbox">Year & Course is provided</label>
-            </div>
-            <div>
-                <input type="checkbox" id="organization-checkbox" disabled>
-                <label for="organization-checkbox">Organization Name is provided</label>
-            </div>
-            <div>
-                <input type="checkbox" id="accreditation-checkbox" disabled>
-                <label for="accreditation-checkbox">Accreditation Type is selected</label>
-            </div>
-            <div>
-                <input type="checkbox" id="contact-checkbox" disabled>
-                <label for="contact-checkbox">Contact Number is provided</label>
-            </div>
-            <div>
-                <input type="checkbox" id="email-checkbox" disabled>
-                <label for="email-checkbox">Email Address is provided</label>
-            </div>
-            <div>
-                <input type="checkbox" id="date-checkbox" disabled>
-                <label for="date-checkbox">Date of Filing is selected</label>
-            </div>
-            <div>
-                <input type="checkbox" id="document-checkbox" disabled>
-                <label for="document-checkbox">Supporting Documents are uploaded</label>
-            </div>
-        </div>
-        <!-- Document List -->
-        <div id="uploaded-documents">
-            <h3>Uploaded Documents:</h3>
-            <ul id="document-list"></ul>
-        </div>
     </div>
 </body>
 </html>
