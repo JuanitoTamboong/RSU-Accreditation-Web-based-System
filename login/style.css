@@ -35,7 +35,7 @@
   align-items: center;
   /*background-color: var(--signIn-Color);*/
   padding: 20px;
-  background-image: url('assets/rsu-background.png');
+  background-image: url('../assets/rsu-background.png');
   background-size: cover;
   background-position: center;
 }
@@ -63,6 +63,7 @@
   align-items: center;
   position: relative;
   padding: 20px;
+  background-image: url('../assets/rsu-logo.png');
 }
 
 .login-container img {
@@ -73,6 +74,7 @@
   height: 100%;
   object-fit: cover;
   z-index: -1;
+  
 }
 
 /* Login Wrap Styles */
@@ -82,7 +84,6 @@
   width: 100%;
   padding: 30px;
   border-radius: 10px;
-  background-color: var(--font-color);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -113,6 +114,7 @@
 /* Form Styles */
 form {
   margin-top: 20px;
+  
 }
 
 .signIn {

@@ -31,6 +31,7 @@ document.getElementById('application-form').addEventListener('submit', async fun
     const emailAddress = document.getElementById('email-address').value;
     const dateFiling = document.getElementById('date-filing').value;
     const supportingDocuments = document.getElementById('supporting-documents').files;
+    const imgFile = document.getElementById('img').files[0];
 
     // Prepare data to be stored in Firestore
     const formData = {
@@ -43,16 +44,16 @@ document.getElementById('application-form').addEventListener('submit', async fun
         emailAddress,
         dateFiling,
         documentURLs: [], // Array to hold document URLs
+        imageURL: '', // URL for the image
         timestamp: serverTimestamp()
     };
 
     try {
-        // Add data to Firestore
+        // Add data to Firestore (without document URLs initially)
         const docRef = await addDoc(collection(db, 'accreditation-applications'), formData);
 
-        // Handle file upload
+        // Handle file upload for supporting documents
         const documentURLs = [];
-
         for (const file of supportingDocuments) {
             const storageRef = ref(storage, `documents/${file.name}`);
             await uploadBytes(storageRef, file);
@@ -60,12 +61,25 @@ document.getElementById('application-form').addEventListener('submit', async fun
             documentURLs.push(downloadURL);
         }
 
-        // Update Firestore document with the array of URLs
-        await updateDoc(docRef, { documentURLs });
-        alert('Application submitted successfully!');
-        document.getElementById('application-form').reset(); // Clear the form
+        // Handle file upload for the image
+        if (imgFile) {
+            const imgStorageRef = ref(storage, `images/${imgFile.name}`);
+            await uploadBytes(imgStorageRef, imgFile);
+            const imgDownloadURL = await getDownloadURL(imgStorageRef);
+            formData.imageURL = imgDownloadURL;
+        }
+
+        // Update Firestore document with the URLs of the uploaded files
+        await updateDoc(docRef, { documentURLs, imageURL: formData.imageURL });
+
+        // Store form data in localStorage
+        localStorage.setItem('applicationFormData', JSON.stringify(formData));
+
+        // Redirect to the next page
+        window.location.href = "../student-profile/list-officers.html";
+
     } catch (error) {
-        console.error('Error submitting application:', error);
-        alert('Failed to submit application. Please try again.');
+        console.error('Error submitting form:', error);
+        alert('Failed to submit the form. Please try again.');
     }
 });

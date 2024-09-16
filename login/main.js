@@ -185,7 +185,7 @@ if (signInForm) {
         // Check if the user's email is verified
         if (user.emailVerified) {
           hideLoading();
-          window.location.href = "welcome.html";
+          window.location.href = "../welcome-page/welcome.html";
         } else {
           hideLoading();
           Swal.fire({

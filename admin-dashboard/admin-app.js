@@ -1,11 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+// Firebase imports
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDXQCFoaCSWsCV2JI7wrOGZPKEpQuNzENA",
     authDomain: "student-org-5d42a.firebaseapp.com",
-    databaseURL: "https://student-org-5d42a-default-rtdb.firebaseio.com",
     projectId: "student-org-5d42a",
     storageBucket: "student-org-5d42a.appspot.com",
     messagingSenderId: "1073695504078",
@@ -16,9 +16,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Function to fetch and display applications
 async function fetchApplications() {
     try {
-        const querySnapshot = await getDocs(collection(db, 'accreditation-applications'));
+        const querySnapshot = await getDocs(collection(db, 'admin-submissions'));
         const applicationsList = document.getElementById('applications-list');
         applicationsList.innerHTML = ''; // Clear existing list
         
@@ -30,8 +31,29 @@ async function fetchApplications() {
                 <p><strong>Organization Name:</strong> ${data.organizationName}</p>
                 <p><strong>Document URLs:</strong></p>
                 <ul>
-                    ${data.documentURLs.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')}
+                    ${data.documentURLs ? data.documentURLs.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('') : ''}
                 </ul>
+                <p><strong>Officers:</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Profile Image</th>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.officers.map(profile => `
+                            <tr>
+                                <td><img src="${profile.imgSrc}" alt="Profile Image" style="width: 50px; height: 50px;"></td>
+                                <td>${profile.studentID}</td>
+                                <td>${profile.name}</td>
+                                <td>${profile.address}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             `;
             applicationsList.appendChild(listItem);
         });
