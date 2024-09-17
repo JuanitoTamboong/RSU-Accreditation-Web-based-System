@@ -1,364 +1,335 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --signIn-Color: rgb(19, 67, 36);
+  --button: #2a8633;
+  --font-color: #fff;
+  --box-shadow: #597d9b;
+  --bg-bx-color: #141a1e56;
+  --hover-color: #3aba47;
+  --spinner-color: #3aba478a;
+}
+
+.nav-bar {
+  width: 100%;
+  display: flex;
+  padding: 20px;
+  background-color: var(--signIn-Color);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+}
+
+.top-nav h2 {
+  padding-left: 20px;
+  color: var(--font-color);
+}
+
+.top-nav img {
+  height: 50px;
+  object-fit: contain;
+}
+
+.search-bar {
+  width: 30%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-bar i {
+  position: absolute;
+  right: 0;
+  font-size: 15px;
+  color: var(--font-color);
+  background-color: var(--button);
+  padding: 11px;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: var(--font-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+ 
+}
+
+.list-officers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: var(--font-color);
+  box-shadow: inset 1px 1px 10px var(--box-shadow);
+  padding: 50px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  height: auto; 
+  width: 50%;
+}
+
+.student-profile h3 {
+  color: var(--button);
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+label.upload-label {
+  height: 150px;
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px auto;
+  border: 2px dashed var(--box-shadow);
+  border-radius: 10px;
+  color: var(--signIn-Color);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+label.upload-label:hover {
+  background-color: var(--box-shadow);
+  color: var(--font-color);
+}
+
+label.upload-label img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+label.upload-label span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  text-align: center;
+}
+
+.student-id {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-id label {
+  color: var(--signIn-Color);
+  margin-bottom: 5px;
+}
+
+.student-id input {
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid var(--box-shadow);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 35px;
+}
+
+.student-info label {
+  color: var(--signIn-Color);
+}
+
+.student-info input {
+  padding: 8px;
+  border: 1px solid var(--box-shadow);
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add-update {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.add-update button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  color: var(--font-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.add-update button i {
+  font-size: 14px;
+}
+
+.add-update .update-btn {
+  background-color: var(--box-shadow);
   
-  :root {
-    --signIn-Color: rgb(19, 67, 36);
-    --button: #2a8633;
-    --font-color: #fff;
-    --box-shadow: #597d9b;
-    --bg-bx-color: #141a1e56;
-    --hover-color: #3aba47;
-    --spinner-color: #3aba478a;
-  }
-  
-  .nav-bar {
-    width: 100%;
-    display: flex;
-    padding: 20px;
-    background-color: var(--signIn-Color);
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .top-nav {
-    display: flex;
-    align-items: center;
-  }
-  
-  .top-nav h2 {
-    padding-left: 20px;
-    color: var(--font-color);
-  }
-  
-  .top-nav img {
-    height: 50px;
-    object-fit: contain;
-  }
-  
-  .search-bar {
-    width: 30%;
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  
-  .search-bar i {
-    position: absolute;
-    right: 0;
-    font-size: 15px;
-    color: var(--font-color);
-    background-color: var(--button);
-    padding: 13px;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-  }
-  
-  .search-bar input {
-    width: 100%;
-    padding: 10px 10px 10px 40px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: var(--font-color);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .list-officers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Space between items */
-    background-color: var(--font-color);
-    box-shadow: inset 1px 1px 10px var(--box-shadow);
-    padding: 50px; /* Added padding */
-    border-radius: 10px;
-    box-sizing: border-box;
-    max-height: none; /* Remove max-height */
-    overflow: visible; /* Remove scrolling */
-    margin-bottom: 20px; /* Space below the container */
-   height:0%;
-  }
-  
-  .student-profile h3 {
-    color: var(--button);
-    text-align: center;
-    padding-bottom: 20px;
-  }
-  
-  input[type="file"] {
-    display: none;
-  }
-  
-  label.upload-label {
-    height: 130px;
-    width: 130px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 15px auto;
-    border: 2px dashed var(--box-shadow);
-    border-radius: 10px;
-    color: var(--signIn-Color);
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  label.upload-label:hover {
-    background-color: var(--box-shadow);
-    color: var(--font-color);
-  }
-  
-  label.upload-label img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  
-  label.upload-label span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  
-  .student-id {
-    margin-top: 25px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .student-id label {
-    color: var(--signIn-Color);
-    margin-bottom: 5px;
-  }
-  
-  .student-id input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--box-shadow);
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-  
-  .student-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .student-info label {
-    color: var(--signIn-Color);
-  }
-  
-  .student-info input {
-    padding: 8px;
-    border: 1px solid var(--box-shadow);
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .add-update {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px; /* Adjusted margin */
-  }
-  
-  .add-update button {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 16px;
-    color: var(--font-color);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-align: center;
-    margin-top: 40px;
-  }
-  
-  .add-update button i {
-    font-size: 14px;
-  }
-  
-  .add-update .update-btn {
-    background-color: var(--box-shadow);
-  }
-  
-  .add-update .add-btn {
-    background-color: var(--button);
-  }
-  
-  .add-update button:hover {
-    background-color: var(--hover-color);
-  }
-  
-  .profiles-container {
-    box-shadow: inset 1px 1px 10px var(--box-shadow);
-    padding: 20px; /* Adjusted padding */
-    border: 1px solid var(--box-shadow);
-    border-radius: 10px;
-    margin-left: 50px;
-    height: 0%; /* Adjust height */
-   
+}
+
+.add-update .add-btn {
+  background-color: var(--button);
+ 
+}
+
+.add-update button:hover {
+  background-color: var(--hover-color);
+}
+
+.profiles-container {
+  box-shadow: inset 1px 1px 10px var(--box-shadow);
+  padding: 20px;
+  border: 1px solid var(--box-shadow);
+  border-radius: 10px;
+  margin-left: 50px;
+  width: 50%;
 }
 
 .table-wrapper {
-    max-height: 300px; /* Adjust this value as needed */
-    overflow-y: auto; /* Enables vertical scrolling */
-    margin-bottom: 20px; /* Space below the table */
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
 }
 
 .profiles-container h3 {
-    color: var(--signIn-Color);
-    margin-bottom: 15px;
+  color: var(--signIn-Color);
+  margin-bottom: 15px;
 }
 
 .profiles-container table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .profiles-container th,
 .profiles-container td {
-    border: 1px solid var(--box-shadow);
-    padding: 8px;
-    text-align: left;
+  border: 1px solid var(--box-shadow);
+  padding: 8px;
+  text-align: left;
 }
 
 .profiles-container th {
-    background-color: var(--signIn-Color);
-    color: var(--font-color);
+  background-color: var(--signIn-Color);
+  color: var(--font-color);
 }
 
 .profiles-container tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
+.submit-btn {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: 20px;
+  position: relative;
+  z-index: 1;
+}
 
-  
-  .profiles-container h3 {
-    color: var(--signIn-Color);
-    margin-bottom: 15px;
-  }
-  
-  .profiles-container table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .profiles-container th,
-  .profiles-container td {
-    border: 1px solid var(--box-shadow);
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .profiles-container th {
-    background-color: var(--signIn-Color);
-    color: var(--font-color);
-  }
-  
-  .profiles-container tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Make the table scrollable on smaller screens */
-  .profiles-container table {
-    max-height: none; /* Remove max-height */
-    display: block;
-    overflow: visible; /* Remove scrolling */
-  }
-  
-  .submit-btn {
-    margin-top: 10px;
-    display: flex;
+.submit-btn button {
+  background-color: var(--button);
+  color: var(--font-color);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn button:hover {
+  background-color: var(--hover-color);
+}
+
+@media (max-width: 1200px) {
+  .container{
     flex-direction: column;
-    align-items: flex-end;
-    padding-top: 20px;
-    position: relative;
-    z-index: 1;
+
+    
+   }
+  .profiles-container {
+      margin-left: 0;
   }
-  
-  .submit-btn button {
-    background-color: var(--button);
-    color: var(--font-color);
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .submit-btn button:hover {
-    background-color: var(--hover-color);
-  }
-  
-  /* Flexbox layout to ensure equal size containers */
-  .list-officers {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 1200px) {
- 
-    .profiles-container {
-      max-height: none; /* Remove max-height for medium screens */
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .nav-bar {
+}
+
+@media (max-width: 768px) {
+.container{
+ flex-direction: column;
+}
+  .nav-bar {
       flex-direction: column;
       align-items: flex-start;
-    }
-  
-    .search-bar {
-        padding-top: 20px;
-      width: 100%;
-    }
-   
-   h2{
-        font-size: 20px;
-    }
-    .list-officers {
-      flex-direction: column;
-    }
-  
-    .profiles-container {
-      max-height: none;
-      min-width: auto;
-      margin-left: 0;
-    }
-  
-    .add-update {
-      flex-direction: column;
-    }
-    .add-update button{
-        margin:2px;
-      }
-      th,td{
-        font-size: 14px;
-      }
-      
   }
- 
+
+  .search-bar {
+      padding-top: 20px;
+      width: 100%;
+  }
+
+  h2 {
+      font-size: 20px;
+  }
+
+  .list-officers {
+      flex-direction: column;
+      width: 100%;
+  }
+  .student-info{
+    margin: 0;
+  }
+
+  .profiles-container {
+      margin-left: 0;
+      width: 100%;
+  }
+
+  .add-update {
+    flex-direction: column;
+  }
+
+  .add-update button {
+      margin: 0;
+  }
+  th, td {
+      font-size: 14px;
+  }
+}
