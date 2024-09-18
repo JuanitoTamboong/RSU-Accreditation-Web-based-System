@@ -282,8 +282,7 @@ label.upload-label span {
 
 @media (max-width: 1200px) {
   .container{
-    flex-direction: column;
-
+  gap: 30px;
     
    }
   .profiles-container {
