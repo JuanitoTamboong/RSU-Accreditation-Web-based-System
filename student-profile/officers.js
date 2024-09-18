@@ -1,6 +1,6 @@
 // Firebase imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
@@ -26,6 +26,16 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = "../index.html";
     }
 });
+
+// Function to show the loading spinner
+function showLoading() {
+    document.getElementById("loading").style.display = "flex";
+}
+
+// Function to hide the loading spinner
+function hideLoading() {
+    document.getElementById("loading").style.display = "none";
+}
 
 // Event listeners for profile-related buttons
 document.getElementById('img').addEventListener('change', handleImageUpload);
@@ -89,11 +99,10 @@ async function addProfile() {
 
     // Check for duplicate Student IDs
     const profilesRef = collection(db, "profiles");
-    const querySnapshot = await getDocs(profilesRef);
+    const q = query(profilesRef, where("studentId", "==", studentId));
+    const querySnapshot = await getDocs(q);
 
-    const existingProfile = querySnapshot.docs.find(doc => doc.data().studentId === studentId);
-
-    if (existingProfile) {
+    if (!querySnapshot.empty) {
         alert("A profile with this Student ID already exists.");
         return;
     }
@@ -105,6 +114,7 @@ async function addProfile() {
 
     try {
         // Add profile to Firestore
+        showLoading();
         await addDoc(collection(db, "profiles"), {
             studentId,
             name,
@@ -118,6 +128,7 @@ async function addProfile() {
         console.error("Error adding profile: ", error);
         alert("Failed to add profile.");
     }
+    hideLoading();
 }
 
 // Add profile details to the table
@@ -139,82 +150,65 @@ async function updateDatalist() {
     const querySnapshot = await getDocs(profilesRef);
 
     querySnapshot.forEach((doc) => {
-        const profile = doc.data();
+        const { name } = doc.data();
         const option = document.createElement('option');
-        option.value = profile.name;
+        option.value = name;
         datalist.appendChild(option);
     });
 }
 
-// Search for profiles by name in Firestore and display in form
+// Search profiles based on input
 async function searchProfiles() {
-    const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-    
-    // Reference to the 'profiles' collection in Firestore
+    const queryText = document.getElementById('search-input').value.toLowerCase();
     const profilesRef = collection(db, "profiles");
     const querySnapshot = await getDocs(profilesRef);
 
-    let profileFound = false;
-
-    // Clear the datalist and add matching profiles
-    const datalist = document.getElementById('profiles-list');
-    datalist.innerHTML = ''; 
-
+    const matches = [];
     querySnapshot.forEach((doc) => {
-        const profile = doc.data();
-        const profileName = profile.name.toLowerCase();
-        
-        if (profileName.startsWith(searchQuery)) {
-            const option = document.createElement('option');
-            option.value = profile.name;
-            datalist.appendChild(option);
-
-            // Optionally, display the first match in the form
-            if (!profileFound) {
-                profileFound = true;
-                displayProfileInForm(profile.studentId, profile.name, profile.address, profile.imageUrl);
-            }
+        const data = doc.data();
+        if (data.name.toLowerCase().includes(queryText)) {
+            matches.push(data);
         }
     });
 
-    if (!profileFound) {
-        clearProfileForm();
-    }
+    displaySearchResults(matches);
 }
 
-// Function to display profile data in the form fields
-function displayProfileInForm(studentId, name, address, imageUrl) {
-    document.getElementById('student-id').value = studentId;
-    document.getElementById('name').value = name;
-    document.getElementById('address').value = address;
+// Display search results in the table
+function displaySearchResults(profiles) {
+    const table = document.getElementById('profiles-list-body');
+    table.innerHTML = ''; // Clear existing rows
 
-    if (imageUrl) {
-        const imagePreview = document.getElementById('image-preview');
-        const uploadText = document.getElementById('upload-text');
-        imagePreview.src = imageUrl;
-        imagePreview.style.display = 'block';
-        uploadText.style.display = 'none';
-    }
+    profiles.forEach(profile => {
+        addProfileToTable(profile.studentId, profile.name, profile.address, profile.imageUrl);
+    });
 }
 
-// Function to clear the form fields if no profile is found
-function clearProfileForm() {
-    document.getElementById('student-id').value = '';
-    document.getElementById('name').value = '';
-    document.getElementById('address').value = '';
-    document.getElementById('image-preview').style.display = 'none';
-    document.getElementById('upload-text').style.display = 'block';
-}
-
-// Placeholder for update profile functionality
-async function updateProfile() {
-    alert("Update feature not yet implemented.");
-}
-
-// Function to handle submission of all profiles
+// Submit all profiles
 async function submitAllProfiles() {
-    alert("Profiles submitted successfully!");
+    showLoading(); // Show the spinner before starting
+    try {
+        const profilesRef = collection(db, "profiles");
+        const querySnapshot = await getDocs(profilesRef);
+
+        const profiles = [];
+        querySnapshot.forEach((doc) => {
+            profiles.push(doc.data());
+        });
+
+        // Log or process the profiles data (this could be sending data to an API, etc.)
+        console.log("Submitting profiles:", profiles);
+
+        alert("All profiles have been submitted successfully!");
+    } catch (error) {
+        console.error("Error submitting profiles: ", error);
+        alert("Failed to submit profiles.");
+    } finally {
+        hideLoading(); // Hide the spinner after the operation is done
+    }
 }
 
-// Initialize the datalist on page load
-updateDatalist();
+// Update profile function (placeholder for implementation)
+async function updateProfile() {
+    alert('Update profile functionality is not yet implemented.');
+}

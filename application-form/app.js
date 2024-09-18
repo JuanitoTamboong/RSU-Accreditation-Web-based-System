@@ -26,23 +26,30 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Authentication state listener
-onAuthStateChanged(auth, (user) => {
-    if (!user) {
-        window.location.href = "../index.html";
-    }
-});
+// Function to show the loading spinner
+function showLoading() {
+    document.getElementById("loading").style.display = "flex";
+}
+
+// Function to hide the loading spinner
+function hideLoading() {
+    document.getElementById("loading").style.display = "none";
+}
 
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
+    // Show loading spinner
+    showLoading();
+
     const user = auth.currentUser;
     console.log('Current user:', user);
-    
+
     if (!user) {
         console.log('User not authenticated.');
         alert('User not authenticated. Please log in.');
+        hideLoading(); // Hide spinner if there's an issue
         return;
     }
 
@@ -120,5 +127,8 @@ document.getElementById('application-form').addEventListener('submit', async fun
     } catch (error) {
         console.error('Error submitting form:', error.message);
         alert('Failed to submit the form. Please try again.');
+    } finally {
+        // Hide loading spinner after everything is done (success or failure)
+        hideLoading();
     }
 });
