@@ -1,3 +1,4 @@
+/* Global Styles */
 * {
   margin: 0;
   padding: 0;
@@ -14,6 +15,7 @@
   --hover-color: #3aba47;
   --spinner-color: #3aba478a;
 }
+
 /* Loading Spinner Styles */
 .loading-spinner {
   position: fixed; 
@@ -28,7 +30,7 @@
 
 .spinner {
   border: 12px solid rgba(0, 0, 0, 0.1);
-  border-left: 12px solid var(--spinner-color); /* Set a default spinner color */
+  border-left: 12px solid var(--spinner-color);
   border-radius: 50%;
   width: 80px;
   height: 80px;
@@ -40,7 +42,7 @@
   100% { transform: rotate(360deg); }
 }
 
-
+/* Navigation Bar Styles */
 .nav-bar {
   width: 100%;
   display: flex;
@@ -48,6 +50,7 @@
   background-color: var(--signIn-Color);
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .top-nav {
@@ -58,6 +61,7 @@
 .top-nav h2 {
   padding-left: 20px;
   color: var(--font-color);
+  font-size: 24px;
 }
 
 .top-nav img {
@@ -65,6 +69,7 @@
   object-fit: contain;
 }
 
+/* Search Bar Styles */
 .search-bar {
   width: 30%;
   display: flex;
@@ -85,12 +90,43 @@
 
 .search-bar input {
   width: 100%;
-  padding: 10px 40px 10px 10px; /* Adjusted padding for icon alignment */
+  padding: 10px 40px 10px 10px;
   border-radius: 5px;
   border: none;
   outline: none;
 }
 
+/* Dropdown Styles */
+#dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 90%;
+  border: 1px solid var(--box-shadow);
+  background-color: var(--font-color);
+  max-height: 200px; 
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  border-radius: 5px;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  color: var(--signIn-Color);
+}
+
+.dropdown-item:hover {
+  background-color: var(--box-shadow);
+  color: var(--font-color);
+}
+
+#search-input {
+  padding-right: 40px;
+}
+
+/* Container Styles */
 .container {
   max-width: 1200px;
   margin: 20px auto;
@@ -99,21 +135,21 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
- 
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
+/* List Officers Styles */
 .list-officers {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   background-color: var(--font-color);
   box-shadow: inset 1px 1px 10px var(--box-shadow);
-  padding: 50px;
+  padding: 20px;
   border-radius: 10px;
   box-sizing: border-box;
-  margin-bottom: 20px;
-  height: auto; 
-  width: 50%;
+  flex: 1;
 }
 
 .student-profile h3 {
@@ -164,6 +200,7 @@ label.upload-label span {
   text-align: center;
 }
 
+/* Student ID Styles */
 .student-id {
   margin-top: 25px;
   display: flex;
@@ -183,6 +220,7 @@ label.upload-label span {
   box-sizing: border-box;
 }
 
+/* Student Info Styles */
 .student-info {
   display: flex;
   flex-direction: column;
@@ -202,25 +240,25 @@ label.upload-label span {
   box-sizing: border-box;
 }
 
+/* Add/Update Button Styles */
 .add-update {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 57px;
 }
 
 .add-update button {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   color: var(--font-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
   text-align: center;
-  margin-top: 40px;
 }
 
 .add-update button i {
@@ -229,31 +267,34 @@ label.upload-label span {
 
 .add-update .update-btn {
   background-color: var(--box-shadow);
-  
 }
 
 .add-update .add-btn {
   background-color: var(--button);
- 
 }
 
 .add-update button:hover {
   background-color: var(--hover-color);
 }
 
+/* Profiles Container Styles */
 .profiles-container {
   box-shadow: inset 1px 1px 10px var(--box-shadow);
   padding: 20px;
   border: 1px solid var(--box-shadow);
   border-radius: 10px;
-  margin-left: 50px;
-  width: 50%;
+  width: 100%;
+  max-width: 600px;
+  max-height: 350px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .table-wrapper {
-  max-height: 300px;
+  flex: 1;
   overflow-y: auto;
-  margin-bottom: 20px;
+  max-height: 100%; /* Ensure the table-wrapper scrolls */
 }
 
 .profiles-container h3 {
@@ -264,6 +305,7 @@ label.upload-label span {
 .profiles-container table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto; /* Adjusts to content */
 }
 
 .profiles-container th,
@@ -271,6 +313,7 @@ label.upload-label span {
   border: 1px solid var(--box-shadow);
   padding: 8px;
   text-align: left;
+  word-wrap: break-word; /* Handle long words */
 }
 
 .profiles-container th {
@@ -282,6 +325,7 @@ label.upload-label span {
   background-color: #f9f9f9;
 }
 
+/* Submit Button Styles */
 .submit-btn {
   margin-top: 10px;
   display: flex;
@@ -306,46 +350,53 @@ label.upload-label span {
   background-color: var(--hover-color);
 }
 
+/* Responsive Design */
 @media (max-width: 1200px) {
-  .container{
-  gap: 30px;
-    
-   }
+  .container {
+    flex-direction: column;
+  }
+
   .profiles-container {
-      margin-left: 0;
+    margin-left: 0;
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
-.container{
- flex-direction: column;
-}
+  .container {
+    flex-direction: column;
+  }
+
   .nav-bar {
-      flex-direction: column;
-      align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .search-bar {
-      padding-top: 20px;
-      width: 100%;
+    padding-top: 20px;
+    width: 100%;
   }
 
-  h2 {
-      font-size: 20px;
+  #dropdown-list {
+    width: 87%;
+  }
+
+  .top-nav h2 {
+    font-size: 20px;
   }
 
   .list-officers {
-      flex-direction: column;
-      width: 100%;
+    flex-direction: column;
+    width: 100%;
   }
-  .student-info{
+
+  .student-info {
     margin: 0;
   }
 
   .profiles-container {
-      margin-left: 0;
-      width: 100%;
-    
+    margin-left: 0;
+    width: 100%;
   }
 
   .add-update {
@@ -353,9 +404,10 @@ label.upload-label span {
   }
 
   .add-update button {
-      margin: 0;
+    margin: 0;
   }
+
   th, td {
-      font-size: 11px;
+    font-size: 11px;
   }
 }

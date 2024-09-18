@@ -1,6 +1,6 @@
 // Firebase imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, query, where, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
@@ -16,9 +16,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const auth = getAuth();
+
+let tempProfiles = []; // Global variable to keep track of added profiles
 
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
@@ -27,12 +29,12 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Function to show the loading spinner
+// Show the loading spinner
 function showLoading() {
     document.getElementById("loading").style.display = "flex";
 }
 
-// Function to hide the loading spinner
+// Hide the loading spinner
 function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
@@ -97,13 +99,56 @@ async function addProfile() {
         return;
     }
 
-    // Check for duplicate Student IDs
-    const profilesRef = collection(db, "profiles");
-    const q = query(profilesRef, where("studentId", "==", studentId));
-    const querySnapshot = await getDocs(q);
+    // Check for duplicate Student IDs in the temporary table
+    if (tempProfiles.some(profile => profile.studentId === studentId)) {
+        alert("A profile with this Student ID already exists in the temporary table.");
+        return;
+    }
 
-    if (!querySnapshot.empty) {
-        alert("A profile with this Student ID already exists.");
+    let imageUrl = null;
+    if (file) {
+        imageUrl = await handleImageUpload({ target: { files: [file] } });
+    }
+
+    // Add profile to the temporary list
+    const newProfile = { studentId, name, address, imageUrl };
+    tempProfiles.push(newProfile);
+
+    // Update the profiles-container with the new profile
+    updateTable(tempProfiles);
+
+    alert("Profile added successfully!");
+    clearStudentProfileForm(); // Clear the form after adding
+}
+
+// Update the table with the profiles from the temporary list
+function updateTable(profiles) {
+    const tableBody = document.querySelector('table tbody');
+    tableBody.innerHTML = ''; // Clear the table
+
+    profiles.forEach(profile => {
+        const { studentId, name, address, imageUrl } = profile;
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td><img src="${imageUrl || ''}" alt="${name}" style="width: 100px; height: auto;"></td>
+            <td>${studentId}</td>
+            <td>${name}</td>
+            <td>${address}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Update an existing profile
+async function updateProfile() {
+    const studentId = document.getElementById('student-id').value;
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const file = document.getElementById('img').files[0];
+
+    if (!studentId || !name || !address) {
+        alert("Please fill in all fields.");
         return;
     }
 
@@ -113,102 +158,146 @@ async function addProfile() {
     }
 
     try {
-        // Add profile to Firestore
         showLoading();
-        await addDoc(collection(db, "profiles"), {
-            studentId,
+
+        const profilesRef = collection(db, "profiles");
+        const q = query(profilesRef, where("studentId", "==", studentId));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            alert("Profile not found.");
+            return;
+        }
+
+        const docId = querySnapshot.docs[0].id;
+        const profileDocRef = doc(db, "profiles", docId);
+
+        await updateDoc(profileDocRef, {
             name,
             address,
-            imageUrl
+            ...(imageUrl && { imageUrl })
         });
-        alert("Profile added successfully!");
-        addProfileToTable(studentId, name, address, imageUrl);
-        updateDatalist();
+
+        alert("Profile updated successfully!");
+        clearStudentProfileForm(); // Clear form after update
+        await updateTable(docId); // Update the table with the updated profile
     } catch (error) {
-        console.error("Error adding profile: ", error);
-        alert("Failed to add profile.");
+        console.error("Error updating profile: ", error);
+        alert("Failed to update profile.");
+    } finally {
+        hideLoading();
     }
-    hideLoading();
 }
 
-// Add profile details to the table
-function addProfileToTable(studentId, name, address, imageUrl) {
-    const table = document.getElementById('profiles-list-body');
-    const row = table.insertRow();
-    row.insertCell().innerHTML = imageUrl ? `<img src="${imageUrl}" alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover;">` : 'No Image';
-    row.insertCell().innerText = studentId;
-    row.insertCell().innerText = name;
-    row.insertCell().innerText = address;
-}
+// Search and display profile in the dropdown
+async function searchProfiles() {
+    const searchValue = document.getElementById('search-input').value.toLowerCase();
+    const dropdown = document.getElementById('dropdown-list');
+    dropdown.innerHTML = ''; // Clear previous results
 
-// Update the datalist with profile names
-async function updateDatalist() {
-    const datalist = document.getElementById('profiles-list');
-    datalist.innerHTML = ''; // Clear existing options
+    if (searchValue.length === 0) {
+        dropdown.style.display = 'none'; // Hide dropdown if search input is empty
+        return;
+    }
 
     const profilesRef = collection(db, "profiles");
     const querySnapshot = await getDocs(profilesRef);
 
+    // Dynamically populate dropdown with matching names
     querySnapshot.forEach((doc) => {
         const { name } = doc.data();
-        const option = document.createElement('option');
-        option.value = name;
-        datalist.appendChild(option);
-    });
-}
-
-// Search profiles based on input
-async function searchProfiles() {
-    const queryText = document.getElementById('search-input').value.toLowerCase();
-    const profilesRef = collection(db, "profiles");
-    const querySnapshot = await getDocs(profilesRef);
-
-    const matches = [];
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.name.toLowerCase().includes(queryText)) {
-            matches.push(data);
+        if (name.toLowerCase().includes(searchValue)) {
+            const option = document.createElement('div');
+            option.classList.add('dropdown-item');
+            option.textContent = name;
+            option.onclick = () => selectProfile(name); // Attach click event to select profile
+            dropdown.appendChild(option);
         }
     });
 
-    displaySearchResults(matches);
+    dropdown.style.display = dropdown.childElementCount > 0 ? 'block' : 'none'; // Show or hide dropdown
 }
 
-// Display search results in the table
-function displaySearchResults(profiles) {
-    const table = document.getElementById('profiles-list-body');
-    table.innerHTML = ''; // Clear existing rows
+// Handle selection of a profile from the dropdown
+async function selectProfile(selectedName) {
+    const profilesRef = collection(db, "profiles");
+    const querySnapshot = await getDocs(profilesRef);
 
-    profiles.forEach(profile => {
-        addProfileToTable(profile.studentId, profile.name, profile.address, profile.imageUrl);
+    // Clear the "Student Profile" section
+    clearStudentProfileForm();
+
+    // Populate form with the selected profile's details
+    querySnapshot.forEach((doc) => {
+        const { studentId, name, address, imageUrl } = doc.data();
+        if (name === selectedName) {
+            document.getElementById('student-id').value = studentId;
+            document.getElementById('name').value = name;
+            document.getElementById('address').value = address;
+
+            const preview = document.getElementById('image-preview');
+            const uploadText = document.getElementById('upload-text');
+
+            if (imageUrl) {
+                preview.src = imageUrl;
+                preview.style.display = 'block';
+                uploadText.style.display = 'none';
+            } else {
+                preview.style.display = 'none';
+                uploadText.style.display = 'block';
+            }
+        }
     });
+
+    document.getElementById('search-input').value = ''; // Clear search input
+    document.getElementById('dropdown-list').style.display = 'none'; // Hide dropdown
 }
 
-// Submit all profiles
+// Clear the form for adding/updating profiles
+function clearStudentProfileForm() {
+    document.getElementById('student-id').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('address').value = '';
+    document.getElementById('image-preview').style.display = 'none';
+    document.getElementById('upload-text').style.display = 'block';
+}
+
+// Submit all profiles from the temporary list to Firestore
 async function submitAllProfiles() {
-    showLoading(); // Show the spinner before starting
     try {
-        const profilesRef = collection(db, "profiles");
-        const querySnapshot = await getDocs(profilesRef);
+        showLoading();
 
-        const profiles = [];
-        querySnapshot.forEach((doc) => {
-            profiles.push(doc.data());
-        });
+        for (const profile of tempProfiles) {
+            const { studentId, name, address, imageUrl } = profile;
 
-        // Log or process the profiles data (this could be sending data to an API, etc.)
-        console.log("Submitting profiles:", profiles);
+            // Check for duplicate Student IDs in Firestore
+            const profilesRef = collection(db, "profiles");
+            const q = query(profilesRef, where("studentId", "==", studentId));
+            const querySnapshot = await getDocs(q);
 
-        alert("All profiles have been submitted successfully!");
+            if (!querySnapshot.empty) {
+                console.error(`Profile with Student ID ${studentId} already exists in Firestore.`);
+                continue; // Skip this profile if it already exists
+            }
+
+            // Add profile to Firestore
+            try {
+                await addDoc(collection(db, "profiles"), { studentId, name, address, imageUrl });
+            } catch (error) {
+                console.error("Error adding profile to Firestore: ", error);
+                alert("Failed to add some profiles to Firestore.");
+                return;
+            }
+        }
+
+        // Clear the temporary profiles list and table
+        tempProfiles = [];
+        updateTable(tempProfiles); // Clear the table
+
+        alert("All profiles submitted successfully!");
     } catch (error) {
-        console.error("Error submitting profiles: ", error);
+        console.error("Error submitting all profiles: ", error);
         alert("Failed to submit profiles.");
     } finally {
-        hideLoading(); // Hide the spinner after the operation is done
+        hideLoading();
     }
-}
-
-// Update profile function (placeholder for implementation)
-async function updateProfile() {
-    alert('Update profile functionality is not yet implemented.');
 }
