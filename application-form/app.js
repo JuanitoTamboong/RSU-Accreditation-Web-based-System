@@ -21,12 +21,8 @@ const auth = getAuth();
 
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
-    console.log('Auth state changed:', user);
     if (!user) {
-        console.log('User is not authenticated. Redirecting to login page.');
-        window.location.href = "../index.html"; // Redirect to login page if not authenticated
-    } else {
-        console.log('User is authenticated:', user.uid);
+        window.location.href = "../index.html";
     }
 });
 
