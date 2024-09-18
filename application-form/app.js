@@ -26,6 +26,13 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// Authentication state listener
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = "../index.html";
+    }
+});
+
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async function (event) {
     event.preventDefault();
