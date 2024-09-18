@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="list-officers.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Student Profile</title>
-    <script type="module" src="app.js" defer></script>
     <script type="module" src="officers.js" defer></script>
 </head>
 <body>
@@ -18,8 +17,11 @@
             <h2>List of Current Officers</h2>
         </div>
         <div class="search-bar">
-            <input type="search" id="search-input" placeholder="Search officers (e.g Dela Cruz, Juan)">
+            <input type="search" id="search-input" placeholder="Search officers (e.g Dela Cruz, Juan)" list="profiles-list">
             <i class='bx bx-search'></i>
+            <datalist id="profiles-list">
+                <!-- Options will be populated here dynamically -->
+            </datalist>
         </div>
     </div>
 
@@ -66,7 +68,7 @@
                             <th>Address</th>
                         </tr>
                     </thead>
-                    <tbody id="profiles-list">
+                    <tbody id="profiles-list-body">
                         <!-- Profiles will be added here dynamically -->
                     </tbody>
                 </table>

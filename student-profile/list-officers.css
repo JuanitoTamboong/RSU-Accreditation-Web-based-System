@@ -48,18 +48,18 @@
 
 .search-bar i {
   position: absolute;
-  right: 0;
-  font-size: 15px;
+  right: 0; 
+  font-size: 20px;
   color: var(--font-color);
   background-color: var(--button);
-  padding: 11px;
+  padding: 8px;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px 10px 10px 40px;
+  padding: 10px 40px 10px 10px; /* Adjusted padding for icon alignment */
   border-radius: 5px;
   border: none;
   outline: none;
@@ -319,6 +319,7 @@ label.upload-label span {
   .profiles-container {
       margin-left: 0;
       width: 100%;
+    
   }
 
   .add-update {
