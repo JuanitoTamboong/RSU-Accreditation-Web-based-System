@@ -263,6 +263,11 @@ function clearStudentProfileForm() {
 
 // Submit all profiles from the temporary list to Firestore
 async function submitAllProfiles() {
+    if (tempProfiles.length === 0) {
+        alert("No profiles to submit.");
+        return; // Exit the function if there are no profiles to submit
+    }
+
     try {
         showLoading();
 
