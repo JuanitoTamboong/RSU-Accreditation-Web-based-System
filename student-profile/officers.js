@@ -1,6 +1,6 @@
 // Firebase imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, query, where, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
@@ -20,7 +20,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth();
 
-let tempProfiles = []; // Global variable to keep track of added profiles
+let tempProfiles = JSON.parse(localStorage.getItem('tempProfiles')) || []; // Load from localStorage or initialize empty array
 
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
@@ -45,6 +45,20 @@ document.querySelector('.update-btn').addEventListener('click', updateProfile);
 document.querySelector('.add-btn').addEventListener('click', addProfile);
 document.querySelector('.submit-btn button').addEventListener('click', submitAllProfiles);
 document.getElementById('search-input').addEventListener('input', searchProfiles);
+document.getElementById('student-id').addEventListener('input',studentIdNo);
+
+//this is for student ID no# format 
+ async function studentIdNo(event) {
+    let input = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+    if (input.length > 3) {
+        input = input.substring(0, 3) + '-' + input.substring(3);
+    }
+    if (input.length > 8) {
+        input = input.substring(0, 8) + '-' + input.substring(8);
+    }
+    event.target.value = input; // Set the formatted value back to the input
+};
+
 
 // Handle image upload and preview
 async function handleImageUpload(event) {
@@ -114,6 +128,9 @@ async function addProfile() {
     const newProfile = { studentId, name, address, imageUrl };
     tempProfiles.push(newProfile);
 
+    // Save to localStorage
+    localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
+
     // Update the profiles-container with the new profile
     updateTable(tempProfiles);
 
@@ -180,7 +197,15 @@ async function updateProfile() {
 
         alert("Profile updated successfully!");
         clearStudentProfileForm(); // Clear form after update
-        await updateTable(docId); // Update the table with the updated profile
+
+        // Update the temporary profiles list and table
+        const updatedProfile = { studentId, name, address, imageUrl };
+        tempProfiles = tempProfiles.map(profile => profile.studentId === studentId ? updatedProfile : profile);
+
+        // Save to localStorage
+        localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
+
+        updateTable(tempProfiles);
     } catch (error) {
         console.error("Error updating profile: ", error);
         alert("Failed to update profile.");
@@ -294,9 +319,12 @@ async function submitAllProfiles() {
             }
         }
 
-        // Clear the temporary profiles list and table
+        // Clear the temporary profiles list and localStorage
         tempProfiles = [];
-        updateTable(tempProfiles); // Clear the table
+        localStorage.removeItem('tempProfiles'); // Clear localStorage
+
+        // Update the table
+        updateTable(tempProfiles);
 
         alert("All profiles submitted successfully!");
     } catch (error) {
@@ -306,3 +334,8 @@ async function submitAllProfiles() {
         hideLoading();
     }
 }
+
+// Load profiles and update table on page load
+window.onload = function() {
+    updateTable(tempProfiles);
+};

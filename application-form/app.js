@@ -26,6 +26,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+
 // Function to show the loading spinner
 function showLoading() {
     document.getElementById("loading").style.display = "flex";
@@ -36,6 +37,47 @@ function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
 
+// Function to save form data to localStorage
+function saveFormData() {
+    const formData = {
+        representativeName: document.getElementById('representative-name').value,
+        representativePosition: document.getElementById('representative-position').value,
+        schoolYear: document.getElementById('school-year').value,
+        studentCourse: document.getElementById('course').value,
+        organizationName: document.getElementById('organization-name').value,
+        accreditationType: document.getElementById('accreditation-type').value,
+        emailAddress: document.getElementById('email-address').value,
+        dateFiling: document.getElementById('date-filing').value
+    };
+
+    localStorage.setItem('applicationFormData', JSON.stringify(formData));
+}
+
+// Function to load form data from localStorage
+function loadFormData() {
+    const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
+    if (savedData) {
+        document.getElementById('representative-name').value = savedData.representativeName || '';
+        document.getElementById('representative-position').value = savedData.representativePosition || '';
+        document.getElementById('school-year').value = savedData.schoolYear || '';
+        document.getElementById('course').value = savedData.studentCourse || '';
+        document.getElementById('organization-name').value = savedData.organizationName || '';
+        document.getElementById('accreditation-type').value = savedData.accreditationType || '';
+        document.getElementById('email-address').value = savedData.emailAddress || '';
+        document.getElementById('date-filing').value = savedData.dateFiling || '';
+    }
+}
+
+// Load the form data when the page loads
+window.addEventListener('load', function() {
+    loadFormData();
+});
+
+// Save form data to localStorage on input change
+document.querySelectorAll('#application-form input, #application-form select').forEach(input => {
+    input.addEventListener('input', saveFormData);
+});
+
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -44,16 +86,11 @@ document.getElementById('application-form').addEventListener('submit', async fun
     showLoading();
 
     const user = auth.currentUser;
-    console.log('Current user:', user);
-
     if (!user) {
-        console.log('User not authenticated.');
         alert('User not authenticated. Please log in.');
-        hideLoading(); // Hide spinner if there's an issue
+        hideLoading(); 
         return;
     }
-
-    console.log('Form submission with user:', user.uid);
 
     // Get form values
     const representativeName = document.getElementById('representative-name').value;
@@ -65,14 +102,8 @@ document.getElementById('application-form').addEventListener('submit', async fun
     const emailAddress = document.getElementById('email-address').value;
     const dateFiling = document.getElementById('date-filing').value;
     const supportingDocuments = document.getElementById('supporting-documents').files;
-    const imgFile = document.getElementById('img').files[0];
 
-    console.log('Form values:', {
-        representativeName, representativePosition, schoolYear, studentCourse,
-        organizationName, accreditationType, emailAddress, dateFiling
-    });
-
-    // Prepare data to be stored in Firestore
+    // Prepare data for Firestore
     const formData = {
         representativeName,
         representativePosition,
@@ -82,44 +113,28 @@ document.getElementById('application-form').addEventListener('submit', async fun
         accreditationType,
         emailAddress,
         dateFiling,
-        documentURLs: [], // Array to hold document URLs
-        imageURL: '', // URL for the image
+        documentURLs: [],
         timestamp: serverTimestamp()
     };
 
     try {
-        // Add data to Firestore (without document URLs initially)
-        console.log('Adding document to Firestore');
+        // Add form data to Firestore
         const docRef = await addDoc(collection(db, 'accreditation-applications'), formData);
-        console.log('Document added with ID:', docRef.id);
 
-        // Handle file upload for supporting documents
+        // Handle file uploads for supporting documents
         const documentURLs = [];
         for (const file of supportingDocuments) {
             const storageRef = ref(storage, `documents/${file.name}`);
-            console.log('Uploading document:', file.name);
             await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(storageRef);
-            console.log('Document URL:', downloadURL);
             documentURLs.push(downloadURL);
         }
 
-        // Handle file upload for the image
-        if (imgFile) {
-            const imgStorageRef = ref(storage, `images/${imgFile.name}`);
-            console.log('Uploading image:', imgFile.name);
-            await uploadBytes(imgStorageRef, imgFile);
-            const imgDownloadURL = await getDownloadURL(imgStorageRef);
-            console.log('Image URL:', imgDownloadURL);
-            formData.imageURL = imgDownloadURL;
-        }
+        // Update Firestore document with document URLs
+        await updateDoc(docRef, { documentURLs });
 
-        // Update Firestore document with the URLs of the uploaded files
-        console.log('Updating Firestore document with URLs');
-        await updateDoc(docRef, { documentURLs, imageURL: formData.imageURL });
-
-        // Store form data in localStorage
-        localStorage.setItem('applicationFormData', JSON.stringify(formData));
+        // Clear the localStorage after successful submission
+        localStorage.removeItem('applicationFormData');
 
         // Redirect to the next page
         window.location.href = "../student-profile/list-officers.html";
@@ -128,7 +143,6 @@ document.getElementById('application-form').addEventListener('submit', async fun
         console.error('Error submitting form:', error.message);
         alert('Failed to submit the form. Please try again.');
     } finally {
-        // Hide loading spinner after everything is done (success or failure)
         hideLoading();
     }
 });
