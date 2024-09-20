@@ -1,6 +1,6 @@
 // Firebase imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, query, where, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
@@ -20,13 +20,19 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth();
 
-let tempProfiles = JSON.parse(localStorage.getItem('tempProfiles')) || []; // Load from localStorage or initialize empty array
+let tempProfiles = JSON.parse(localStorage.getItem('tempProfiles')) || [];
 
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         window.location.href = "../index.html";
     }
+});
+
+// Load profiles from localStorage on page load
+window.addEventListener('load', function() {
+    tempProfiles = JSON.parse(localStorage.getItem('tempProfiles')) || [];
+    updateTable(tempProfiles);
 });
 
 // Show the loading spinner
@@ -39,26 +45,24 @@ function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
 
-// Event listeners for profile-related buttons
+// Event listeners
 document.getElementById('img').addEventListener('change', handleImageUpload);
-document.querySelector('.update-btn').addEventListener('click', updateProfile);
 document.querySelector('.add-btn').addEventListener('click', addProfile);
 document.querySelector('.submit-btn button').addEventListener('click', submitAllProfiles);
 document.getElementById('search-input').addEventListener('input', searchProfiles);
-document.getElementById('student-id').addEventListener('input',studentIdNo);
+document.getElementById('student-id').addEventListener('input', studentIdNo);
 
-//this is for student ID no# format 
- async function studentIdNo(event) {
-    let input = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+// Student ID formatting
+function studentIdNo(event) {
+    let input = event.target.value.replace(/\D/g, '');
     if (input.length > 3) {
         input = input.substring(0, 3) + '-' + input.substring(3);
     }
     if (input.length > 8) {
         input = input.substring(0, 8) + '-' + input.substring(8);
     }
-    event.target.value = input; // Set the formatted value back to the input
-};
-
+    event.target.value = input;
+}
 
 // Handle image upload and preview
 async function handleImageUpload(event) {
@@ -74,18 +78,9 @@ async function handleImageUpload(event) {
             uploadText.style.display = 'none';
         };
         reader.readAsDataURL(file);
-
-        try {
-            return await uploadImage(file);
-        } catch (error) {
-            console.error('Failed to upload image:', error);
-            alert('Failed to upload image.');
-            return null;
-        }
     } else {
         preview.style.display = 'none';
         uploadText.style.display = 'block';
-        return null;
     }
 }
 
@@ -101,44 +96,48 @@ async function uploadImage(file) {
     }
 }
 
-// Add a new profile to Firestore
+// Add a new profile to the temporary list
 async function addProfile() {
     const studentId = document.getElementById('student-id').value;
     const name = document.getElementById('name').value;
     const address = document.getElementById('address').value;
     const file = document.getElementById('img').files[0];
 
-    if (!studentId || !name || !address) {
-        alert("Please fill in all fields.");
+    // Check if all fields are filled, including the image
+    if (!studentId || !name || !address || !file) {
+        alert("Please fill in all fields, including the image upload.");
         return;
     }
 
-    // Check for duplicate Student IDs in the temporary table
+    // Validate Student ID format
+    const idFormat = /^\d{3}-\d{4}-\d{6}$/; // Adjust this pattern based on your ID format
+    if (!idFormat.test(studentId)) {
+        alert("Student ID are not complete");
+        return;
+    }
+
+    // Check for duplicate Student ID in temporary profiles
     if (tempProfiles.some(profile => profile.studentId === studentId)) {
         alert("A profile with this Student ID already exists in the temporary table.");
         return;
     }
 
-    let imageUrl = null;
-    if (file) {
-        imageUrl = await handleImageUpload({ target: { files: [file] } });
+    // Upload image to Firebase
+    const imageUrl = await uploadImage(file);
+    if (!imageUrl) {
+        alert("Failed to upload image. Please try again.");
+        return;
     }
 
-    // Add profile to the temporary list
     const newProfile = { studentId, name, address, imageUrl };
     tempProfiles.push(newProfile);
-
-    // Save to localStorage
     localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
-
-    // Update the profiles-container with the new profile
     updateTable(tempProfiles);
-
     alert("Profile added successfully!");
-    clearStudentProfileForm(); // Clear the form after adding
+    clearStudentProfileForm();
 }
 
-// Update the table with the profiles from the temporary list
+// Update the table with the profiles
 function updateTable(profiles) {
     const tableBody = document.querySelector('table tbody');
     tableBody.innerHTML = ''; // Clear the table
@@ -157,64 +156,7 @@ function updateTable(profiles) {
     });
 }
 
-// Update an existing profile
-async function updateProfile() {
-    const studentId = document.getElementById('student-id').value;
-    const name = document.getElementById('name').value;
-    const address = document.getElementById('address').value;
-    const file = document.getElementById('img').files[0];
-
-    if (!studentId || !name || !address) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
-    let imageUrl = null;
-    if (file) {
-        imageUrl = await handleImageUpload({ target: { files: [file] } });
-    }
-
-    try {
-        showLoading();
-
-        const profilesRef = collection(db, "profiles");
-        const q = query(profilesRef, where("studentId", "==", studentId));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-            alert("Profile not found.");
-            return;
-        }
-
-        const docId = querySnapshot.docs[0].id;
-        const profileDocRef = doc(db, "profiles", docId);
-
-        await updateDoc(profileDocRef, {
-            name,
-            address,
-            ...(imageUrl && { imageUrl })
-        });
-
-        alert("Profile updated successfully!");
-        clearStudentProfileForm(); // Clear form after update
-
-        // Update the temporary profiles list and table
-        const updatedProfile = { studentId, name, address, imageUrl };
-        tempProfiles = tempProfiles.map(profile => profile.studentId === studentId ? updatedProfile : profile);
-
-        // Save to localStorage
-        localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
-
-        updateTable(tempProfiles);
-    } catch (error) {
-        console.error("Error updating profile: ", error);
-        alert("Failed to update profile.");
-    } finally {
-        hideLoading();
-    }
-}
-
-// Search and display profile in the dropdown
+// Search profiles in Firestore
 async function searchProfiles() {
     const searchValue = document.getElementById('search-input').value.toLowerCase();
     const dropdown = document.getElementById('dropdown-list');
@@ -225,53 +167,47 @@ async function searchProfiles() {
         return;
     }
 
-    const profilesRef = collection(db, "profiles");
-    const querySnapshot = await getDocs(profilesRef);
+    const profilesRef = collection(db, "student-org-applications");
+    const q = query(profilesRef, where("name", ">=", searchValue), where("name", "<=", searchValue + '\uf8ff'));
+    const querySnapshot = await getDocs(q);
 
-    // Dynamically populate dropdown with matching names
     querySnapshot.forEach((doc) => {
         const { name } = doc.data();
-        if (name.toLowerCase().includes(searchValue)) {
-            const option = document.createElement('div');
-            option.classList.add('dropdown-item');
-            option.textContent = name;
-            option.onclick = () => selectProfile(name); // Attach click event to select profile
-            dropdown.appendChild(option);
-        }
+        const option = document.createElement('div');
+        option.classList.add('dropdown-item');
+        option.textContent = name;
+        option.onclick = () => selectProfile(doc.id);
+        dropdown.appendChild(option);
     });
 
     dropdown.style.display = dropdown.childElementCount > 0 ? 'block' : 'none'; // Show or hide dropdown
 }
 
 // Handle selection of a profile from the dropdown
-async function selectProfile(selectedName) {
-    const profilesRef = collection(db, "profiles");
-    const querySnapshot = await getDocs(profilesRef);
+async function selectProfile(selectedId) {
+    const profileRef = doc(db, "student-org-applications", selectedId);
+    const profileSnapshot = await getDoc(profileRef);
 
-    // Clear the "Student Profile" section
     clearStudentProfileForm();
 
-    // Populate form with the selected profile's details
-    querySnapshot.forEach((doc) => {
-        const { studentId, name, address, imageUrl } = doc.data();
-        if (name === selectedName) {
-            document.getElementById('student-id').value = studentId;
-            document.getElementById('name').value = name;
-            document.getElementById('address').value = address;
+    if (profileSnapshot.exists()) {
+        const { studentId, name, address, imageUrl } = profileSnapshot.data();
+        document.getElementById('student-id').value = studentId;
+        document.getElementById('name').value = name;
+        document.getElementById('address').value = address;
 
-            const preview = document.getElementById('image-preview');
-            const uploadText = document.getElementById('upload-text');
+        const preview = document.getElementById('image-preview');
+        const uploadText = document.getElementById('upload-text');
 
-            if (imageUrl) {
-                preview.src = imageUrl;
-                preview.style.display = 'block';
-                uploadText.style.display = 'none';
-            } else {
-                preview.style.display = 'none';
-                uploadText.style.display = 'block';
-            }
+        if (imageUrl) {
+            preview.src = imageUrl;
+            preview.style.display = 'block';
+            uploadText.style.display = 'none';
+        } else {
+            preview.style.display = 'none';
+            uploadText.style.display = 'block';
         }
-    });
+    }
 
     document.getElementById('search-input').value = ''; // Clear search input
     document.getElementById('dropdown-list').style.display = 'none'; // Hide dropdown
@@ -286,21 +222,23 @@ function clearStudentProfileForm() {
     document.getElementById('upload-text').style.display = 'block';
 }
 
-// Submit all profiles from the temporary list to Firestore
+// Submit all profiles to Firestore
 async function submitAllProfiles() {
     if (tempProfiles.length === 0) {
         alert("No profiles to submit.");
-        return; // Exit the function if there are no profiles to submit
+        return;
     }
 
     try {
         showLoading();
+        
+        // Load application data from localStorage
+        const applicationData = JSON.parse(localStorage.getItem('applicationFormData')) || {};
 
         for (const profile of tempProfiles) {
             const { studentId, name, address, imageUrl } = profile;
 
-            // Check for duplicate Student IDs in Firestore
-            const profilesRef = collection(db, "profiles");
+            const profilesRef = collection(db, "student-org-applications");
             const q = query(profilesRef, where("studentId", "==", studentId));
             const querySnapshot = await getDocs(q);
 
@@ -309,24 +247,22 @@ async function submitAllProfiles() {
                 continue; // Skip this profile if it already exists
             }
 
-            // Add profile to Firestore
-            try {
-                await addDoc(collection(db, "profiles"), { studentId, name, address, imageUrl });
-            } catch (error) {
-                console.error("Error adding profile to Firestore: ", error);
-                alert("Failed to add some profiles to Firestore.");
-                return;
-            }
+            // Add the profile along with application data
+            await addDoc(profilesRef, {
+                studentId,
+                name,
+                address,
+                imageUrl,
+                ...applicationData // Include the application data here
+                
+            });
         }
 
-        // Clear the temporary profiles list and localStorage
+        // Clear temporary profiles and localStorage
         tempProfiles = [];
-        localStorage.removeItem('tempProfiles'); // Clear localStorage
-
-        // Update the table
-        updateTable(tempProfiles);
-
-        alert("All profiles submitted successfully!");
+        localStorage.removeItem('tempProfiles'); 
+        updateTable(tempProfiles); // Clear the table
+        alert("All profiles and applications submitted successfully!");
     } catch (error) {
         console.error("Error submitting all profiles: ", error);
         alert("Failed to submit profiles.");
@@ -334,8 +270,3 @@ async function submitAllProfiles() {
         hideLoading();
     }
 }
-
-// Load profiles and update table on page load
-window.onload = function() {
-    updateTable(tempProfiles);
-};

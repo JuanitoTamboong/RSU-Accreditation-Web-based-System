@@ -25,6 +25,11 @@ body {
     padding: 2rem;
 }
 
+h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
 .application-item {
     border: 1px solid #ccc;
     margin-bottom: 1rem;
@@ -50,4 +55,8 @@ body {
 
 .application-actions button:hover {
     background-color: #ddd;
+}
+
+.application-actions {
+    margin-top: 1rem;
 }

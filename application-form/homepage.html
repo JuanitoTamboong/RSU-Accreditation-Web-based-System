@@ -21,7 +21,7 @@
                 <label for="accreditation-type">Type of Accreditation:</label>
                 <select id="accreditation-type" required>
                     <option value="">--Select Accreditation Type--</option>
-                    <option value="initial">New Organization</option>
+                    <option value="NewOrganization">New Organization</option>
                     <option value="reaccreditation">Re Accreditation</option>
                 </select>
             </div>
@@ -56,8 +56,11 @@
             </div>
             <!-- Document Upload -->
             <div class="form-group">
-                <label for="supporting-documents">Upload Supporting Documents:</label>
-                <input type="file" id="supporting-documents" multiple required>
+                <label for="requirement-documents">Upload Requirement Documents:</label>
+                <p>(Only accepts PDF format with max size 5MB)</p>
+                <input type="file" id="requirement-documents" accept=".pdf" multiple required>
+           
+
             </div>
             <!-- Submission -->
             <div class="form-group submit-btn">

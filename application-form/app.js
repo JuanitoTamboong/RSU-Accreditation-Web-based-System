@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -15,9 +14,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 const auth = getAuth();
+const storage = getStorage(app);
 
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
@@ -26,19 +24,17 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-
-// Function to show the loading spinner
+// Show/hide loading spinner
 function showLoading() {
     document.getElementById("loading").style.display = "flex";
 }
 
-// Function to hide the loading spinner
 function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
 
-// Function to save form data to localStorage
-function saveFormData() {
+// Save form data to localStorage
+function saveFormData(docUrls) {
     const formData = {
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position').value,
@@ -47,13 +43,13 @@ function saveFormData() {
         organizationName: document.getElementById('organization-name').value,
         accreditationType: document.getElementById('accreditation-type').value,
         emailAddress: document.getElementById('email-address').value,
-        dateFiling: document.getElementById('date-filing').value
+        dateFiling: document.getElementById('date-filing').value,
+        documents: docUrls // Store document URLs
     };
-
     localStorage.setItem('applicationFormData', JSON.stringify(formData));
 }
 
-// Function to load form data from localStorage
+// Load form data from localStorage
 function loadFormData() {
     const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
     if (savedData) {
@@ -65,84 +61,68 @@ function loadFormData() {
         document.getElementById('accreditation-type').value = savedData.accreditationType || '';
         document.getElementById('email-address').value = savedData.emailAddress || '';
         document.getElementById('date-filing').value = savedData.dateFiling || '';
+
+        // Load documents if available
+        const documentsList = document.getElementById('documents-list');
+        if (savedData.documents && savedData.documents.length > 0) {
+            documentsList.innerHTML = savedData.documents.map(docUrl => `<li><a href="${docUrl}" target="_blank">View Document</a></li>`).join('');
+        }
     }
 }
 
-// Load the form data when the page loads
-window.addEventListener('load', function() {
-    loadFormData();
+// Handle document upload and validate size
+document.getElementById('requirement-documents').addEventListener('change', async function (event) {
+    const files = Array.from(event.target.files);
+    const maxSize = 5 * 1024 * 1024; // 5 MB
+    const documentUrls = []; // To store the URLs
+
+    for (const file of files) {
+        if (file.size <= maxSize && file.type === 'application/pdf') {
+            const storageRef = ref(storage, `documents/${file.name}`);
+            await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(storageRef);
+            documentUrls.push(url); // Store the URL of the uploaded file
+            console.log('Uploaded Document URL:', url); // Debugging step
+        } else {
+            alert(`${file.name} exceeds 5MB size or is not a PDF.`);
+        }
+    }
+
+    // Save valid files to localStorage
+    saveFormData(documentUrls);
+    loadFormData(); // Refresh the displayed documents
 });
 
-// Save form data to localStorage on input change
+// Load data on page load
+window.addEventListener('load', loadFormData);
+
+// Save form data on input change
 document.querySelectorAll('#application-form input, #application-form select').forEach(input => {
-    input.addEventListener('input', saveFormData);
+    input.addEventListener('input', () => {
+        const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
+        const currentDocUrls = savedData ? savedData.documents : [];
+        saveFormData(currentDocUrls); // Save document URLs when form data changes
+    });
 });
 
 // Handle form submission
-document.getElementById('application-form').addEventListener('submit', async function (event) {
+document.getElementById('application-form').addEventListener('submit', async (event) => {
     event.preventDefault();
-
-    // Show loading spinner
     showLoading();
 
     const user = auth.currentUser;
     if (!user) {
         alert('User not authenticated. Please log in.');
-        hideLoading(); 
+        hideLoading();
         return;
     }
 
-    // Get form values
-    const representativeName = document.getElementById('representative-name').value;
-    const representativePosition = document.getElementById('representative-position').value;
-    const schoolYear = document.getElementById('school-year').value;
-    const studentCourse = document.getElementById('course').value;
-    const organizationName = document.getElementById('organization-name').value;
-    const accreditationType = document.getElementById('accreditation-type').value;
-    const emailAddress = document.getElementById('email-address').value;
-    const dateFiling = document.getElementById('date-filing').value;
-    const supportingDocuments = document.getElementById('supporting-documents').files;
+    // Finalize saving the form data including document URLs
+    const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
+    const currentDocUrls = savedData ? savedData.documents : [];
+    saveFormData(currentDocUrls);
 
-    // Prepare data for Firestore
-    const formData = {
-        representativeName,
-        representativePosition,
-        schoolYear,
-        studentCourse,
-        organizationName,
-        accreditationType,
-        emailAddress,
-        dateFiling,
-        documentURLs: [],
-        timestamp: serverTimestamp()
-    };
-
-    try {
-        // Add form data to Firestore
-        const docRef = await addDoc(collection(db, 'accreditation-applications'), formData);
-
-        // Handle file uploads for supporting documents
-        const documentURLs = [];
-        for (const file of supportingDocuments) {
-            const storageRef = ref(storage, `documents/${file.name}`);
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
-            documentURLs.push(downloadURL);
-        }
-
-        // Update Firestore document with document URLs
-        await updateDoc(docRef, { documentURLs });
-
-        // Clear the localStorage after successful submission
-        localStorage.removeItem('applicationFormData');
-
-        // Redirect to the next page
-        window.location.href = "../student-profile/list-officers.html";
-
-    } catch (error) {
-        console.error('Error submitting form:', error.message);
-        alert('Failed to submit the form. Please try again.');
-    } finally {
-        hideLoading();
-    }
+    // Redirect to the next page
+    window.location.href = '../student-profile/list-officers.html';
+    hideLoading();
 });

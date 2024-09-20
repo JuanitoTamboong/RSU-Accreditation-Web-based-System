@@ -94,6 +94,11 @@ form {
   color: #333;
   margin-bottom: 5px;
 }
+.form-group p{
+  font-size: 12px;
+  padding: 4px;
+  color: var(--box-shadow);
+}
 
 .form-group input,
 .form-group select {
