@@ -290,11 +290,19 @@ label.upload-label span {
   display: flex;
   flex-direction: column;
 }
-
+.clear-list{
+  padding: 10px;
+}
+.clear-list button{
+float: right;
+padding: 5px;
+border: none;
+cursor: pointer;
+}
 .table-wrapper {
   flex: 1;
   overflow-y: auto;
-  max-height: 100%; /* Ensure the table-wrapper scrolls */
+  max-height: 100%; 
 }
 
 .profiles-container h3 {
@@ -305,7 +313,7 @@ label.upload-label span {
 .profiles-container table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto; /* Adjusts to content */
+  table-layout: auto; 
 }
 
 .profiles-container th,
@@ -313,7 +321,7 @@ label.upload-label span {
   border: 1px solid var(--box-shadow);
   padding: 8px;
   text-align: left;
-  word-wrap: break-word; /* Handle long words */
+  word-wrap: break-word; 
 }
 
 .profiles-container th {

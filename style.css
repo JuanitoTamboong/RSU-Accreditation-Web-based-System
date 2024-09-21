@@ -218,11 +218,11 @@ input[type="password"]:focus {
 }
 /* sweet alert size*/
 .swal-wide{
-  width:850px !important;
-  font-size: 9px;
-height: 160px;
-background-color: var(--bg-bx-color=);
-color:var(--font-color);
+ width: 30%;
+  font-size: 13px;
+height: auto;
+
+
 }
 
 /* Responsive Design */
@@ -235,7 +235,11 @@ color:var(--font-color);
     min-width: 100%;
     padding: 20px;
   }
-
+  .swal-wide{
+    width: 85%;
+    font-size: 11px;
+    
+  }
   .login-container {
     min-width: 100%;
     padding: 20px;

@@ -53,6 +53,38 @@ function validateSignUpForm(email, password, confirmPassword) {
 
   return { isValid, errors };
 }
+// Event listener for the "Register" link
+const registerLink = document.getElementById("register-link");
+if (registerLink) {
+  registerLink.addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent the default link behavior
+
+    // Show a confirmation dialog
+    Swal.fire({
+      title: "Are you a representative of a student organization?",
+      text: "You must be a representative to proceed with registration.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, I am",
+      cancelButtonText: "No, cancel",
+      customClass: "swal-wide",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If confirmed, redirect to Sign-Up.html
+        window.location.href = "Sign-Up.html";
+      } else {
+        // If not confirmed, show an alert and stay on the login page
+        Swal.fire({
+          icon: "info",
+          title: "Registration is only for student organization representatives.",
+          timer: 2000,
+          showConfirmButton: false,
+          customClass: "swal-wide",
+        });
+      }
+    });
+  });
+}
 
 // Sign-Up Functionality
 const signUpForm = document.getElementById("signup-form");
@@ -184,7 +216,33 @@ if (signInForm) {
         // Check if the user's email is verified
         if (user.emailVerified) {
           hideLoading();
-          window.location.href = "../welcome-page/welcome.html";
+
+          // Show privacy agreement dialog
+          Swal.fire({
+            title: "Privacy Agreement",
+            html: 'Do you agree to the <a href="https://rsu.edu.ph/wp-content/uploads/2024/03/Privacy-Notice-For-website.pdf" target="_blank">Privacy Policy</a> before proceeding?', // Using 'html' instead of 'text' to allow HTML links
+            imageUrl: "../assets/privacy_agreement.png",
+            imageWidth: 130, // Set the image width
+            imageHeight: 130, // Set the image height
+            imageAlt: "Privacy Agreement Image", // Alt text for the image
+            showCancelButton: true,
+            confirmButtonText: "Yes, I agree",
+            cancelButtonText: "No, I disagree",
+            customClass: "swal-wide",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // If the user agrees, redirect to the welcome page
+              window.location.href = "../welcome-page/welcome.html";
+            } else {
+              // If the user disagrees, show an alert and do not proceed
+              Swal.fire({
+                icon: "info",
+                title: "You must agree to the privacy policy to proceed.",
+                customClass: "swal-wide",
+                timer: 2000,
+              });
+            }
+          });
         } else {
           hideLoading();
           Swal.fire({
@@ -210,6 +268,7 @@ if (signInForm) {
       });
   });
 }
+
 
 // Google Sign-In Functionality
 const googleLogin = document.getElementById("google-login-btn");

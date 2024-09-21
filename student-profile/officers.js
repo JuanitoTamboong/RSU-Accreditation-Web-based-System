@@ -137,6 +137,17 @@ async function addProfile() {
     clearStudentProfileForm();
 }
 
+// Clear profiles when the clear icon is clicked
+document.getElementById('clear-profiles').addEventListener('click', function() {
+    if (confirm("Are you sure you want to clear all added profiles?")) {
+        tempProfiles = []; // Clear the temporary profiles array
+        localStorage.removeItem('tempProfiles'); // Clear localStorage
+        updateTable(tempProfiles); // Refresh the table
+        alert("All profiles cleared.");
+    }
+});
+
+
 // Update the table with the profiles
 function updateTable(profiles) {
     const tableBody = document.querySelector('table tbody');
