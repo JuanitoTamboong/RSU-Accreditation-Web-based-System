@@ -222,7 +222,10 @@ input[type="password"]:focus {
   font-size: 13px;
 height: auto;
 
-
+}
+.swal-image{
+  object-fit: contain;
+  width: 100%;
 }
 
 /* Responsive Design */

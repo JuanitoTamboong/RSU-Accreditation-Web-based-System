@@ -223,12 +223,16 @@ if (signInForm) {
             html: 'Do you agree to the <a href="https://rsu.edu.ph/wp-content/uploads/2024/03/Privacy-Notice-For-website.pdf" target="_blank">Privacy Policy</a> before proceeding?', // Using 'html' instead of 'text' to allow HTML links
             imageUrl: "../assets/privacy_agreement.png",
             imageWidth: 130, // Set the image width
-            imageHeight: 130, // Set the image height
+            imageHeight: 120, // Set the image height
             imageAlt: "Privacy Agreement Image", // Alt text for the image
             showCancelButton: true,
             confirmButtonText: "Yes, I agree",
             cancelButtonText: "No, I disagree",
-            customClass: "swal-wide",
+            customClass:{ 
+              popup:"swal-wide",
+             image:"swal-image",
+            }
+            
           }).then((result) => {
             if (result.isConfirmed) {
               // If the user agrees, redirect to the welcome page

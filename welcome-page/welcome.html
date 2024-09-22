@@ -6,81 +6,37 @@
     <link rel="stylesheet" href="welcome.css">
     <link rel="icon" href="../assets/rsu-logo.png">
     <title>Welcome</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script  type="module" src="guide.js"></script>
 </head>
 <body>
    <div class="container">
        <div class="logo">
            <img src="../assets/rsu-logo.png" alt="RSU Logo">
        </div>
-           <div class="logo-text">
+       <div class="logo-text">
            <h2>Systematized OSAS Transactions System</h2>
-           
        </div>
    </div>
-   <!-- Guide Section -->
+
    <div class="guide-container">
        <div class="guide">
-        <img src="../assets/guide.png" alt="">
+           <img src="../assets/guide.png" alt="">
            <h2>Guidelines to Follow</h2>
+
+           <label for="guide-selector">Type of Accreditation:</label>
            <select id="guide-selector" required>
-               <option value="new-organization">New Organization</option>
-               <option value="re-accreditation">Re Accreditation</option>
+                <option value="">--Select Accreditation Type--</option>
+                <option value="new-organization">New Organization</option>
+                <option value="re-accreditation">Re-Accreditation</option>
            </select>
-           <ul class="guide-list" id="guide-list">
-               <!-- Default guide content for "New Organization" -->
-               <li>Accomplish the application</li>
-               <li>Letter of application stating the purpose of accreditation of organization filed at the Office of Student Affairs and Services</li>
-               <li>Recommendation from the SSC President as to the acceptance of the application, organization, registration, and accreditation</li>
-               <li>List of officers and their respective positions and profile.</li>
-               <li>Letter of invitation to chosen faculty adviser.</li>
-               <li>Faculty adviser's letter of acceptance of responsibility addressed to the University President through the Office of Student Affairs and Services.</li>
-               <li>Proposed activities and project for one (1) year (Action Plan).</li>
-               <li>Constitution and By-laws (include Anti-Hazing).</li>
-               <li>For Fraternity and Sorority, Parent's Consent is required.</li>
-               <li>Documents should be submitted in four copies (one for University President, one for the OSAS, one for SSC, and one for file copy).</li>
-           </ul>
+
+           <ul class="guide-list" id="guide-list"></ul>
+
            <div class="button-container">
-            <a href="../application-form/homepage.html"><button>Proceed</button></a>
+               <button id="proceed-btn" disabled>Proceed</button>
            </div>
        </div>
    </div>
-   <script>
-       document.getElementById('guide-selector').addEventListener('change', function() {
-           const guideList = document.getElementById('guide-list');
-           guideList.innerHTML = ''; // Clear current list items
-
-           // Update guide list based on selected value
-           if (this.value === 'new-organization') {
-               guideList.innerHTML = `
-                   <li>Accomplish the application</li>
-                   <li>Letter of application stating the purpose of accreditation of organization filed at the Office of Student Affairs and Services</li>
-                   <li>Recommendation from the SSC President as to the acceptance of the application, organization, registration, and accreditation</li>
-                   <li>List of officers and their respective positions and profile.</li>
-                   <li>Letter of invitation to chosen faculty adviser.</li>
-                   <li>Faculty adviser's letter of acceptance of responsibility addressed to the University President through the Office of Student Affairs and Services.</li>
-                   <li>Proposed activities and project for one (1) year (Action Plan).</li>
-                   <li>Constitution and By-laws (include Anti-Hazing).</li>
-                   <li>For Fraternity and Sorority, Parent's Consent is required.</li>
-                   <li>Documents should be submitted in four copies (one for University President, one for the OSAS, one for SSC, and one for file copy).</li>
-               `;
-           } else if (this.value === 're-accreditation') {
-               guideList.innerHTML = `
-                   <li>Accomplish the application form (Re-Accreditation)</li>
-                   <li>Letter of application stating the purpose of accreditation of organization filed at the Office of Student Affairs and Services.</li>
-                   <li>Recommendation from the SSC President as to the acceptance of the application, organization, registration and accreditation</li>
-                   <li>List of officers and their respective positions and profile.</li>
-                   <li>Letter of invitation to chosen faculty adviser.</li>
-                   <li>Faculty adviser's letter of acceptance of responsibility addressed to the University President through the Office of Student Affairs and Services.</li>
-                   <li>Photocopy of Certificate of Recognition for the previous year</li>
-                   <li>Photo of certificate of attendance/ participation in Seminar of at least one (1) student officer.</li>
-                   <li>Financial statement for the previous semester/school Year</li>
-                   <li>Proposed activities and project for one (1) year (Action Plan)</li>
-                   <li>Constitution and By-laws (include Anti-Hazing)</li>
-                   <li>For Fraternity and Sorority, Parent's Consent is required.</li>
-                   <li>Documents should be submitted in four copies (one for University President, one for the OSAS, one for SSC, and one for file copy).</li>
-               `;
-           }
-       });
-   </script>
 </body>
 </html>
