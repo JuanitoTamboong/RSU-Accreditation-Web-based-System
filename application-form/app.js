@@ -21,6 +21,9 @@ const storage = getStorage(app);
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         window.location.href = "../index.html";
+    } else {
+        document.getElementById('email-address').value = user.email || ''; // Prefill user email
+        loadFormData(); // Load the user's specific form data
     }
 });
 
@@ -33,75 +36,87 @@ function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
 
-// Save form data to localStorage
+// Save form data to localStorage using user's uid as key
 function saveFormData(docUrls) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    // Collect form data
     const formData = {
         representativeName: document.getElementById('representative-name').value,
-        representativePosition: document.getElementById('representative-position').value,
+        representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
-        studentCourse: document.getElementById('course').value,
-        organizationName: document.getElementById('organization-name').value,
-        accreditationType: document.getElementById('accreditation-type').value,
+        studentCourse: document.getElementById('course-dropdown').value,
+        organizationName: document.getElementById('organization-name-dropdown').value,
         emailAddress: document.getElementById('email-address').value,
         dateFiling: document.getElementById('date-filing').value,
-        documents: docUrls // Store document URLs
+        documents: docUrls || []
     };
-    localStorage.setItem('applicationFormData', JSON.stringify(formData));
+
+    // Save form data to localStorage with user-specific key
+    localStorage.setItem(`applicationFormData_${user.uid}`, JSON.stringify(formData));
 }
 
-// Load form data from localStorage
+// Load form data from localStorage using user's uid as key
 function loadFormData() {
-    const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
+    const user = auth.currentUser;
+    if (!user) return;
+
+    // Retrieve saved data from localStorage
+    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`));
     if (savedData) {
-        document.getElementById('representative-name').value = savedData.representativeName || '';
-        document.getElementById('representative-position').value = savedData.representativePosition || '';
+        document.getElementById('representative-name').value = savedData.representativeName || ''; // Correctly load representative name
+        document.getElementById('representative-position-dropdown').value = savedData.representativePosition || '';
         document.getElementById('school-year').value = savedData.schoolYear || '';
-        document.getElementById('course').value = savedData.studentCourse || '';
-        document.getElementById('organization-name').value = savedData.organizationName || '';
-        document.getElementById('accreditation-type').value = savedData.accreditationType || '';
+        document.getElementById('course-dropdown').value = savedData.studentCourse || '';
+        document.getElementById('organization-name-dropdown').value = savedData.organizationName || '';
         document.getElementById('email-address').value = savedData.emailAddress || '';
         document.getElementById('date-filing').value = savedData.dateFiling || '';
-
-        // Load documents if available
-        const documentsList = document.getElementById('documents-list');
-        if (savedData.documents && savedData.documents.length > 0) {
-            documentsList.innerHTML = savedData.documents.map(docUrl => `<li><a href="${docUrl}" target="_blank">View Document</a></li>`).join('');
-        }
     }
 }
 
-// Handle document upload and validate size
-document.getElementById('requirement-documents').addEventListener('change', async function (event) {
+// Handle document upload
+document.getElementById('requirement-documents').addEventListener('change', async (event) => {
     const files = Array.from(event.target.files);
     const maxSize = 5 * 1024 * 1024; // 5 MB
-    const documentUrls = []; // To store the URLs
+    const documentUrls = [];
 
     for (const file of files) {
         if (file.size <= maxSize && file.type === 'application/pdf') {
             const storageRef = ref(storage, `documents/${file.name}`);
             await uploadBytes(storageRef, file);
             const url = await getDownloadURL(storageRef);
-            documentUrls.push(url); // Store the URL of the uploaded file
-            console.log('Uploaded Document URL:', url); // Debugging step
+            documentUrls.push(url);
         } else {
-            alert(`${file.name} exceeds 5MB size or is not a PDF.`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Error',
+                text: `${file.name} exceeds 5MB size or is not a PDF.`,
+            });
         }
     }
 
-    // Save valid files to localStorage
     saveFormData(documentUrls);
-    loadFormData(); // Refresh the displayed documents
 });
 
-// Load data on page load
-window.addEventListener('load', loadFormData);
+// Set the current year to the school year input
+function setCurrentYear() {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('school-year').value = currentYear;
+}
 
-// Save form data on input change
-document.querySelectorAll('#application-form input, #application-form select').forEach(input => {
-    input.addEventListener('input', () => {
-        const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
-        const currentDocUrls = savedData ? savedData.documents : [];
-        saveFormData(currentDocUrls); // Save document URLs when form data changes
+// Load data on page load
+window.addEventListener('load', () => {
+    setCurrentYear(); // Set the current year on load
+});
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#date-filing", {
+        dateFormat: "Y-m-d", // Format as Year-Month-Day
+        defaultDate: new Date(), // Set the current date as default
+        allowInput: true, // Allow manual input
+        altInput: true, // Use an alternate input to show a more user-friendly date
+        altFormat: "F j, Y", // Show the user-friendly format
+        disableMobile: "true" // Ensures the Flatpickr is used on mobile
     });
 });
 
@@ -112,17 +127,77 @@ document.getElementById('application-form').addEventListener('submit', async (ev
 
     const user = auth.currentUser;
     if (!user) {
-        alert('User not authenticated. Please log in.');
-        hideLoading();
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Error',
+            text: 'User not authenticated. Please log in.',
+        }).then(() => {
+            hideLoading();
+        });
         return;
     }
 
-    // Finalize saving the form data including document URLs
-    const savedData = JSON.parse(localStorage.getItem('applicationFormData'));
-    const currentDocUrls = savedData ? savedData.documents : [];
-    saveFormData(currentDocUrls);
+    saveFormData(); // Finalize saving the form data
 
     // Redirect to the next page
     window.location.href = '../student-profile/list-officers.html';
     hideLoading();
+});
+
+// Add organization name dynamically
+document.getElementById('add-organization').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new organization name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New organization name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const organizationNameDropdown = document.getElementById('organization-name-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            organizationNameDropdown.appendChild(option);
+            organizationNameDropdown.value = result.value; // Set it as selected
+        }
+    });
+});
+
+// Add position dynamically
+document.getElementById('add-position').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new position name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New position name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const positionDropdown = document.getElementById('representative-position-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            positionDropdown.appendChild(option);
+            positionDropdown.value = result.value; // Set it as selected
+        }
+    });
+});
+
+// Add course dynamically
+document.getElementById('add-course').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new course name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New course name',
+        customClass: "swal-wide"
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const courseDropdown = document.getElementById('course-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            courseDropdown.appendChild(option);
+            courseDropdown.value = result.value; // Set it as selected
+        }
+    });
 });

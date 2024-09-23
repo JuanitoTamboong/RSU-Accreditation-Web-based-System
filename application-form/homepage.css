@@ -5,7 +5,7 @@
   --box-shadow: #597d9b;
   --bg-bx-color: #141a1e56;
   --hover-color: #3aba47;
-  --spinner-color:#3aba478a;
+  --spinner-color: #3aba478a;
 }
 
 * {
@@ -15,49 +15,22 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Body and General Layout */
 body {
-  background-color: #f7f7f7;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  font-size: 16px;
-}
-/* Loading Spinner Styles */
-.loading-spinner {
-  position: fixed; 
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); 
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
 }
 
-.spinner {
-  border: 12px solid rgba(0, 0, 0, 0.1);
-  border-left: 12px solid var(--spinner-color); /* Set a default spinner color */
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-
+/* Top Header Section */
 .top-header {
   background-color: var(--signIn-Color);
   padding: 20px;
   text-align: center;
   width: 100%;
   max-width: 750px;
-
   box-shadow: 0 4px 10px rgba(var(--box-shadow), 0.1);
 }
 
@@ -73,31 +46,29 @@ body {
   margin: 0;
 }
 
+/* Form Container */
 .form-container {
   background-color: var(--font-color);
   padding: 30px;
   margin: 20px auto;
   max-width: 800px;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0px 4px 15px rgba(var(--box-shadow), 0.1);
+  box-shadow: 1px 0px 10px var(--bg-bx-color);
 }
 
+/* Form Elements */
 form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
+/* Form Group */
 .form-group label {
   display: block;
   font-size: 14px;
   color: #333;
   margin-bottom: 5px;
-}
-.form-group p{
-  font-size: 12px;
-  padding: 4px;
-  color: var(--box-shadow);
 }
 
 .form-group input,
@@ -110,6 +81,36 @@ form {
   font-size: 16px;
 }
 
+/* Input and Text Area Placeholder */
+.form-group p {
+  font-size: 12px;
+  padding: 4px;
+  color: var(--box-shadow);
+}
+
+/* Dropdown Container */
+.dropdown-container {
+  display: flex;
+  align-items: center;
+}
+
+.add-btn {
+  margin-left: 10px;
+  padding: 0 10px;
+  background-color: var(--box-shadow);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px;
+  width: 10%;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Submit Button */
 .submit-btn {
   grid-column: span 2;
 }
@@ -130,6 +131,52 @@ form {
   background-color: var(--hover-color);
 }
 
+/* Flatpickr (Calendar Input) Styling */
+.flatpickr-input {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #333;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.flatpickr-input:focus {
+  border-color: #007BFF;
+  outline: none;
+  background-color: #fff;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 12px solid rgba(0, 0, 0, 0.1);
+  border-left: 12px solid var(--spinner-color);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Checklist Section */
 .checklist-container {
   margin-top: 20px;
 }
@@ -148,6 +195,7 @@ form {
   margin-right: 10px;
 }
 
+/* Uploaded Documents Section */
 #uploaded-documents {
   margin-top: 20px;
 }
@@ -167,7 +215,7 @@ form {
   margin-bottom: 10px;
 }
 
-/* Responsive design */
+/* Responsive Design for Smaller Screens */
 @media (max-width: 768px) {
   form {
     grid-template-columns: 1fr;
