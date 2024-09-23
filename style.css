@@ -28,17 +28,37 @@
 
 /* Logo Container Styles */
 .logo-container {
+  position: relative; /* Establish a positioning context */
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*background-color: var(--signIn-Color);*/
   padding: 20px;
-  background-image: url('../assets/rsu-background.png');
+  background-image: url('assets/rsu-landmark.jpg');
   background-size: cover;
   background-position: center;
+  overflow: hidden; /* Prevent overflow from children */
 }
+
+.logo-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.21); /* Add a dark overlay */
+  z-index: 0; /* Make sure it's behind the text */
+}
+
+.logo-container > * {
+  position: relative; /* Ensure the content is above the overlay */
+  z-index: 1;
+  color: white; /* Make the text white for better contrast */
+  
+}
+
 
 .logo-wrap img {
   height: 150px;
@@ -63,6 +83,7 @@
   align-items: center;
   position: relative;
   padding: 20px;
+  background-color:#52595212;
 
 }
 
@@ -73,7 +94,9 @@
   width: 100%;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  background-color: var(--font-color);
+  box-shadow:1px 0px 10px var(--bg-bx-color);
+
 }
 
 .login-text {
@@ -126,7 +149,7 @@ form {
 .signIn input[type="text"],
 .signIn input[type="password"] {
   width: 100%;
-  padding: 15px; 
+  padding: 10px; 
   border-radius: 5px;
   border: none;
   outline: none;
@@ -182,10 +205,10 @@ input[type="password"]:focus {
 }
 
 .signIn a {
-  display: block;
+display: block;
   text-align: right;
   font-size: 13px;
-  color: var(--button);
+  color: var(--box-shadow);
   margin-top: 20px;
 }
 
@@ -233,7 +256,11 @@ height: auto;
   .container {
     flex-direction: column;
   }
-
+.logo-wrap img{
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+}
   .logo-container {
     min-width: 100%;
     padding: 20px;
@@ -251,7 +278,7 @@ height: auto;
   .login-wrap {
     width: 100%;
   }
-
+ 
   button {
     font-size: 14px; /* Adjust font size on smaller screens */
   }

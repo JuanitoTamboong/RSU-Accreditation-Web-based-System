@@ -5,38 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="welcome.css">
     <link rel="icon" href="../assets/rsu-logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <title>Welcome</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script  type="module" src="guide.js"></script>
+    <script type="module" src="guide.js" defer></script>
 </head>
 <body>
-   <div class="container">
-       <div class="logo">
-           <img src="../assets/rsu-logo.png" alt="RSU Logo">
-       </div>
-       <div class="logo-text">
-           <h2>Systematized OSAS Transactions System</h2>
-       </div>
-   </div>
+    <div class="container">
+        <div class="logo">
+            <img src="../assets/rsu-logo.png" alt="RSU Logo">
+        </div>
+        <div class="logo-text">
+            <h2>Systematized OSAS Transactions System</h2>
+        </div>
+    </div>
 
-   <div class="guide-container">
-       <div class="guide">
-           <img src="../assets/guide.png" alt="">
-           <h2>Guidelines to Follow</h2>
-
-           <label for="guide-selector">Type of Accreditation:</label>
-           <select id="guide-selector" required>
+    <div class="guide-container">
+        <div class="guide">
+            <img src="../assets/guide.png" alt="">
+            <h2>Guidelines to Follow</h2>
+            <label for="guide-selector">Type of Accreditation:</label>
+            <select id="guide-selector" required>
                 <option value="">--Select Accreditation Type--</option>
                 <option value="new-organization">New Organization</option>
                 <option value="re-accreditation">Re-Accreditation</option>
-           </select>
+            </select>
+              <div class="guide">
+                <p>
 
-           <ul class="guide-list" id="guide-list"></ul>
+                     Please put the following documents together in one PDF file.
+                     This will make it easier to look at everything. Thank you for your help! 😊
+                    </p>
+              </div>
+            <ul class="guide-list" id="guide-list"></ul>
 
-           <div class="button-container">
-               <button id="proceed-btn" disabled>Proceed</button>
-           </div>
-       </div>
-   </div>
+            <div class="button-container">
+                <button id="proceed-btn" disabled>Proceed</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
