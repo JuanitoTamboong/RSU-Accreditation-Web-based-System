@@ -16,7 +16,7 @@
   --box-shadow: #597d9b;
   --bg-bx-color: #141a1e56;
   --hover-color: #3aba47;
-  --spinner-color:#3aba478a;
+  --spinner-color: #3aba478a;
 }
 
 /* Container Styles */
@@ -28,17 +28,16 @@
 
 /* Logo Container Styles */
 .logo-container {
-  position: relative; /* Establish a positioning context */
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
   background-image: url('assets/rsu-landmark.jpg');
   background-size: cover;
   background-position: center;
-  overflow: hidden; /* Prevent overflow from children */
+  overflow: hidden;
 }
 
 .logo-container::before {
@@ -48,30 +47,28 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.21); /* Add a dark overlay */
-  z-index: 0; /* Make sure it's behind the text */
+  background-color: rgba(0, 0, 0, 0.21);
+  z-index: 0;
 }
 
 .logo-container > * {
-  position: relative; /* Ensure the content is above the overlay */
+  position: relative;
   z-index: 1;
-  color: white; /* Make the text white for better contrast */
-  
+  color: white;
 }
-
 
 .logo-wrap img {
   height: 150px;
   object-fit: contain;
   box-shadow: 0px 4px 15px rgba(var(--box-shadow), 0.1);
-  
+  margin-top: -100px;
 }
 
-.logo-wrap h3 {
+.logo-wrap h2 {
   color: var(--font-color);
   text-align: center;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 20px;
   margin-top: 20px;
 }
 
@@ -83,20 +80,18 @@
   align-items: center;
   position: relative;
   padding: 20px;
-  background-color:#52595212;
-
+  background-color: #52595212;
 }
 
 /* Login Wrap Styles */
 .login-wrap {
-  position: relative; /* Position relative to contain the absolute spinner */
+  position: relative;
   max-width: 400px;
   width: 100%;
   padding: 30px;
   border-radius: 10px;
   background-color: var(--font-color);
-  box-shadow:1px 0px 10px var(--bg-bx-color);
-
+  box-shadow: 1px 0px 10px var(--bg-bx-color);
 }
 
 .login-text {
@@ -111,7 +106,6 @@
   margin-top: -40px;
 }
 
-
 .login-text h4 {
   color: var(--font-color);
   text-transform: uppercase;
@@ -123,13 +117,14 @@
   position: relative;
 }
 
-/* Form Styles */
 form {
   margin-top: 20px;
-  
 }
 
+/* SignIn Form Field Styles */
 .signIn {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
 }
 
@@ -144,29 +139,27 @@ form {
   color: var(--button);
   margin-bottom: 5px;
   font-weight: 500;
+  text-align: left;
 }
 
 .signIn input[type="text"],
 .signIn input[type="password"] {
   width: 100%;
-  padding: 10px; 
+  padding: 10px;
   border-radius: 5px;
-  border: none;
-  outline: none;
-  font-size: 16px;
   border: 1px solid var(--bg-bx-color);
+  transition: border 0.3s ease-in-out;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-  outline: none;
   border: 2px solid var(--hover-color);
-
+  outline: none;
 }
 
 .signIn input[type="submit"] {
   width: 100%;
-  padding: 15px; 
+  padding: 10px;
   border-radius: 5px;
   border: none;
   outline: none;
@@ -175,7 +168,7 @@ input[type="password"]:focus {
   background-color: var(--button);
   color: var(--font-color);
   letter-spacing: 1px;
-  font-size: 16px; 
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -184,46 +177,60 @@ input[type="password"]:focus {
   transition: 0.5s ease-out;
 }
 
-.signIn p {
-  color: var(--button);
+/* Register and Forgot Password Links Styles */
+.register-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
   font-size: 13px;
-  margin-top: 20px;
+  color: var(--button);
 }
 
-.signIn p a {
+.register-container p {
+  margin: 0;
   color: var(--button);
-  text-decoration: underline;
-  margin-left: 5px;
-  font-size: 13px;
-  margin-top: -18px;
-  font-weight: 600;
 }
 
-.signIn p a:hover {
-  color: var(--hover-color);
+.register-container a {
+  color: var(--box-shadow);
   text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
 }
 
-.signIn a {
-display: block;
-  text-align: right;
+.register-container a:hover {
+  color: var(--hover-color);
+}
+
+.forgot-pass {
+  display: flex;
+  justify-content:right;
+  margin: 10px 0;
+}
+
+.forgot-pass a {
+  color: var(--button);
   font-size: 13px;
   color: var(--box-shadow);
-  margin-top: 20px;
+}
+
+.forgot-pass a:hover {
+  color: var(--hover-color);
 }
 
 /* Loading Spinner Styles */
 .loading-spinner {
-  position: absolute; /* Center the spinner */
-  top: 40%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Adjust position */
-  width: 100px; /* Increase width */
-  height: 100px; /* Increase height */
+  position: absolute;
+  top: 40%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999; /* Ensure it appears above other content */
+  z-index: 9999;
 }
 
 .spinner {
@@ -232,21 +239,22 @@ display: block;
   border-radius: 50%;
   width: 80px;
   height: 80px;
-  animation: spin 1s linear infinite; 
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-/* sweet alert size*/
-.swal-wide{
- width: 30%;
-  font-size: 13px;
-height: auto;
 
+/* SweetAlert Customization */
+.swal-wide {
+  width: 30%;
+  font-size: 13px;
+  height: auto;
 }
-.swal-image{
+
+.swal-image {
   object-fit: contain;
   width: 100%;
 }
@@ -256,20 +264,26 @@ height: auto;
   .container {
     flex-direction: column;
   }
-.logo-wrap img{
-  width: 85px;
-  height: 85px;
-  object-fit: contain;
-}
+
+  .logo-wrap img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    margin: 0;
+  }
+ .logo-wrap h2{
+  font-size: 16px;
+ }
   .logo-container {
     min-width: 100%;
     padding: 20px;
   }
-  .swal-wide{
+
+  .swal-wide {
     width: 85%;
     font-size: 11px;
-    
   }
+
   .login-container {
     min-width: 100%;
     padding: 20px;
@@ -278,13 +292,4 @@ height: auto;
   .login-wrap {
     width: 100%;
   }
- 
-  button {
-    font-size: 14px; /* Adjust font size on smaller screens */
-  }
-
-  button i {
-    font-size: 18px; /* Adjust icon size on smaller screens */
-  }
-
 }
