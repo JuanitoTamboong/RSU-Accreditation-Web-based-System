@@ -239,6 +239,9 @@ height: auto;
 }
 /* Responsive styles */
 @media (max-width: 768px) {
+    body{
+        padding: 0 10px;
+    }
     .header h2{
         font-size: 18px;
     }
