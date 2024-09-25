@@ -84,6 +84,9 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  box-shadow: inset 1px 0px 10px var(--box-shadow);
+  padding: 20px;
+  border-radius: 10px;
 }
 
 /* Form Group */
@@ -98,12 +101,10 @@ form {
 .form-group select {
   width: 100%;
   padding: 12px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--box-shadow);
   border-radius: 5px;
-  background-color: #f9f9f9;
   font-size: 16px;
 }
-
 /* Input and Text Area Placeholder */
 .form-group p {
   font-size: 12px;
