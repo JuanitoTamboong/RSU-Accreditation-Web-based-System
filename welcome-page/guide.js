@@ -7,6 +7,17 @@ document.addEventListener('DOMContentLoaded', function() {
         guideList.innerHTML = ''; // Clear current list items
         proceedBtn.disabled = true; // Disable the proceed button initially
 
+        if (this.value === '') {
+            // If no selection, do not proceed
+            Swal.fire({
+                icon: 'info',
+                title: 'Select Accreditation Type',
+                text: 'Please select an accreditation type to see the requirements.',
+                customClass: "swal-wide",
+            });
+            return;
+        }
+
         const guideItems = this.value === 'new-organization' ? [
             "Accomplish the application",
             "Letter of application stating the purpose of accreditation",

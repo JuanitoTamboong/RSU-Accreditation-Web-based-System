@@ -17,7 +17,7 @@
 
 /* Body and General Layout */
 body {
-  background-color: #ffffff;
+  background-color: #7273723f;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,13 +26,38 @@ body {
 
 /* Top Header Section */
 .top-header {
-  background-color: var(--signIn-Color);
-  padding: 20px;
+  position: relative;
+  padding: 30px;
   text-align: center;
   width: 100%;
-  max-width: 750px;
+  max-width: 800px;
   box-shadow: 0 4px 10px rgba(var(--box-shadow), 0.1);
+  background-image: url('../assets/rsu-landmark.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: white; /* Set text color to white for better contrast */
+  
 }
+
+/* Dark overlay for better readability */
+.top-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.21); /* Add a dark overlay */
+  z-index: 1;
+}
+
+/* Ensures text appears above the overlay */
+.top-header > * {
+  position: relative;
+  z-index: 2;
+}
+
 
 .top-header img {
   height: 70px;
@@ -50,7 +75,6 @@ body {
 .form-container {
   background-color: var(--font-color);
   padding: 30px;
-  margin: 20px auto;
   max-width: 800px;
   border-radius: 0 0 10px 10px;
   box-shadow: 1px 0px 10px var(--bg-bx-color);
@@ -249,12 +273,9 @@ form {
 
 @media (max-width: 480px) {
   .top-header h2 {
-    font-size: 1.25rem;
+    font-size: 18px;
   }
 
-  .top-header img {
-    height: 50px;
-  }
 
   .form-container {
     padding: 15px;

@@ -12,35 +12,28 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="../assets/rsu-logo.png" alt="RSU Logo">
+        <div class="header">
+            <img src="../assets/rsu-logo.png" alt="RSU Logo" class="guide-logo">
+            <h2 class="guide-title">Systematized OSAS Transactions System</h2>
         </div>
-        <div class="logo-text">
-            <h2>Systematized OSAS Transactions System</h2>
-        </div>
-    </div>
-
-    <div class="guide-container">
-        <div class="guide">
-            <img src="../assets/guide.png" alt="">
-            <h2>Guidelines to Follow</h2>
-            <label for="guide-selector">Type of Accreditation:</label>
-            <select id="guide-selector" required>
-                <option value="">--Select Accreditation Type--</option>
-                <option value="new-organization">New Organization</option>
-                <option value="re-accreditation">Re-Accreditation</option>
-            </select>
-              <div class="guide">
+        <div class="guide-container">
+            <div class="guide">
+                <img src="../assets/guide.png" alt="">
+                <h2>Guidelines to Follow</h2>
+                <label for="guide-selector">Type of Accreditation:</label>
+                <select id="guide-selector" required>
+                    <option value="">--Select Accreditation Type--</option>
+                    <option value="new-organization">New Organization</option>
+                    <option value="re-accreditation">Re-Accreditation</option>
+                </select>
                 <p>
-
-                     Please put the following documents together in one PDF file.
-                     This will make it easier to look at everything. Thank you for your help! 😊
-                    </p>
-              </div>
-            <ul class="guide-list" id="guide-list"></ul>
-
-            <div class="button-container">
-                <button id="proceed-btn" disabled>Proceed</button>
+                    Please put the following documents together in one PDF file.
+                    This will make it easier to look at everything. Thank you for your help! 😊
+                </p>
+                <ul class="guide-list" id="guide-list"></ul>
+                <div class="button-container">
+                    <button id="proceed-btn" disabled>Proceed</button>
+                </div>
             </div>
         </div>
     </div>

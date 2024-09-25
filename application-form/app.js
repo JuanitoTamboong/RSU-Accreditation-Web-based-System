@@ -43,6 +43,7 @@ function saveFormData(docUrls) {
 
     // Collect form data
     const formData = {
+        typeOfAccreditation: "New Organization",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
@@ -50,7 +51,7 @@ function saveFormData(docUrls) {
         organizationName: document.getElementById('organization-name-dropdown').value,
         emailAddress: document.getElementById('email-address').value,
         dateFiling: document.getElementById('date-filing').value,
-        documents: docUrls || []
+        documents: docUrls || [] // Ensure documents are saved
     };
 
     // Save form data to localStorage with user-specific key
@@ -77,17 +78,36 @@ function loadFormData() {
 
 // Handle document upload
 document.getElementById('requirement-documents').addEventListener('change', async (event) => {
-    const files = Array.from(event.target.files);
+    const files = Array.from(event.target.files); // Convert FileList to an array
     const maxSize = 5 * 1024 * 1024; // 5 MB
-    const documentUrls = [];
+    let documentUrls = []; // Array to hold URLs of uploaded documents
 
+    // Retrieve existing document URLs from localStorage
+    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${auth.currentUser.uid}`));
+    const existingDocUrls = savedData?.documents || []; // Use existing URLs or an empty array
+
+    // Iterate over selected files
     for (const file of files) {
+        // Check file size and type
         if (file.size <= maxSize && file.type === 'application/pdf') {
+            // Create a reference to the storage location
             const storageRef = ref(storage, `documents/${file.name}`);
-            await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(storageRef);
-            documentUrls.push(url);
+            try {
+                // Upload the file
+                await uploadBytes(storageRef, file);
+                // Get the download URL for the uploaded file
+                const url = await getDownloadURL(storageRef);
+                documentUrls.push(url); // Add the download URL to the array
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Upload Error',
+                    text: `Failed to upload ${file.name}. Please try again later.`,
+                });
+            }
         } else {
+            // Show an error message if the file exceeds size or type restrictions
             Swal.fire({
                 icon: 'error',
                 title: 'Upload Error',
@@ -96,8 +116,13 @@ document.getElementById('requirement-documents').addEventListener('change', asyn
         }
     }
 
-    saveFormData(documentUrls);
+    // Combine new document URLs with existing ones
+    documentUrls = [...existingDocUrls, ...documentUrls];
+
+    // Save the updated URLs to localStorage
+    saveFormData(documentUrls); // Function to handle localStorage updates
 });
+
 
 // Set the current year to the school year input
 function setCurrentYear() {
@@ -137,7 +162,11 @@ document.getElementById('application-form').addEventListener('submit', async (ev
         return;
     }
 
-    saveFormData(); // Finalize saving the form data
+    // Retrieve the document URLs saved in localStorage if there are any
+    let savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`));
+    let docUrls = savedData?.documents || [];
+
+    saveFormData(docUrls); // Always pass the document URLs
 
     // Redirect to the next page
     window.location.href = '../student-profile/list-officers.html';

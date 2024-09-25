@@ -112,13 +112,22 @@ async function addProfile() {
     // Validate Student ID format
     const idFormat = /^\d{3}-\d{4}-\d{6}$/; // Adjust this pattern based on your ID format
     if (!idFormat.test(studentId)) {
-        alert("Student ID are not complete");
+        alert("Student ID format is invalid. Please use the format XXX-XXXX-XXXXXX.");
         return;
     }
 
     // Check for duplicate Student ID in temporary profiles
     if (tempProfiles.some(profile => profile.studentId === studentId)) {
         alert("A profile with this Student ID already exists in the temporary table.");
+        return;
+    }
+
+    // Check for duplicate Student ID in Firestore
+    const profilesRef = collection(db, "student-org-applications");
+    const q = query(profilesRef, where("studentId", "==", studentId));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        alert("A profile with this Student ID already exists in Firestore.");
         return;
     }
 
@@ -146,7 +155,6 @@ document.getElementById('clear-profiles').addEventListener('click', function() {
         alert("All profiles cleared.");
     }
 });
-
 
 // Update the table with the profiles
 function updateTable(profiles) {
@@ -229,6 +237,7 @@ function clearStudentProfileForm() {
     document.getElementById('student-id').value = '';
     document.getElementById('name').value = '';
     document.getElementById('address').value = '';
+    document.getElementById('img').value = '';
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('upload-text').style.display = 'block';
 }
@@ -242,41 +251,53 @@ async function submitAllProfiles() {
 
     try {
         showLoading();
-        
-        // Load application data from localStorage
-        const applicationData = JSON.parse(localStorage.getItem('applicationFormData')) || {};
 
+        const user = auth.currentUser;
+        if (!user) {
+            alert("User is not authenticated.");
+            hideLoading();
+            return;
+        }
+
+        // Load application data (t2) from localStorage for the authenticated user
+        const applicationData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
+
+        // Check for duplicate Student IDs in Firestore for the temporary profiles
         for (const profile of tempProfiles) {
-            const { studentId, name, address, imageUrl } = profile;
-
+            const { studentId } = profile;
             const profilesRef = collection(db, "student-org-applications");
             const q = query(profilesRef, where("studentId", "==", studentId));
             const querySnapshot = await getDocs(q);
-
             if (!querySnapshot.empty) {
-                console.error(`Profile with Student ID ${studentId} already exists in Firestore.`);
-                continue; // Skip this profile if it already exists
+                alert(`A profile with Student ID ${studentId} already exists in Firestore. Submission aborted.`);
+                return;
             }
-
-            // Add the profile along with application data
-            await addDoc(profilesRef, {
-                studentId,
-                name,
-                address,
-                imageUrl,
-                ...applicationData // Include the application data here
-                
-            });
         }
 
-        // Clear temporary profiles and localStorage
+       
+        const combinedData = {
+            applicationDetails: applicationData,   
+            profiles: tempProfiles                
+        };
+
+        // Reference to Firestore collection (using 'student-org-applications')
+        const profilesRef = collection(db, "student-org-applications");
+
+        // Add the combined data (profiles + application data) as one document in Firestore
+        await addDoc(profilesRef, combinedData);
+        console.log("All profiles and application data saved in one document.");
+
+        // Clear temporary profiles and localStorage after successful submission
         tempProfiles = [];
-        localStorage.removeItem('tempProfiles'); 
-        updateTable(tempProfiles); // Clear the table
-        alert("All profiles and applications submitted successfully!");
+        localStorage.removeItem('tempProfiles');
+        localStorage.removeItem(`applicationFormData_${user.uid}`);
+        updateTable(tempProfiles); // Update the table after clearing profiles
+
+        alert("All profiles and application data submitted successfully!");
+        window.location.href = "../student-profile/list-officers.html"; // Redirect after submission
     } catch (error) {
-        console.error("Error submitting all profiles: ", error);
-        alert("Failed to submit profiles.");
+        console.error("Error submitting profiles and application data: ", error);
+        alert("Error submitting profiles and application data. Please try again.");
     } finally {
         hideLoading();
     }
