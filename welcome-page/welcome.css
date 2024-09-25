@@ -153,6 +153,7 @@ select {
     display: grid; /* Use grid for layout */
     grid-template-columns: repeat(2, 1fr); /* Create two equal columns */
     gap: 10px; /* Space between checkboxes */
+    font-size: 15px;
   }
   
   /* List styles */
@@ -248,6 +249,8 @@ height: auto;
     .guide-list {
       grid-template-columns: 1fr;
       gap: 5px; 
+      font-size: 14px;
+    
     }
   
     .guide-list li {
