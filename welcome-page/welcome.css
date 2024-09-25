@@ -96,6 +96,7 @@
   align-items: center;
   padding: 20px;
   border-radius: 10px;
+  box-shadow: inset 1px 0px 10px var(--box-shadow);
 }
 
 .header h2 {
