@@ -8,6 +8,14 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+body {
+  background-image: url('assets/Home.png');
+  background-position: center;
+  background-size:cover; /* Ensures the width fits the viewport, adjusts height automatically */
+  background-repeat: no-repeat;
+}
+
+
 
 :root {
   --signIn-Color: rgb(19, 67, 36);
@@ -34,13 +42,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url('assets/rsu-landmark.jpg');
+  /*background-image: url('assets/rsu-landmark.jpg');*/
   background-size: cover;
   background-position: center;
   overflow: hidden;
 }
-
-.logo-container::before {
+/*.logo-container::before {
   content: "";
   position: absolute;
   top: 0;
@@ -55,17 +62,17 @@
   position: relative;
   z-index: 1;
   color: white;
-}
+}*/
 
 .logo-wrap img {
   height: 150px;
   object-fit: contain;
-  box-shadow: 0px 4px 15px rgba(var(--box-shadow), 0.1);
+  filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
   margin-top: -100px;
 }
 
 .logo-wrap h2 {
-  color: var(--font-color);
+  color: var(--signIn-Color);
   text-align: center;
   text-transform: uppercase;
   font-size: 20px;
@@ -80,7 +87,7 @@
   align-items: center;
   position: relative;
   padding: 20px;
-  background-color: #52595212;
+ 
 }
 
 /* Login Wrap Styles */
@@ -89,7 +96,7 @@
   max-width: 400px;
   width: 100%;
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 20px;
   background-color: var(--font-color);
   box-shadow: 1px 0px 10px var(--bg-bx-color);
 }
@@ -98,7 +105,7 @@
   text-align: center;
   background-color: var(--signIn-Color);
   padding: 25px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 20px 20px 0 0;
   width: calc(100% + 60px);
   margin-left: -30px; 
   margin-right: -30px; 
@@ -146,7 +153,7 @@ form {
 .signIn input[type="password"] {
   width: 100%;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 50px;
   border: 1px solid var(--bg-bx-color);
   transition: border 0.3s ease-in-out;
 }
@@ -157,10 +164,32 @@ input[type="password"]:focus {
   outline: none;
 }
 
+/* Add these styles to your CSS file (style.css) */
+.password-container {
+  position: relative; /* Position relative for absolute positioning of the icon */
+}
+
+.password-container input {
+  width: 100%; 
+  padding-right: 40px; 
+}
+
+.password-container i {
+  position: absolute;
+  top: 50%;
+  right: 10px; 
+  transform: translateY(-50%);
+  cursor: pointer; 
+  color: #555;
+  font-size: 20px;
+}
+.password-container i:hover{
+  color: var(--box-shadow);
+}
 .signIn input[type="submit"] {
   width: 100%;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 50px;
   border: none;
   outline: none;
   text-transform: uppercase;

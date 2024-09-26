@@ -23,6 +23,7 @@
   margin: 0;
   padding: 0;
   background-color: #7273723f;
+
 }
 
 /* Centering Container */
@@ -233,10 +234,10 @@ button:hover {
   background-color: var(--hover-color);
   cursor: pointer;
 }
-.swal-wide{
-width: 30%;
-font-size: 13px;
-height: auto;
+.swal-wide {
+  width: 30%;
+  font-size: 13px;
+  height: auto;
 }
 /* Responsive styles */
 @media (max-width: 768px) {

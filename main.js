@@ -24,6 +24,60 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
+// Function to toggle password visibility
+function togglePasswordVisibility(inputElement, toggleElement) {
+  if (inputElement && toggleElement) {
+      // Toggle the type attribute
+      const type = inputElement.getAttribute("type") === "password" ? "text" : "password";
+      inputElement.setAttribute("type", type);
+
+      // Toggle the icon class
+      toggleElement.classList.toggle('bx-show', type === "text");
+      toggleElement.classList.toggle('bx-hide', type === "password");
+  } else {
+      console.error("Input or toggle element not found.");
+  }
+}
+
+// Wait for the DOM to be fully loaded
+document.addEventListener("DOMContentLoaded", function () {
+  // Login password toggle
+  const passwordInput = document.getElementById("password");
+  const togglePassword = document.getElementById("togglePassword");
+
+  if (togglePassword) {
+      togglePassword.addEventListener("click", function () {
+          togglePasswordVisibility(passwordInput, togglePassword);
+      });
+  } else {
+      console.error("Toggle Password button not found.");
+  }
+
+  // Sign-up password fields and their toggle buttons
+  const signupPasswordInput = document.getElementById("signup-password");
+  const toggleSignupPassword = document.getElementById("toggleSignupPassword");
+  const confirmPasswordInput = document.getElementById("confirm-password");
+  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+
+  // Event listener for toggling sign-up password visibility
+  if (toggleSignupPassword) {
+      toggleSignupPassword.addEventListener("click", function () {
+          togglePasswordVisibility(signupPasswordInput, toggleSignupPassword);
+      });
+  } else {
+      console.error("Toggle Signup Password button not found.");
+  }
+
+  // Event listener for toggling confirm password visibility
+  if (toggleConfirmPassword) {
+      toggleConfirmPassword.addEventListener("click", function () {
+          togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
+      });
+  } else {
+      console.error("Toggle Confirm Password button not found.");
+  }
+});
+
 // Function to show loading spinner
 function showLoading() {
   document.getElementById("loading").style.display = "flex";
@@ -267,7 +321,7 @@ if (signInForm) {
           title: "Invalid email or password. Please try again.",
           showConfirmButton: false,
           customClass: "swal-wide",
-          timer: 1500,
+          timer: 1500,         
         });
       });
   });

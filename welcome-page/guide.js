@@ -75,7 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon: 'error',
                 title: 'Incomplete Requirements',
                 text: 'Please complete all requirements before proceeding.',
-                customClass: "swal-wide",
+                backdrop: `
+                rgba(0, 0, 0, 0.34)
+                url("https://media.tenor.com/AaAoeklgL7MAAAAi/twerk-yushin.gif")
+                left top
+                no-repeat
+              `,
+              customClass:{ 
+                popup:"swal-wide",
+                backdrop:"swal-gif",
+              }
             });
         } else {
             const selectedOption = guideSelector.value;

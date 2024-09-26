@@ -16,37 +16,50 @@
         <img src="../assets/rsu-logo.png" alt="RSU Logo">
       </div>
       <div class="logo-wrap">
-        <h3>Systematized OSAS Transactions System</h3>
+        <h2>Systematized OSAS Transactions System</h2>
       </div>
     </div>
     <div class="login-container">
-      <!--<img src="assets/rsu-background.png" alt="Background Image">-->
       <div class="login-wrap">
         <!-- Loading Spinner -->
         <div id="loading" class="loading-spinner" style="display: none;">
           <div class="spinner"></div>
         </div>
+        
+        <!-- Sign-Up Form -->
         <div class="login-text">
           <h4>Sign Up</h4>
         </div>
         <form id="signup-form">
+          <div class="form-fields">
+            <div class="signIn">
+              <label for="email">Email</label>
+              <input type="text" name="email" id="email" placeholder="Enter your email" required>
+            </div>
+           <!-- Sign-Up Form (add this section to your existing sign-up HTML) -->
           <div class="signIn">
-            <label for="email">Email</label>
-            <input type="text" name="email" id="email" placeholder="Enter your email">
+        <label for="password">Password</label>
+        <div class="password-container">
+       <input type="password" name="password" id="signup-password" placeholder="Enter your password" required>
+        <i class='bx bx-hide' id="toggleSignupPassword"></i>
+       </div>
+      </div>
+      <div class="signIn">
+      <label for="confirm-password">Confirm Password</label>
+      <div class="password-container">
+      <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm your password" required>
+      <i class='bx bx-hide' id="toggleConfirmPassword"></i>
+       </div>
+       </div>
+
+            <div class="signIn">
+              <input type="submit" value="Submit">
+            </div>
           </div>
-          <div class="signIn">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" placeholder="Enter your password">
-          </div>
-          <div class="signIn">
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm your password">
-          </div>
-          <div class="signIn">
-            <input type="submit" value="Submit">
-          </div>
+          <!-- Consistent Style for 'Already have an account?' -->
           <div class="register-container">
-            <p>Already have an account?</p> <a href="index.html">Log In</a>
+            <p>Already have an account?</p>
+            <a href="index.html">Log In</a>
           </div>
         </form>
       </div>
