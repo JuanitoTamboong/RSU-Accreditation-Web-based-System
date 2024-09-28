@@ -127,7 +127,7 @@ async function addProfile() {
     const q = query(profilesRef, where("studentId", "==", studentId));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
-        alert("A profile with this Student ID already exists in Firestore.");
+        alert("A profile with this Student ID already exist");
         return;
     }
 
@@ -174,8 +174,7 @@ function updateTable(profiles) {
         tableBody.appendChild(row);
     });
 }
-
-// Search profiles in Firestore
+//search profiles
 async function searchProfiles() {
     const searchValue = document.getElementById('search-input').value.toLowerCase();
     const dropdown = document.getElementById('dropdown-list');
@@ -186,16 +185,16 @@ async function searchProfiles() {
         return;
     }
 
-    const profilesRef = collection(db, "student-org-applications");
-    const q = query(profilesRef, where("name", ">=", searchValue), where("name", "<=", searchValue + '\uf8ff'));
-    const querySnapshot = await getDocs(q);
+    // Filter through tempProfiles to find matches
+    const filteredProfiles = tempProfiles.filter(profile =>
+        profile.name.toLowerCase().includes(searchValue)
+    );
 
-    querySnapshot.forEach((doc) => {
-        const { name } = doc.data();
+    filteredProfiles.forEach((profile, index) => {
         const option = document.createElement('div');
         option.classList.add('dropdown-item');
-        option.textContent = name;
-        option.onclick = () => selectProfile(doc.id);
+        option.textContent = profile.name;
+        option.onclick = () => selectProfile(index); // Pass the index of the profile
         dropdown.appendChild(option);
     });
 
@@ -203,29 +202,24 @@ async function searchProfiles() {
 }
 
 // Handle selection of a profile from the dropdown
-async function selectProfile(selectedId) {
-    const profileRef = doc(db, "student-org-applications", selectedId);
-    const profileSnapshot = await getDoc(profileRef);
+function selectProfile(index) {
+    clearStudentProfileForm(); // Clear the form first
+    const profile = tempProfiles[index]; // Get the selected profile
 
-    clearStudentProfileForm();
+    document.getElementById('student-id').value = profile.studentId;
+    document.getElementById('name').value = profile.name;
+    document.getElementById('address').value = profile.address;
 
-    if (profileSnapshot.exists()) {
-        const { studentId, name, address, imageUrl } = profileSnapshot.data();
-        document.getElementById('student-id').value = studentId;
-        document.getElementById('name').value = name;
-        document.getElementById('address').value = address;
+    const preview = document.getElementById('image-preview');
+    const uploadText = document.getElementById('upload-text');
 
-        const preview = document.getElementById('image-preview');
-        const uploadText = document.getElementById('upload-text');
-
-        if (imageUrl) {
-            preview.src = imageUrl;
-            preview.style.display = 'block';
-            uploadText.style.display = 'none';
-        } else {
-            preview.style.display = 'none';
-            uploadText.style.display = 'block';
-        }
+    if (profile.imageUrl) {
+        preview.src = profile.imageUrl;
+        preview.style.display = 'block';
+        uploadText.style.display = 'none';
+    } else {
+        preview.style.display = 'none';
+        uploadText.style.display = 'block';
     }
 
     document.getElementById('search-input').value = ''; // Clear search input
@@ -241,6 +235,36 @@ function clearStudentProfileForm() {
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('upload-text').style.display = 'block';
 }
+
+// Update the selected profile in the list
+function updateProfile() {
+    const studentId = document.getElementById('student-id').value;
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const imageUrl = document.getElementById('image-preview').src;
+
+    // Validate that a profile exists to update
+    const index = tempProfiles.findIndex(profile => profile.studentId === studentId);
+
+    if (index !== -1) {
+        // Update the profile details
+        tempProfiles[index].name = name;
+        tempProfiles[index].address = address;
+        tempProfiles[index].imageUrl = imageUrl;
+
+        // Refresh the displayed list of profiles
+        updateTable(tempProfiles);
+        
+        // Clear the form
+        clearStudentProfileForm();
+        alert('Profile updated successfully!'); // Inform the user
+    } else {
+        alert('Profile not found!'); // Alert if no matching profile is found
+    }
+}
+// Add this event listener to your script to trigger the updateProfile function when the Update button is clicked
+document.querySelector('.update-btn').addEventListener('click', updateProfile);
+
 
 // Submit all profiles to Firestore
 async function submitAllProfiles() {
