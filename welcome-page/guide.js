@@ -94,4 +94,24 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = redirectUrl;
         }
     });
+    window.onload = function() {
+        Swal.fire({
+            title: 'Welcome!',
+            html: `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <p style="font-size: 14px; text-align: left; max-width: 60%; margin-right: 15px;">
+                        Please put the following documents together in one PDF file. This will make it easier to look at everything. Thank you for your help! 😊
+                    </p>
+                    <img src="../assets/welcome.png" alt="Custom image" width="150" height="150" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                </div>
+               <audio autoplay preload="auto">
+                    <source src="../assets/script.mp3" type="audio/mpeg">
+                </audio>
+            `,
+            confirmButtonText: 'OK',
+            customClass: {
+                popup: 'swal-custom-popup'
+            }
+        });
+    };    
 });
