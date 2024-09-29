@@ -239,6 +239,41 @@ button:hover {
   font-size: 13px;
   height: auto;
 }
+.swal-custom-popup {
+  font-size: 16px; /* Adjust font size */
+  padding: 20px; /* Add padding for better spacing */
+}
+
+.swal2-input {
+  border-radius: 5px; /* Round the corners of the input fields */
+  border: 1px solid #ccc; /* Add a border for better visibility */
+  margin: 0;
+}
+
+.swal2-actions {
+  display: flex; /* Use flexbox for button alignment */
+  justify-content: space-between; /* Space between buttons */
+}
+
+.swal-confirm-btn,
+.swal-cancel-btn {
+  flex: 1; /* Allow buttons to grow equally */
+  margin: 0 5px; /* Optional: Add some margin between buttons */
+}
+
+.swal-confirm-btn {
+  background-color: var(--box-shadow); /* Customize confirm button */
+}
+
+.swal-cancel-btn {
+  background-color: #f44336; /* Customize cancel button */
+  color: white; /* Text color for cancel button */
+}
+
+.swal-confirm-btn .swal-cancel-btn {
+  display: inline;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
     .header h2{
@@ -272,4 +307,15 @@ button:hover {
         width: 80%;
         font-size: 11px;
     }
+    .swal-custom-popup {
+      font-size: 15px;
+    }
+    .swal-title{
+      font-size: 26px;
+    }
+    .swal-confirm-btn,
+    .swal-cancel-btn {
+   font-size: 15px;
+}
+
   }

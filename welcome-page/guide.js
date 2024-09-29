@@ -48,57 +48,63 @@ document.addEventListener('DOMContentLoaded', function () {
             const { value: formValues } = await Swal.fire({
                 title: 'Re-Accreditation',
                 html: `
-                    <div style="text-align: left;">
-                        <label for="organization-search">Search Organization:</label>
-                        <input type="text" id="organization-search" class="swal2-input" placeholder="Enter organization name" required>
-                        <label for="filing-date">Date of Filing:</label>
-                        <input type="text" id="filing-date" class="swal2-input" readonly> <!-- Make this field read-only -->
+                    <div style="font-family: Arial, sans-serif; max-width: 400px; margin: auto;">
+                        <div style="margin-bottom: 20px; text-align:left;">
+                            <label for="organization-search" style="display: block; margin-bottom: 5px;">Search Organization:</label>
+                            <input type="text" id="organization-search" class="swal2-input" placeholder="Enter organization name" required style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        </div>
+                        <div style="margin-bottom: 20px; text-align:left;">
+                            <label for="filing-date" style="display: block; margin-bottom: 5px;">Date of Filing:</label>
+                            <input type="text" id="filing-date" class="swal2-input" readonly style="background-color: #f0f0f0; width: 100%; padding: 10px; box-sizing: border-box;">
+                        </div>
                     </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: 'Search',
                 customClass: {
-                    popup: 'swal-custom-popup'
+                    popup: 'swal-custom-popup',
+                    title: 'swal-title',
+                    input: 'swal-input',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn',
                 },
                 preConfirm: async () => {
                     const organizationName = document.getElementById('organization-search').value.trim();
                     const filingDateInput = document.getElementById('filing-date');
-
+        
                     if (!organizationName) {
                         Swal.showValidationMessage('Please fill out the organization name');
                         return false;
                     }
-
+        
                     const currentUser = auth.currentUser;
                     if (!currentUser) {
                         console.error("User is not authenticated");
                         Swal.showValidationMessage('User is not authenticated.');
                         return;
                     }
-
+        
                     const currentUserId = currentUser.uid;
                     console.log("Current user ID:", currentUserId);
-
+        
                     // Query Firebase Firestore to get the organization based on the search
                     const orgQuery = query(
                         collection(db, "student-org-applications"),
                         where("organizationName", "==", organizationName),
                         where("createdBy", "==", currentUserId) // Ensure this matches the UID of the logged-in user
                     );
-
+        
                     try {
                         console.log("Searching for organization:", organizationName);
-
                         const querySnapshot = await getDocs(orgQuery);
                         console.log("Query snapshot size:", querySnapshot.size);
                         console.log("Query snapshot data:", querySnapshot.docs.map(doc => doc.data()));
-
-                        // If the organization exists, check if it belongs to the current user
+        
                         if (!querySnapshot.empty) {
                             const orgData = querySnapshot.docs[0].data();
                             filingDateInput.value = orgData.dateFiling; // Populate filing date
                             console.log('Found organization data:', orgData);
-
+        
                             // Add a delay before closing the modal
                             await new Promise(resolve => setTimeout(resolve, 3000)); // 3000 ms = 3 seconds
                             return { orgData, filingDate: orgData.dateFiling };
@@ -113,12 +119,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             });
-
+        
             if (formValues) {
                 const { orgData, filingDate } = formValues;
                 console.log('Organization:', orgData.organizationName);
                 console.log('Date of Filing:', filingDate);
-
+        
                 // Load the guide items after the search
                 addGuideItems([
                     "Accomplish the application form (Re-Accreditation)",
@@ -135,7 +141,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     "Parent’s Consent (For Fraternity/Sorority)"
                 ]);
             }
-        } else {
+        }        
+        
+         else {
             // For New Organization
             addGuideItems([
                 "Accomplish the application",
@@ -201,14 +209,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <img src="../assets/welcome-student.png" alt="Custom image" width="150" height="150" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); margin-bottom: 15px;">
                     <p style="font-size: 14px; text-align:center; max-width: 100%;">
-                        Please make sure to follow all the important requirements for getting accredited and re-accredited. It is very important to look at each guideline carefully and make sure you meet all the necessary requirements.
+                       Please make sure to follow all the important requirements for getting accredited and re-accredited. It is very important to look at each guideline carefully and make sure you meet all the necessary steps. This will help us stay on the right path and meet the standards we need during this process.Thank you!
                     </p>
                 </div>
                 <audio autoplay preload="auto">
                     <source src="../assets/script.mp3" type="audio/mpeg">
                 </audio>
             `,
-            confirmButtonText: 'Proceed'
+            confirmButtonText: 'OK'
         });
     };
 });
