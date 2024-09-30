@@ -43,6 +43,7 @@ function saveFormData(docUrls) {
 
     // Collect form data
     const formData = {
+        uid: user.uid, // Add uid here
         typeOfAccreditation: "New Organization",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
@@ -75,6 +76,7 @@ function loadFormData() {
         document.getElementById('date-filing').value = savedData.dateFiling || '';
     }
 }
+
 
 // Handle document upload
 document.getElementById('requirement-documents').addEventListener('change', async (event) => {
