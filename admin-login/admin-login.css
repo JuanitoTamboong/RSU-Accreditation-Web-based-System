@@ -1,0 +1,104 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --primary-color: #0D1B2A;         /* Dark Navy */
+  --accent-color: #1B263B;          /* Deep Blue */
+  --background-color: #F0F4F8;      /* Light Gray Background */
+  --card-background: #FFFFFF;       /* White for card background */
+  --input-border-color: #E0E0E0;    /* Light border for input fields */
+  --text-color-primary: #E0E0E0;    /* Light gray text */
+  --text-color-secondary: #7C8A97;  /* Muted gray for labels */
+  --button-hover-color: #415A77;    /* Hover for buttons */
+  --button-background: #1B263B;     /* Dark button color */
+}
+
+
+body {
+background-color: #1B263B;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.admin-container {
+  background-color: var(--card-background);
+  padding: 40px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.admin-container h2 {
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-form label {
+  text-align: left;
+  color: var(--text-color-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.admin-form input {
+  padding: 12px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.admin-form input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+.forgot-password{
+  text-align: right;
+  padding-top: 10px;
+}
+.forgot-password a{
+  font-size: 13px;
+  color: var(--button-hover-color);
+}
+/* Submit button styling */
+.submit {
+  margin-top: 25px;
+}
+
+.submit button {
+  width: 100%;
+  padding: 15px;
+  background-color: var(--button-background);
+  color: var(--text-color-primary);
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit button:hover {
+  background-color: var(--button-hover-color); /* Lighter blue on hover */
+}

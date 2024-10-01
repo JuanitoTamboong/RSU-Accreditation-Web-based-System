@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin-login.css">
+    <link rel="website icon" href="../assets/rsu-logo.png">
+    <title>Admin Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script type="module" src="admin-login.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-container">
+            <h2>Admin Login</h2>
+            <div class="admin-form">
+                <label for="admin">Admin</label>
+                <input type="email" name="admin" id="admin" placeholder="Enter email address" required>
+                
+                <label for="admin-pass">Password</label>
+                <input type="password" name="admin-pass" id="admin-pass" placeholder="Enter your given password" required>
+            </div>
+               <div class="forgot-password">
+                <a href="#" id="forgot-password-link">Forgot Password?</a>
+              </div>
+            <div class="submit">
+                <button type="submit" name="submit" id="submit">Login</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
