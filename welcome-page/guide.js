@@ -225,4 +225,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    window.onload = function() {
+        Swal.fire({
+            title: 'Welcome!',
+            html: `
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <img src="../assets/welcome-student.png" alt="Custom image" width="150" height="150" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); margin-bottom: 15px;">
+                    <p style="font-size: 14px; text-align:center; max-width: 100%;">
+                       Please make sure to follow all the important requirements for getting accredited and re-accredited. It is very important to look at each guideline carefully and make sure you meet all the necessary steps. This will help us stay on the right path and meet the standards we need during this process. Thank you!
+                    </p>
+                </div>
+                <audio autoplay preload="auto">
+                    <source src="../assets/script.mp3" type="audio/mpeg">
+                </audio>
+            `,
+            confirmButtonText: 'Got it'
+        });
+    };
 });
