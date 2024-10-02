@@ -6,37 +6,19 @@
     <link rel="stylesheet" href="admin-dashboard.css">
     <link rel="website icon" href="../assets/rsu-logo.png">
     <title>Admin Dashboard</title>
-    <script type="module" src="admin-app.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
-    <div class="top-header">
-        <img src="../assets/rsu-logo.png" alt="RSU Logo">
-        <h2>Admin Dashboard</h2>
-    </div>
-
-    <div class="applications-container">
-        <h3>Applications</h3>
-        
-        <div id="approved-applications">
-            <h4>Approved Applications</h4>
-            <div id="approved-list">
-                <!-- Approved applications will be dynamically populated here -->
-            </div>
-        </div>
-
-        <div id="declined-applications">
-            <h4>Declined Applications</h4>
-            <div id="declined-list">
-                <!-- Declined applications will be dynamically populated here -->
-            </div>
-        </div>
-
-        <div id="pending-applications">
-            <h4>Pending Applications</h4>
-            <div id="pending-list">
-                <!-- Pending applications will be dynamically populated here -->
-            </div>
-        </div>
+    <div class="sidebar">
+        <div class="admin-user"></div>
+        <ul class="side-me">
+            <li>
+                <a href="#">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </body>
 </html>

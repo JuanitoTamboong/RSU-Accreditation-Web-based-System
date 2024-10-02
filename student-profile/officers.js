@@ -294,14 +294,15 @@ async function submitAllProfiles() {
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
                 alert(`A profile with Student ID ${studentId} already exists in Firestore. Submission aborted.`);
+                hideLoading();
                 return;
             }
         }
 
-       
+        // Combine application data and profiles
         const combinedData = {
-            applicationDetails: applicationData,   
-            profiles: tempProfiles                
+            applicationDetails: applicationData,  // Data from the application form
+            profiles: tempProfiles  // Temp profiles stored locally
         };
 
         // Reference to Firestore collection (using 'student-org-applications')

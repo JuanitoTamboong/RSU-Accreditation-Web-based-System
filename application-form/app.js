@@ -1,4 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"; 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
@@ -23,7 +23,6 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = "../index.html";
     } else {
         document.getElementById('email-address').value = user.email || ''; // Prefill user email
-        loadFormData(); // Load the user's specific form data
     }
 });
 
@@ -43,7 +42,7 @@ function saveFormData(docUrls) {
 
     // Collect form data
     const formData = {
-        uid: user.uid, // Add uid here
+        uid: user.uid,
         typeOfAccreditation: "New Organization",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
@@ -52,79 +51,74 @@ function saveFormData(docUrls) {
         organizationName: document.getElementById('organization-name-dropdown').value,
         emailAddress: document.getElementById('email-address').value,
         dateFiling: document.getElementById('date-filing').value,
-        documents: docUrls || [] // Ensure documents are saved
+        documents: docUrls || [] // Save document URLs here
     };
 
     // Save form data to localStorage with user-specific key
     localStorage.setItem(`applicationFormData_${user.uid}`, JSON.stringify(formData));
 }
 
-// Load form data from localStorage using user's uid as key
-function loadFormData() {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    // Retrieve saved data from localStorage
-    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`));
-    if (savedData) {
-        document.getElementById('representative-name').value = savedData.representativeName || ''; // Correctly load representative name
-        document.getElementById('representative-position-dropdown').value = savedData.representativePosition || '';
-        document.getElementById('school-year').value = savedData.schoolYear || '';
-        document.getElementById('course-dropdown').value = savedData.studentCourse || '';
-        document.getElementById('organization-name-dropdown').value = savedData.organizationName || '';
-        document.getElementById('email-address').value = savedData.emailAddress || '';
-        document.getElementById('date-filing').value = savedData.dateFiling || '';
-    }
-}
-
-
 // Handle document upload
-document.getElementById('requirement-documents').addEventListener('change', async (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to an array
-    const maxSize = 5 * 1024 * 1024; // 5 MB
-    let documentUrls = []; // Array to hold URLs of uploaded documents
+let uploadedFiles = []; // Store uploaded files locally
 
-    // Retrieve existing document URLs from localStorage
-    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${auth.currentUser.uid}`));
-    const existingDocUrls = savedData?.documents || []; // Use existing URLs or an empty array
+document.getElementById('requirement-documents').addEventListener('change', (event) => {
+    const files = Array.from(event.target.files);
+    const maxSize = 5 * 1024 * 1024; // 5MB
 
-    // Iterate over selected files
+    if (files.length > 0) {
+        document.getElementById('preview-documents').disabled = false; // Enable preview button
+    }
+
+    // Clear previously stored files
+    uploadedFiles = []; 
+
     for (const file of files) {
-        // Check file size and type
-        if (file.size <= maxSize && file.type === 'application/pdf') {
-            // Create a reference to the storage location
-            const storageRef = ref(storage, `documents/${file.name}`);
-            try {
-                // Upload the file
-                await uploadBytes(storageRef, file);
-                // Get the download URL for the uploaded file
-                const url = await getDownloadURL(storageRef);
-                documentUrls.push(url); // Add the download URL to the array
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Upload Error',
-                    text: `Failed to upload ${file.name}. Please try again later.`,
-                });
-            }
-        } else {
-            // Show an error message if the file exceeds size or type restrictions
+        if (file.size > maxSize || file.type !== 'application/pdf') {
             Swal.fire({
                 icon: 'error',
                 title: 'Upload Error',
-                text: `${file.name} exceeds 5MB size or is not a PDF.`,
+                text: `${file.name} exceeds 5MB or is not a PDF.`,
             });
+            document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+        } else {
+            uploadedFiles.push(file); // Store valid files in memory
         }
     }
-
-    // Combine new document URLs with existing ones
-    documentUrls = [...existingDocUrls, ...documentUrls];
-
-    // Save the updated URLs to localStorage
-    saveFormData(documentUrls); // Function to handle localStorage updates
 });
 
+// Preview button logic
+document.getElementById('preview-documents').addEventListener('click', () => {
+    const file = uploadedFiles[0]; // Get the first valid file from memory
+
+    if (file && file.type === 'application/pdf') {
+        const fileReader = new FileReader();
+
+        // Once the file is loaded, display it in an iframe
+        fileReader.onload = function(event) {
+            const pdfData = event.target.result;
+            Swal.fire({
+                title: 'Selected PDF Document',
+                html: `<iframe src="${pdfData}" style="width:100%; height:400px;" frameborder="0"></iframe>`,
+                icon: 'info',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Close',
+                customClass: {
+                    popup: "swal-pdf-viewer"
+                }
+            });
+        };
+
+        // Read the file as a data URL
+        fileReader.readAsDataURL(file);
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'No Valid File',
+            text: 'Please select a valid PDF document to preview.',
+        });
+    }
+});
 
 // Set the current year to the school year input
 function setCurrentYear() {
@@ -136,6 +130,8 @@ function setCurrentYear() {
 window.addEventListener('load', () => {
     setCurrentYear(); // Set the current year on load
 });
+
+// Date picker initialization
 document.addEventListener('DOMContentLoaded', function() {
     flatpickr("#date-filing", {
         dateFormat: "Y-m-d", // Format as Year-Month-Day
@@ -164,11 +160,49 @@ document.getElementById('application-form').addEventListener('submit', async (ev
         return;
     }
 
-    // Retrieve the document URLs saved in localStorage if there are any
-    let savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`));
-    let docUrls = savedData?.documents || [];
+    // Array to store the uploaded document URLs
+    let docUrls = [];
 
-    saveFormData(docUrls); // Always pass the document URLs
+    // If there are files uploaded, upload them to Firebase Storage
+    if (uploadedFiles.length > 0) {
+        const uploadPromises = uploadedFiles.map((file, index) => {
+            // Create a storage reference for each file
+            const fileRef = ref(storage, `documents/${user.uid}/${file.name}`);
+            
+            // Upload the file and return the promise
+            return uploadBytes(fileRef, file)
+                .then(snapshot => {
+                    // After uploading, get the download URL
+                    return getDownloadURL(snapshot.ref).then(url => {
+                        return url; // Return the URL
+                    });
+                })
+                .catch(error => {
+                    console.error("Error uploading file:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Upload Error',
+                        text: `Failed to upload file: ${file.name}`,
+                    });
+                    throw error; // Propagate error to stop form submission
+                });
+        });
+
+        try {
+            // Wait for all files to upload and get their URLs
+            docUrls = await Promise.all(uploadPromises);
+        } catch (error) {
+            hideLoading();
+            return; // Stop form submission if file upload fails
+        }
+    }
+
+    // Get previously saved form data from localStorage
+    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
+    const allDocUrls = [...(savedData.documents || []), ...docUrls]; // Combine existing and new document URLs
+
+    // Store the form data and uploaded document URLs in localStorage
+    saveFormData(allDocUrls);
 
     // Redirect to the next page
     window.location.href = '../student-profile/list-officers.html';
@@ -203,32 +237,12 @@ document.getElementById('add-position').addEventListener('click', () => {
         inputPlaceholder: 'New position name'
     }).then((result) => {
         if (result.isConfirmed && result.value) {
-            const positionDropdown = document.getElementById('representative-position-dropdown');
+            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
             const option = document.createElement('option');
             option.value = result.value;
             option.textContent = result.value;
-            positionDropdown.appendChild(option);
-            positionDropdown.value = result.value; // Set it as selected
-        }
-    });
-});
-
-// Add course dynamically
-document.getElementById('add-course').addEventListener('click', () => {
-    Swal.fire({
-        title: 'Enter the new course name:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'New course name',
-        customClass: "swal-wide"
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const courseDropdown = document.getElementById('course-dropdown');
-            const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
-            courseDropdown.appendChild(option);
-            courseDropdown.value = result.value; // Set it as selected
+            representativePositionDropdown.appendChild(option);
+            representativePositionDropdown.value = result.value; // Set it as selected
         }
     });
 });

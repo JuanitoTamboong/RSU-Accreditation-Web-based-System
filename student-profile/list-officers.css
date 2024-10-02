@@ -75,6 +75,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  margin-left: 480px;
 }
 
 .search-bar i {
@@ -94,6 +95,29 @@
   border-radius: 5px;
   border: none;
   outline: none;
+}
+/* Logout Container Styles */
+.logout {
+  margin:0; /* Space between search bar and logout link */
+}
+
+/* Logout Link Styles */
+.logout-link {
+  text-decoration: none;
+  color: var(--font-color);
+  padding: 10px; 
+  font-size: 23px; 
+}
+/* Icon Styles */
+.logout-link i {
+  margin-left: 5px; /* Space between text and icon */
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* Hover Effect */
+.logout-link i:hover {
+  color: var(--button); 
 }
 
 /* Dropdown Styles */
@@ -383,8 +407,13 @@ cursor: pointer;
   .search-bar {
     padding-top: 20px;
     width: 100%;
+    margin: 0;
   }
-
+.logout{
+  position: absolute;
+  left: 85%;
+  font-size: 1px;
+}
   #dropdown-list {
     width: 87%;
   }

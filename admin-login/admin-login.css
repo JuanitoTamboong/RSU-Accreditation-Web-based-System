@@ -21,51 +21,96 @@
   --button-background: #1B263B;     /* Dark button color */
 }
 
-
 body {
-background-color: #1B263B;
-}
-
-.container {
+  background-color: var(--accent-color);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  width: 100%;
+}
+
+.container {
+  margin-top: 50px;
+  width: 100%;
+  max-width: 780px; 
+  border-radius: 50px; 
+  overflow: hidden;
+  border: 8px solid var(--primary-color); 
+  display: flex;
+  align-items: stretch;
+  background-image: url('../assets/admin-bg.png');
+}
+
+.left-section {
+  width: 50%; 
+}
+.left-section img {
+  object-fit: contain;
+  height: 500px;
+  width: auto;
+  filter: drop-shadow(1px 5px 0px var(--accent-color));
+  transition: all 1s;
+  animation: icon-move 1.5s;
+}
+@keyframes icon-move {
+  0% {transform: translateX(-400px);}
 }
 
 .admin-container {
-  background-color: var(--card-background);
-  padding: 40px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-  width: 100%;
-  max-width: 400px;
+  padding: 50px; 
   text-align: center;
+  width: 50%;
+  background-color: var(--primary-color);
+}
+
+.admin-container img {
+  object-fit: contain;
+  height: 70px; 
+  margin-bottom: 10px;
 }
 
 .admin-container h2 {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   font-weight: 600;
-  color: var(--accent-color);
+  font-size: 20px; 
+  color: var(--card-background);
 }
+
+/* Admin form container styling */
 .admin-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px; 
 }
 
 .admin-form label {
   text-align: left;
   color: var(--text-color-secondary);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 }
 
+/* Input field container to position icon */
+.input-container {
+  position: relative; /* Position relative for absolute children */
+}
+
+#toggle-password {
+  cursor: pointer;
+  position: absolute; /* Positioning it inside the input */
+  right: 15px; /* Adjust as needed */
+  top: 50%; /* Center it vertically */
+  transform: translateY(-50%); /* Adjust for vertical centering */
+  color: var(--text-color-secondary); /* Icon color */
+}
+
 .admin-form input {
-  padding: 12px;
+  padding: 10px;
+  padding-right: 40px; /* Space for the icon */
+  width: 100%;
   border: 1px solid var(--input-border-color);
-  border-radius: 20px;
-  font-size: 14px;
+  border-radius: 15px; 
+  font-size: 13px;
   transition: border-color 0.2s ease-in-out;
 }
 
@@ -73,32 +118,51 @@ background-color: #1B263B;
   border-color: var(--accent-color);
   outline: none;
 }
-.forgot-password{
+
+/* Positioning the icons inside the input fields */
+.email-icon, .password-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color-secondary);
+}
+
+.forgot-password {
   text-align: right;
-  padding-top: 10px;
+  padding-top: 8px;
 }
-.forgot-password a{
-  font-size: 13px;
-  color: var(--button-hover-color);
+
+.forgot-password a {
+  font-size: 12px;
+  color: var(--text-color-secondary);
 }
+
 /* Submit button styling */
 .submit {
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .submit button {
   width: 100%;
-  padding: 15px;
+  padding: 12px; 
   background-color: var(--button-background);
   color: var(--text-color-primary);
   border: none;
-  border-radius: 20px;
-  font-size: 16px;
+  border-radius: 15px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .submit button:hover {
-  background-color: var(--button-hover-color); /* Lighter blue on hover */
+  background-color: var(--button-hover-color); 
+}
+.swal-modal{
+  background-color: var(--button-background);
+  border-radius: 30px;
+  color: var(--text-color-primary);
+  width: 30%;
+  font-size: 13px;
 }

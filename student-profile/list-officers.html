@@ -18,12 +18,14 @@
         <div class="search-bar">
             <input type="search" id="search-input" placeholder="Search officers (e.g Dela Cruz, Juan)">
             <i class='bx bx-search'></i>
-            <div id="dropdown-list" class="dropdown">
-                <!-- Options will be populated here dynamically -->
-            </div>
+            <div id="dropdown-list" class="dropdown"></div>
+        </div>
+        <div class="logout">
+            <a href="../index.html" class="logout-link">
+                <i class='bx bx-log-out-circle'></i>
+            </a>
         </div>
     </div>
-
     <div class="container">
         <div class="list-officers">
             <div class="student-profile">
@@ -45,7 +47,7 @@
                 <label for="address">Address</label>
                 <input type="text" id="address" placeholder="Enter your address">
                 <div class="add-update">
-                    <button id="update-btn"class="update-btn" onclick="updateProfile()">
+                    <button id="update-btn" class="update-btn" onclick="updateProfile()">
                         <i class='bx bx-refresh'></i> Update
                     </button>
                     <button type="button" class="add-btn">
@@ -56,11 +58,11 @@
         </div>
 
         <div class="profiles-container">
-            <h3>
-                Added Student Profiles
-            </h3>
+            <h3>Added Student Profiles</h3>
             <div class="clear-list">
-                <button <i class='bx bx-x' id="clear-profiles"></i> </button>
+                <button id="clear-profiles">
+                    <i class='bx bx-x'></i> Clear
+                </button>
             </div>
             <div class="table-wrapper">
                 <table>
@@ -78,7 +80,7 @@
                 </table>
             </div>
             <div class="submit-btn">
-                <button type="button" onclick="submitAllProfiles()">Submit</button>
+                <button class="submit-btn" onclick="submitAllProfiles()">Submit</button>
                 <!-- Loading Spinner -->
                 <div id="loading" class="loading-spinner" style="display:none;">
                     <div class="spinner"></div>

@@ -9,8 +9,7 @@ const firebaseConfig = {
     storageBucket: "admin-9ee84.appspot.com",
     messagingSenderId: "65720582473",
     appId: "1:65720582473:web:48f63f7d4d100d65039a98"
-  };
-  
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -30,6 +29,9 @@ document.getElementById('submit').addEventListener('click', (e) => {
       icon: 'warning',
       title: 'Error',
       text: 'Please fill in both email and password.',
+      customClass: {
+        popup: 'swal-modal' // Applies the custom background and font class
+      }
     });
     return;
   }
@@ -44,50 +46,104 @@ document.getElementById('submit').addEventListener('click', (e) => {
         icon: 'success',
         title: 'Login Successful',
         text: `Welcome ${user.email}!`,
+        customClass: {
+          popup: 'swal-modal' // Applies the custom background and font class
+        }
       }).then(() => {
         // Redirect to admin dashboard or another page
         window.location.href = '../admin-dashboard/admin-dashboard.html';
       });
     })
     .catch((error) => {
+      // Handle Firebase login errors
+      let errorMessage = 'Login failed. Please try again.';
+      
+      // Check for specific Firebase error codes
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'Admin email not found. Please check your email.';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email format. Please enter a valid email.';
+      }
+
+      // Display the specific error message
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
-        text: `Error: ${error.message}`,
+        text: errorMessage,
+        customClass: {
+          popup: 'swal-modal' // Applies the custom background and font class
+        }
       });
     });
 });
+// Toggle password visibility
+const togglePassword = document.getElementById('toggle-password');
+const passwordInput = document.getElementById('admin-pass');
 
-// Function to handle password reset
+togglePassword.addEventListener('click', () => {
+    // Toggle the type attribute
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    // Toggle the icon
+    if (type === 'password') {
+        togglePassword.classList.remove('fa-unlock'); // Change back to lock icon
+        togglePassword.classList.add('fa-lock');
+    } else {
+        togglePassword.classList.remove('fa-lock'); // Change to unlock icon
+        togglePassword.classList.add('fa-unlock');
+    }
+});
+
+
+// Function to handle password reset with Swal input for email
 document.getElementById('forgot-password-link').addEventListener('click', (e) => {
   e.preventDefault();
 
-  const email = document.getElementById('admin').value;
+  // Show Swal input prompt for email
+  Swal.fire({
+    title: 'Reset Password',
+    input: 'email',
+    inputLabel: 'Enter your email address',
+    inputPlaceholder: 'Email',
+    showCancelButton: true,
+    confirmButtonText: 'Send Reset Link',
+    customClass: {
+      popup: 'swal-modal' // Applies the custom background and font class
+    },
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to enter your email address!';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const email = result.value;
 
-  // Check if email is provided
-  if (!email) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Error',
-      text: 'Please enter your email address to reset your password.',
-    });
-    return;
-  }
-
-  // Send password reset email
-  sendPasswordResetEmail(auth, email)
-    .then(() => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Reset Email Sent',
-        text: 'Check your inbox for a link to reset your password.',
-      });
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Failed to Send Reset Email',
-        text: `Error: ${error.message}`,
-      });
-    });
+      // Send password reset email
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Reset Email Sent',
+            text: 'Check your gmail for a link to reset your password.',
+            customClass: {
+              popup: 'swal-modal' // Applies the custom background and font class
+            }
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to Send Reset Email',
+            text: `Error: ${error.message}`,
+            customClass: {
+              popup: 'swal-modal' // Applies the custom background and font class
+            }
+          });
+        });
+    }
+  });
 });

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="student-org-application.css">
+    <link rel="icon" href="../assets/rsu-logo.png">
+    <title>SOA Application Form</title>
+    <script type="module" src="renewal.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="top-header">
+        <img src="../assets/rsu-logo.png" alt="RSU Logo">
+        <h2>Student Organization Re-Accreditation Form</h2>
+    </div>
+    
+    <div class="form-container">
+        <form id="application-form">
+            <div class="form-group">
+                <label for="representative-name">Name of Representative:</label>
+                <input type="text" id="representative-name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="representative-position">Position:</label>
+                <div class="dropdown-container">
+                    <select id="representative-position-dropdown">
+                        <option value="">--Select a position--</option>
+                        <option value="President">President</option>
+                        <option value="Vice President">Vice President</option>
+                        <option value="Secretary">Secretary</option>
+                        <option value="Treasurer">Treasurer</option>
+                    </select>
+                    <button type="button" id="add-position" class="add-btn">+</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="school-year">School Year:</label>
+                <input type="text" id="school-year" placeholder="Enter your school year" required readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="course">Course:</label>
+                <div class="dropdown-container">
+                    <select id="course-dropdown">
+                        <option value="">--Select a course--</option>
+                        <option value="BS Education">BS Education</option>
+                        <option value="BS Information Technology">BS Information Technology</option>
+                        <option value="BS Business and Accountancy">BS Business and Accountancy</option>
+                        <option value="BS Mechanical Engineering">BS Mechanical Engineering</option>
+                        <option value="BS Electrical Engineering">BS Electrical Engineering</option>
+                        <option value="BS Civil Engineering">BS Civil Engineering</option>
+                        <option value="BS Political Science">BS Political Science</option>
+                        <option value="BS Public Administration">BS Public Administration</option>
+                        <option value="BS Biology">BS Biology</option>
+                    </select>
+                    <button type="button" id="add-course" class="add-btn">+</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="organization-name">Organization Name:</label>
+                <div class="dropdown-container">
+                    <select id="organization-name-dropdown"> 
+                        <option value="">--Select an organization--</option>
+                        <option value="CBASO">CBASO</option>
+                        <option value="CETSO">CETSO</option>
+                        <option value="CEDSO">CEDSO</option>
+                        <option value="CASSO">CASSO</option>
+                        <option value="CCMADISO">CCMADISO</option>
+                    </select>
+                    
+                    <button type="button" id="add-organization" class="add-btn">+</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email-address">Email Address:</label>
+                <p>You may provide an alternative email address if you have one. This email will be used by the admin to send your request.</p>
+                <input type="email" id="email-address" placeholder="Enter email address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date-filing">Date of Filing:</label>
+                <input type="date" id="date-filing" required>
+            </div>
+            <div class="form-group">
+                <label for="requirement-documents">Upload Requirement Documents:</label>
+                <p>(Only accepts PDF file with max size 5MB)</p>
+                <div class="file-container">
+                    <input type="file" id="requirement-documents" accept=".pdf" required>
+                    <button type="button" id="preview-documents" class="preview-btn" disabled>View Documents
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group submit-btn">
+                <button type="submit">Next</button>
+                <div id="loading" class="loading-spinner" style="display:none;">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
