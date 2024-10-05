@@ -16,7 +16,7 @@
   --text-color-primary: #FFFFFF;     
   --text-color-secondary: #D0D0D0;   
   --button-hover-color: #415A77;     
-  --button-background: #1B263B;      
+  --button-background: #1B263B;
 }
 body {
   display: flex; 
@@ -181,17 +181,26 @@ body {
 }
 .left-side-container{
 padding: 20px;
-width: 20%;
 margin-top: 20px;
 border-radius: 20px;
 }
 .left-content{
-background-color: var(--button-hover-color);
+background-color: var(--text-color-secondary);
 padding: 10px;
 border-radius: 5px;
+width: 13%;
+text-align: center;
 }
 .left-content p{
-  color: var(--text-color-primary);
+  color: var(--button-background);
   font-weight: 500;
   font-size: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+.left-content i {
+  text-align: center;
+  color: var(--accent-color);
+  font-size: 26px;
+  
 }
