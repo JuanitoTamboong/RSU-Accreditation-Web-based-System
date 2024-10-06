@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="module" src="admin-dash.js" defer></script>
+    <script type="module" src="time-calendar.js" defer></script>
+    <script type="module" src="toogle-sidebar.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -57,21 +59,34 @@
         </ul>
         <i class="fa-solid fa-bars menu-btn"></i>
     </div>
+    <!--Section-->
     <div class="section">
+        <!--main container-->
         <div class="main-container">
+    <!--top container-->
             <div class="top-container">
                 <div class="top-content">
-                    <h2>Welcome</h2>
+                    <h2>Welcome Admin</h2>
+                </div>
+                <div class="notifications">
+                    <p><i class="fa fa-bell"></i>Notifications</p>
                 </div>
             </div>
-            <div class="left-side-container">
+            <!--end of top container-->
+            <!--leftcontainer-->
+        <div class="left-side-container">
         <div class="left-content">
-            <i class="fa fa-users"><p>Applicants</p></i>
+            <i class="fa fa-users" id="applicants"><p>Applicants</p></i>
+            <i class="fa fa-check-circle"id="approved"><p>Approved</p></i>
+            <i class="fa fa-window-close-o"id="declined"><p>Declined</p></i>
            </div>
         </div>
+        <!--end of left Container-->
             <div class="right-side-container">
-                <div class="data-time"></div>
-                <div class="time"></div>
+                <div class="right-content">
+                    <div class="time"></div>
+                    <div class="calendar"></div>
+                </div>
             </div>
             <div class="bottom-container"></div>
         </div>

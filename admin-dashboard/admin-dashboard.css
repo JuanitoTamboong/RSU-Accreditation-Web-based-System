@@ -17,6 +17,8 @@
   --text-color-secondary: #D0D0D0;   
   --button-hover-color: #415A77;     
   --button-background: #1B263B;
+  --declined-button:#740303f5;
+  --applicans:#023a02;
 }
 body {
   display: flex; 
@@ -156,7 +158,7 @@ body {
 
 /* Section Styles */
 .section {
-  background-color:var(--background-color); 
+  background-color: var(--input-border-color);
   flex-grow:1; 
   padding: 18px; 
   display: flex; 
@@ -165,42 +167,140 @@ body {
 .main-container{
   overflow: hidden;
   flex-grow: 1;
-  margin: 5px;
+  margin: 4px;
   padding: 13px;
   border-radius: 20px;
   box-shadow: inset 0px 1px 10px var(--button-hover-color);
+  background-color: var(--card-background);
 }
 .top-container{
-  background-color: var(--input-border-color);
+background-color: var(--background-color);
   width: 100%;
   padding: 20px;
   border-radius: 20px;
 }
-.top-container h2{
+.top-content h2{
   color: var(--primary-color);
 }
+.notifications{
+float:right;
+margin-top: -40px;
+background-color:var(--text-color-primary);
+padding: 10px;
+border-radius: 10px;
+}
+.notifications p{
+  color: var(--button-hover-color);
+  font-weight: 500;
+}
+.notifications i{
+  color: var(--);
+  font-size: 20px;
+}
+
 .left-side-container{
-padding: 20px;
 margin-top: 20px;
 border-radius: 20px;
+
+
 }
 .left-content{
-background-color: var(--text-color-secondary);
-padding: 10px;
 border-radius: 5px;
-width: 13%;
 text-align: center;
-}
-.left-content p{
-  color: var(--button-background);
-  font-weight: 500;
-  font-size: 20px;
-  text-align: center;
-  margin-top: 10px;
+display: flex;
+gap: 50px;
 }
 .left-content i {
   text-align: center;
-  color: var(--accent-color);
-  font-size: 26px;
+  font-size: 18px;
+  padding: 10px;
+  width: 15%;
+  border-radius: 5px;
+}
+.left-content p{
+  font-weight: 500;
+  font-size: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+#applicants{
+  background-color: var(--applicans);
+  color: var(--text-color-primary);
+}
+#approved{
+  background-color: var(--button-hover-color);
+  color: var(--text-color-primary);
+
+}
+#declined{
+  background-color: var(--declined-button);
+  color: var(--text-color-primary);
+}
+.right-side-container{ 
+  float: right;
+  width: 45%;
+  display: block;
+  margin-top: -58px;
+}
+.right-content{
+  background-color: var(--background-color);
+ padding: 15px;
+  border-radius: 20px;
+}
+/* Styling for time */
+.time {
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--primary-color);
+  background-color: var(--card-background);
+   padding: 10px;
+   color: var(--primary-color);
+   border-radius: 20px;
+}
+
+/* Styling for calendar */
+.calendar {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.calendar table {
+  width: 100%;
+  border-collapse: collapse;
   
+}
+
+.calendar th, .calendar td {
+  border: 1px solid var(--primary-color);
+  padding: 10px;
+  text-align: center;
+}
+
+.calendar th {
+  background-color:var(--button-hover-color);
+  font-weight: bold;
+  color: var(--text-color-primary);
+}
+
+.calendar td:not(:empty) {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.today {
+  background-color:var(--declined-button); 
+  color:var(--text-color-primary);
+  font-weight: bold;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
 }
