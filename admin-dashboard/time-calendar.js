@@ -1,3 +1,5 @@
+// Import Firebase Authentication
+
 
 // Function to update the time with AM/PM
 function updateTime() {
@@ -59,4 +61,4 @@ function generateCalendar() {
 }
 
 // Generate calendar on load
-generateCalendar();a
+generateCalendar();

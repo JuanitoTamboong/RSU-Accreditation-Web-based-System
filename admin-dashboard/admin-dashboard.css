@@ -192,10 +192,35 @@ border-radius: 10px;
 .notifications p{
   color: var(--button-hover-color);
   font-weight: 500;
+  font-size: 13px;
 }
 .notifications i{
   color: var(--);
-  font-size: 20px;
+  font-size: 17px;
+}
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.view-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.view-btn:hover {
+  background-color: #45a049;
 }
 
 .left-side-container{
@@ -222,6 +247,9 @@ gap: 50px;
   font-size: 10px;
   text-align: center;
   margin-top: 10px;
+}
+.left-content span{
+  font-size: 20px;
 }
 #applicants{
   background-color: var(--applicans);
