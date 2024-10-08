@@ -81,45 +81,21 @@
 .search-bar i {
   position: absolute;
   right: 0; 
-  font-size: 20px;
+  font-size: 30px;
   color: var(--font-color);
-  background-color: var(--button);
+  background-color:rgba(0, 0, 0, 0.256);
   padding: 8px;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 10px 10px 0;
   cursor: pointer;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px 40px 10px 10px;
-  border-radius: 5px;
+  padding: 15px 40px 15px 15px;
+  border-radius: 10px;
   border: none;
   outline: none;
 }
-/* Logout Container Styles */
-.logout {
-  margin:0; /* Space between search bar and logout link */
-}
-
-/* Logout Link Styles */
-.logout-link {
-  text-decoration: none;
-  color: var(--font-color);
-  padding: 10px; 
-  font-size: 23px; 
-}
-/* Icon Styles */
-.logout-link i {
-  margin-left: 5px; /* Space between text and icon */
-  padding: 10px;
-  border-radius: 50%;
-}
-
-/* Hover Effect */
-.logout-link i:hover {
-  color: var(--button); 
-}
-
 /* Dropdown Styles */
 #dropdown-list {
   position: absolute;
@@ -132,7 +108,7 @@
   overflow-y: auto;
   z-index: 1000;
   display: none;
-  border-radius: 5px;
+border-radius: 5px;
 }
 
 .dropdown-item {
@@ -151,34 +127,30 @@
 }
 
 .container {
-  max-width: 1200px;
-  margin: 20px auto;
-  background-color: var(--font-color);
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 30px;
+
 }
 
 /* List Officers Styles */
 .list-officers {
-  display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  background-color: var(--font-color);
   box-shadow: inset 1px 1px 10px var(--box-shadow);
-  padding: 20px;
+  padding: 25px;
   border-radius: 10px;
   box-sizing: border-box;
-  flex: 1;
+  width: 50%;
+  background-image: url('../assets/mobile-size-bg.png');
+  background-repeat: no-repeat;
+  background-size: 113% 100%;
 }
-
 .student-profile h3 {
-  color: var(--button);
+  color: var(--signIn-Color);
   text-align: center;
   padding-bottom: 20px;
+  font-size: 25px;
 }
 
 input[type="file"] {
@@ -186,8 +158,8 @@ input[type="file"] {
 }
 
 label.upload-label {
-  height: 150px;
-  width: 150px;
+  height: 180px;
+  width: 180px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -228,6 +200,7 @@ label.upload-label span {
   margin-top: 25px;
   display: flex;
   flex-direction: column;
+  width: 100%; /* Ensure Student ID section takes full width */
 }
 
 .student-id label {
@@ -236,19 +209,21 @@ label.upload-label span {
 }
 
 .student-id input {
-  max-width: 100%;
-  padding: 8px;
+  width: 100%; /* Input field takes full width */
+  padding: 15px;
   border: 1px solid var(--box-shadow);
-  border-radius: 5px;
+  border-radius: 25px;
   box-sizing: border-box;
-}
+  max-width: 100%; /* Ensure no overflow */
 
+}
 /* Student Info Styles */
 .student-info {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 35px;
+  margin-top: 20px;
+  width: 100%; /* Take up full width of the container */
 }
 
 .student-info label {
@@ -256,36 +231,39 @@ label.upload-label span {
 }
 
 .student-info input {
-  padding: 8px;
+  padding: 15px;
   border: 1px solid var(--box-shadow);
-  border-radius: 5px;
-  width: 100%;
+  border-radius: 25px;
+  width: 100%; /* Ensure input takes full width */
   box-sizing: border-box;
+  max-width: 100%; /* Prevent overflow */
 }
 
 /* Add/Update Button Styles */
 .add-update {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
-  margin-top: 57px;
+  margin-top: 25px; /* Adjust margin for spacing */
+  width: 100%; /* Fit buttons to container */
 }
 
 .add-update button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
+  padding: 15px;
+  width: 100%;
   color: var(--font-color);
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.3s;
   text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
+
 .add-update button i {
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .add-update .update-btn {
@@ -302,20 +280,29 @@ label.upload-label span {
 
 /* Profiles Container Styles */
 .profiles-container {
+  width: 100%;
+  max-width: 700px;
+  max-height: 350px;
+  
+
+}
+.added-profiles{
   box-shadow: inset 1px 1px 10px var(--box-shadow);
   padding: 20px;
   border: 1px solid var(--box-shadow);
   border-radius: 10px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 350px;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 75vh;
+  background-image: url('../assets/mobile-size-bg.png');
+  background-repeat: no-repeat;
+  background-size: 113% 100%;
+  
+  
 }
 .clear-list{
   padding: 10px;
-  margin-top:-20px;
+  margin-top:-10px;
 }
 .clear-list button{
 float: right;
@@ -325,78 +312,97 @@ cursor: pointer;
 }
 .table-wrapper {
   flex: 1;
-  overflow-y: auto;
-  max-height: 100%; 
+  max-height: 300px; /* Set a maximum height for scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: var(--signIn-Color);
+  padding: 10px;
 }
-
-.profiles-container h3 {
+.added-profiles h3 {
   color: var(--signIn-Color);
   margin-bottom: 15px;
+  
 }
 
-.profiles-container table {
+.added-profiles table {
   width: 100%;
   border-collapse: collapse;
   table-layout: auto; 
+  
 }
 
-.profiles-container th,
-.profiles-container td {
+.added-profiles th,
+.added-profiles td {
   border: 1px solid var(--box-shadow);
   padding: 8px;
   text-align: left;
   word-wrap: break-word; 
+  overflow: hidden;
+  color: var(--font-color);
+  
+  
 }
 
-.profiles-container th {
+.added-profiles th {
   background-color: var(--signIn-Color);
   color: var(--font-color);
 }
 
-.profiles-container tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+.added-profiles tbody tr:nth-child(even) {
+ /* color: var(--font-color);*/
 }
 
 /* Submit Button Styles */
 .submit-btn {
   margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
   padding-top: 20px;
-  position: relative;
-  z-index: 1;
+  position: relative;;
+  
+
 }
 
 .submit-btn button {
-  background-color: var(--button);
+  background-color: var(--box-shadow);
   color: var(--font-color);
-  padding: 10px 20px;
+  padding: 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.3s;
+  width: 20%;
+  float: right;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .submit-btn button:hover {
   background-color: var(--hover-color);
 }
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .container {
-    flex-direction: column;
+@media (max-width:1300px) {
+  .container{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
   }
-
-  .profiles-container {
-    margin-left: 0;
+  .list-officers{
     width: 100%;
+  
+  }
+  .added-profiles{
+    width: 100%;
+    
+
+   
   }
 }
 
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+   margin: 0;
+   padding: 0;
+
   }
 
   .nav-bar {
@@ -408,25 +414,26 @@ cursor: pointer;
     padding-top: 20px;
     width: 100%;
     margin: 0;
+    
   }
-.logout{
-  position: absolute;
-  left: 85%;
-  font-size: 1px;
-}
   #dropdown-list {
-    width: 87%;
+    width: 89%;
   }
 
   .top-nav h2 {
-    font-size: 20px;
+    font-size: 26px;
   }
 
   .list-officers {
     flex-direction: column;
     width: 100%;
-  }
+    gap:5;
+    padding: 10;
 
+  }
+label{
+  padding: 10px;
+}
   .student-info {
     margin: 0;
   }
@@ -442,9 +449,18 @@ cursor: pointer;
 
   .add-update button {
     margin: 0;
+    
   }
 
   th, td {
     font-size: 11px;
+  }
+  .submit-btn{
+    margin: 0;
+    padding:15px;
+  }
+  .submit-btn button{
+    float: none;
+    width: 100%;
   }
 }

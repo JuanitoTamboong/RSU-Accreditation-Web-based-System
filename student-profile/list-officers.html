@@ -13,17 +13,12 @@
     <div class="nav-bar">
         <div class="top-nav">
             <img src="../assets/rsu-logo.png" alt="Logo">
-            <h2>List of Current Officers</h2>
+            <h2>List of Officers</h2>
         </div>
         <div class="search-bar">
-            <input type="search" id="search-input" placeholder="Search officers (e.g Dela Cruz, Juan)">
+            <input type="search" id="search-input" placeholder="Search officers (e.g. Dela Cruz, Juan)">
             <i class='bx bx-search'></i>
             <div id="dropdown-list" class="dropdown"></div>
-        </div>
-        <div class="logout">
-            <a href="../index.html" class="logout-link">
-                <i class='bx bx-log-out-circle'></i>
-            </a>
         </div>
     </div>
     <div class="container">
@@ -38,7 +33,7 @@
                 
                 <div class="student-id">
                     <label for="student-id">Student ID Number</label>
-                    <input type="text" id="student-id" placeholder="ex(123-4567-891000)" maxlength="15">
+                    <input type="text" id="student-id" placeholder="ex (123-4567-891000)" maxlength="15">
                 </div>
             </div>
             <div class="student-info">
@@ -58,26 +53,28 @@
         </div>
 
         <div class="profiles-container">
-            <h3>Added Student Profiles</h3>
-            <div class="clear-list">
-                <button id="clear-profiles">
-                    <i class='bx bx-x'></i> Clear
-                </button>
-            </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                        </tr>
-                    </thead>
-                    <tbody id="profiles-list-body">
-                        <!-- Profiles will be added here dynamically -->
-                    </tbody>
-                </table>
+            <div class="added-profiles">
+                <h3>Added Student Profiles</h3>
+                <div class="clear-list">
+                    <button id="clear-profiles">
+                        <i class='bx bx-x'></i> Clear
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="profiles-list-body">
+                            <!-- Profiles will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="submit-btn">
                 <button class="submit-btn" onclick="submitAllProfiles()">Submit</button>
@@ -88,5 +85,6 @@
             </div>
         </div>        
     </div>
+    
 </body>
 </html>

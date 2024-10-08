@@ -318,8 +318,8 @@ async function submitAllProfiles() {
         localStorage.removeItem(`applicationFormData_${user.uid}`);
         updateTable(tempProfiles); // Update the table after clearing profiles
 
-        alert("All profiles and application data submitted successfully!");
-        window.location.href = "../student-profile/list-officers.html"; // Redirect after submission
+        alert("All profiles and application data submitted successfully! and please your email");
+        window.location.href = "../index.html"; // Redirect after submission
     } catch (error) {
         console.error("Error submitting profiles and application data: ", error);
         alert("Error submitting profiles and application data. Please try again.");
