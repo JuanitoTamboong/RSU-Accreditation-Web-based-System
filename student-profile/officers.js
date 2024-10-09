@@ -174,7 +174,7 @@ function updateTable(profiles) {
         tableBody.appendChild(row);
     });
 }
-//search profiles
+// Search profiles based on input
 async function searchProfiles() {
     const searchValue = document.getElementById('search-input').value.toLowerCase();
     const dropdown = document.getElementById('dropdown-list');
@@ -185,27 +185,30 @@ async function searchProfiles() {
         return;
     }
 
-    // Filter through tempProfiles to find matches
+    // Filter through tempProfiles to find matches by name
     const filteredProfiles = tempProfiles.filter(profile =>
         profile.name.toLowerCase().includes(searchValue)
     );
 
-    filteredProfiles.forEach((profile, index) => {
-        const option = document.createElement('div');
-        option.classList.add('dropdown-item');
-        option.textContent = profile.name;
-        option.onclick = () => selectProfile(index); // Pass the index of the profile
-        dropdown.appendChild(option);
-    });
-
-    dropdown.style.display = dropdown.childElementCount > 0 ? 'block' : 'none'; // Show or hide dropdown
+    if (filteredProfiles.length > 0) {
+        dropdown.style.display = 'block'; // Show dropdown if matches are found
+        filteredProfiles.forEach((profile, index) => {
+            const option = document.createElement('div');
+            option.classList.add('dropdown-item');
+            option.textContent = profile.name; // Show name in the dropdown
+            option.onclick = () => selectProfile(profile); // Pass the selected profile
+            dropdown.appendChild(option);
+        });
+    } else {
+        dropdown.style.display = 'none'; // Hide if no matches are found
+    }
 }
 
-// Handle selection of a profile from the dropdown
-function selectProfile(index) {
+// Handle profile selection from the dropdown
+function selectProfile(profile) {
     clearStudentProfileForm(); // Clear the form first
-    const profile = tempProfiles[index]; // Get the selected profile
 
+    // Populate form with selected profile details
     document.getElementById('student-id').value = profile.studentId;
     document.getElementById('name').value = profile.name;
     document.getElementById('address').value = profile.address;
@@ -222,11 +225,12 @@ function selectProfile(index) {
         uploadText.style.display = 'block';
     }
 
+    // Hide the dropdown and clear search input
     document.getElementById('search-input').value = ''; // Clear search input
     document.getElementById('dropdown-list').style.display = 'none'; // Hide dropdown
 }
 
-// Clear the form for adding/updating profiles
+// Clear form function (unchanged)
 function clearStudentProfileForm() {
     document.getElementById('student-id').value = '';
     document.getElementById('name').value = '';
@@ -235,6 +239,7 @@ function clearStudentProfileForm() {
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('upload-text').style.display = 'block';
 }
+
 
 // Update the selected profile in the list
 function updateProfile() {
