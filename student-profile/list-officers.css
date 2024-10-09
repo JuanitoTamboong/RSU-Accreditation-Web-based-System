@@ -82,10 +82,8 @@
   position: absolute;
   right: 0; 
   font-size: 30px;
-  color: var(--font-color);
-  background-color:rgba(0, 0, 0, 0.256);
+  color: var(--box-shadow);
   padding: 8px;
-  border-radius: 0 10px 10px 0;
   cursor: pointer;
 }
 
@@ -130,7 +128,7 @@ border-radius: 5px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  padding: 30px;
+  padding: 20px;
 
 }
 
@@ -142,9 +140,8 @@ border-radius: 5px;
   border-radius: 10px;
   box-sizing: border-box;
   width: 50%;
-  background-image: url('../assets/mobile-size-bg.png');
-  background-repeat: no-repeat;
-  background-size: 113% 100%;
+  min-height: 75vh;
+
 }
 .student-profile h3 {
   color: var(--signIn-Color);
@@ -280,8 +277,7 @@ label.upload-label span {
 
 /* Profiles Container Styles */
 .profiles-container {
-  width: 100%;
-  max-width: 700px;
+  width: 48%;
   max-height: 350px;
   
 
@@ -297,6 +293,7 @@ label.upload-label span {
   background-image: url('../assets/mobile-size-bg.png');
   background-repeat: no-repeat;
   background-size: 113% 100%;
+
   
   
 }
@@ -401,7 +398,7 @@ cursor: pointer;
   .container {
     flex-direction: column;
    margin: 0;
-   padding: 0;
+   padding: 5px;
 
   }
 

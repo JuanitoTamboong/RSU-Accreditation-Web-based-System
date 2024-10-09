@@ -263,7 +263,8 @@ form {
   }
 
   .form-container {
-    padding: 25px;
+    margin: 0;
+    padding: 5px;
   }
 
   .form-group input, 
@@ -279,38 +280,10 @@ form {
   #uploaded-documents {
     margin-top: 15px;
   }
-}
+
 .swal-pdf-viewer{
-  width: 50%;
-  height: 600px;
+  width: 90%;
+  height: 400px;
   font-size: 13px;
 }
-@media (max-width: 768px) {
-  .top-header h2 {
-    font-size: 18px; /* 18px */
-    font-weight: 700; 
-  }
-
-  .form-container {
-    padding: 15px;
-  }
-
-  .form-group input, 
-  .form-group select {
-    padding: 10px;
-    font-size: 16px;
-  }
-
-  .submit-btn button {
-    padding: 12px;
-    font-size: 16px;
-  }
-
-  .checklist-container,
-  #uploaded-documents {
-    margin-top: 10px;
-  }
-  .swal-pdf-viewer{
-  width: 90%;
-  }
 }

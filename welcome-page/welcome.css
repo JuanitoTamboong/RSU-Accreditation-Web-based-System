@@ -282,6 +282,8 @@ button:hover {
     }
     .guide-container {
       width: 100%;
+      margin: 0;
+      padding:5px;
     }
   
     .guide-list {
