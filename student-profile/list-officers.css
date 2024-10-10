@@ -311,7 +311,7 @@ cursor: pointer;
   flex: 1;
   max-height: 300px; /* Set a maximum height for scrolling */
   overflow-y: auto; /* Enable vertical scrolling */
-  background-color: var(--signIn-Color);
+  background-color:var(--signIn-Color);
   padding: 10px;
 }
 .added-profiles h3 {

@@ -158,7 +158,7 @@ body {
 
 /* Section Styles */
 .section {
-  background-color: var(--input-border-color);
+  background-color: var(--background-color);
   flex-grow:1; 
   padding: 18px; 
   display: flex; 
@@ -170,7 +170,7 @@ body {
   margin: 4px;
   padding: 13px;
   border-radius: 20px;
-  box-shadow: inset 0px 1px 10px var(--button-hover-color);
+
   background-color: var(--card-background);
 }
 .top-container{
@@ -188,6 +188,8 @@ margin-top: -40px;
 background-color:var(--text-color-primary);
 padding: 10px;
 border-radius: 10px;
+display: flex;
+gap: 5px;
 }
 .notifications p{
   color: var(--button-hover-color);
@@ -197,6 +199,7 @@ border-radius: 10px;
 .notifications i{
   color: var(--);
   font-size: 17px;
+
 }
 .notification-item {
   display: flex;
@@ -286,6 +289,11 @@ gap: 50px;
    padding: 10px;
    color: var(--primary-color);
    border-radius: 20px;
+}
+.current-date{
+  color: var(--accent-color);
+  padding: 10px;
+ 
 }
 
 /* Styling for calendar */

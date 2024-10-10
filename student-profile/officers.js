@@ -166,7 +166,8 @@ function updateTable(profiles) {
         const row = document.createElement('tr');
 
         row.innerHTML = `
-            <td><img src="${imageUrl || ''}" alt="${name}" style="width: 100px; height: 100px; object-fit:contain"></td>
+            <td><img src="${imageUrl || ''}" alt="${name}" style="width: 90px; height: 90px; object-fit:contain
+            ;border-radius:50%"></td>
             <td>${studentId}</td>
             <td>${name}</td>
             <td>${address}</td>
