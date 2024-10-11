@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, query, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 // Firebase configuration
-const firebaseConfig = {
+const firebaseConfig = {  
     apiKey: "AIzaSyDXQCFoaCSWsCV2JI7wrOGZPKEpQuNzENA",
     authDomain: "student-org-5d42a.firebaseapp.com",
     projectId: "student-org-5d42a",
@@ -25,40 +25,25 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = "../admin-login/admin-login.html"; // Redirect to login page
     } else {
         console.log("User is logged in: ", user);
-        getAllOrganizations(); // Fetch all organizations on login
+        fetchApplicants();  // Fetch applicants and notifications when admin is authenticated
     }
 });
 
-// Fetch all organizations that submitted applications and update applicant count
-async function getAllOrganizations() {
+// Function to fetch and display applicants and notifications
+async function fetchApplicants() {
     try {
-        console.log("Fetching all submissions..."); // Debugging line
-        const q = query(collection(db, "student-org-applications"));
+        // Fetch all student organization applications from Firestore
+        const q = query(collection(db, 'student-org-applications'));
         const querySnapshot = await getDocs(q);
 
-        const organizations = []; // To store organization details
-        let applicantCount = 0; // Initialize applicant count
-
-        querySnapshot.forEach(doc => {
-            const data = doc.data();
-            organizations.push({
-                name: data.organizationName,
-                email: data.email // Assuming email is part of the submission data
-            }); // Add organization name and email to the list
-            applicantCount++; // Increment count for each application
-        });
-
-        console.log("Total Applicants: ", applicantCount); // Debugging line
-
-        // Update the applicant count displayed on the dashboard
+        // Update the applicant count
+        const applicantCount = querySnapshot.size; // Get number of applications
         updateApplicantCount(applicantCount);
 
-        // If there are new submissions, display the organizations in the notifications list
-        if (organizations.length > 0) {
-            displayOrganizations(organizations);
-        }
+        // Display notifications for submitted applications
+        displayNotifications(querySnapshot);
     } catch (error) {
-        console.error("Error fetching organizations: ", error);
+        console.error("Error fetching applications: ", error);
     }
 }
 
@@ -71,50 +56,59 @@ function updateApplicantCount(count) {
         console.error("Applicant count element not found");
     }
 }
+// Display notifications for each organization submitted
+function displayNotifications(querySnapshot) {
+    const notificationsList = document.getElementById('notification-list');
 
-// Display organizations in the notification area
-function displayOrganizations(organizations) {
-    const notifContainer = document.querySelector('#notifications-list');
-    if (notifContainer) {
-        notifContainer.innerHTML = ''; // Clear existing notifications
-
-        // Create a notification element for the new submissions
-        const notifElement = document.createElement('div');
-        notifElement.classList.add('notification-item');
-        notifElement.innerHTML = `
-            <p>New Notification: ${organizations.length} new submission(s)</p>
-        `;
-        notifElement.addEventListener('click', () => viewSubmissions(organizations)); // Add click event to view submissions
-        notifContainer.appendChild(notifElement);
-    } else {
-        console.error("Notification container not found");
+    if (!notificationsList) {
+        console.error("Notifications list element not found");
+        return;
     }
-}
 
-// Function to view submissions (organization names and emails)
-function viewSubmissions(organizations) {
-    const notifContainer = document.querySelector('#notifications-list');
-    notifContainer.innerHTML = ''; // Clear existing notifications
+    // Clear the notifications list before appending new items
+    notificationsList.innerHTML = '';
 
-    organizations.forEach(org => {
-        const orgElement = document.createElement('div');
-        orgElement.classList.add('notification-item');
-        orgElement.innerHTML = `
-            <p>Organization: <strong>${org.name}</strong> | Email: <strong>${org.email}</strong></p>
-        `;
-        notifContainer.appendChild(orgElement);
+    // Check if there are any applications
+    if (querySnapshot.empty) {
+        notificationsList.innerHTML = '<li>No new notifications</li>'; // Use <li> for empty state
+        return;
+    }
+
+    // Populate notifications list with organization submissions
+    querySnapshot.forEach((doc) => {
+        const appData = doc.data();
+        console.log("Document ID:", doc.id); // Log the document ID
+        console.log("Document Data:", appData); // Log the entire document data
+
+        // Accessing nested properties correctly
+        const applicationDetails = appData.applicationDetails || {};
+        const orgName = applicationDetails.organizationName || "Unknown Organization";
+        const repName = applicationDetails.representativeName || "Unknown Representative";
+        const email = applicationDetails.emailAddress || "Unknown Email";
+
+        // Create notification message
+        const notificationItem = document.createElement('li'); // Use <li> for each notification
+        notificationItem.textContent = `${orgName} submitted by ${repName} (Email: ${email})`;
+
+        // Append the notification item to the list
+        notificationsList.appendChild(notificationItem);
     });
-}
 
-// Function to handle notification icon click
-document.querySelector('#notification-icon').addEventListener('click', getAllOrganizations);
-
-// Update notification count if needed
-function updateNotificationCount(count) {
-    const notifCount = document.querySelector('#notification-count');
-    if (notifCount) {
-        notifCount.textContent = `${count}`; // Update count here
-    } else {
-        console.error("Notification count element not found");
+    // Update notification count
+    const notificationCountElement = document.getElementById('notification-count');
+    if (notificationCountElement) {
+        notificationCountElement.textContent = querySnapshot.size; // Update notification count
     }
 }
+
+// Show/hide the notification modal when the icon is clicked
+document.getElementById('notification-icon').addEventListener('click', () => {
+    const modal = document.getElementById('notification-modal');
+    modal.classList.toggle('active'); // Toggle visibility with 'active' class
+});
+
+// Close the modal when the close button is clicked
+document.getElementById('close-notification-modal').addEventListener('click', () => {
+    const modal = document.getElementById('notification-modal');
+    modal.classList.remove('active'); // Hide modal
+});

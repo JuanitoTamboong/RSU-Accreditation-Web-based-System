@@ -35,28 +35,39 @@
                 <div class="top-content">
                     <h2>Welcome Admin</h2>
                 </div>
-                <div class="notifications">
-                    <p><i class="fa fa-bell"></i> <span id="notification-count">0</span> New Notifications</p>
-                    <div class="notifications-list" id="notifications-list"></div>
+                <div class="notifications-dropdown">
+                    <div id="notification-icon" class="notification-icon">
+                        <span id="notification-count" class="notification-count">0</span>
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div id="notification-modal" class="notification-modal hidden">
+                        <button id="close-notification-modal" class="close-button">Close</button>
+                        <div class="notification-content">
+                            <ul id="notification-list">
+                                <!-- Notifications will be populated here -->
+                            </ul>
+                        </div>
+                     </div>
+                  </div>
                     <p><i class="fa-solid fa-cog"></i></p>
-                </div>                            
-            </div>
-            <div class="left-side-container">
-                <div class="left-content">
-                    <i class="fa fa-users" id="applicants">
-                        <p>Applicants: <span id="applicant-count">0</span></p>
-                    </i>
-                    <i class="fa fa-check-circle" id="approved"><p>Approved</p></i>
-                    <i class="fa fa-window-close-o" id="declined"><p>Declined</p></i>
                 </div>
-            </div>
-            <div class="right-side-container">
-                <div class="right-content">
-                    <div class="time"></div>
-                    <div class="calendar"></div>
+                <div class="left-side-container">
+                    <div class="left-content">
+                        <i class="fa fa-users" id="applicants">
+                            <p>Applicants: <span id="applicant-count">0</span></p>
+                        </i>
+                        <i class="fa fa-check-circle" id="approved"><p>Approved</p></i>
+                        <i class="fa fa-window-close-o" id="declined"><p>Declined</p></i>
+                    </div>
                 </div>
+                <div class="right-side-container">
+                    <div class="right-content">
+                        <div class="time"></div>
+                        <div class="calendar"></div>
+                    </div>
+                </div>
+                <div class="bottom-container"></div>
             </div>
-            <div class="bottom-container"></div>
         </div>
     </div>
 </body>
