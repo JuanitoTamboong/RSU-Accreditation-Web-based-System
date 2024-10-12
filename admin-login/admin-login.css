@@ -1,7 +1,6 @@
-/* Import Google Fonts */
+/* Global Styles */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-/* Global Styles */
 * {
   margin: 0;
   padding: 0;
@@ -10,15 +9,15 @@
 }
 
 :root {
-  --primary-color: #0D1B2A;         /* Dark Navy */
-  --accent-color: #1B263B;          /* Deep Blue */
-  --background-color: #F0F4F8;      /* Light Gray Background */
-  --card-background: #FFFFFF;       /* White for card background */
-  --input-border-color: #E0E0E0;    /* Light border for input fields */
-  --text-color-primary: #E0E0E0;    /* Light gray text */
-  --text-color-secondary: #7C8A97;  /* Muted gray for labels */
-  --button-hover-color: #415A77;    /* Hover for buttons */
-  --button-background: #1B263B;     /* Dark button color */
+  --primary-color: #0D1B2A;
+  --accent-color: #1B263B;
+  --background-color: #F0F4F8;
+  --card-background: #FFFFFF;
+  --input-border-color: #E0E0E0;
+  --text-color-primary: #E0E0E0;
+  --text-color-secondary: #7C8A97;
+  --button-hover-color: #415A77;
+  --button-background: #1B263B;
 }
 
 body {
@@ -28,22 +27,25 @@ body {
   align-items: center;
   width: 100%;
   min-height: 100vh;
+  padding: 20px; /* Added padding for smaller screens */
 }
 
 .container {
   width: 100%;
-  max-width: 780px; 
-  border-radius: 50px; 
+  max-width: 780px;
+  border-radius: 50px;
   overflow: hidden;
-  border: 8px solid var(--primary-color); 
+  border: 8px solid var(--primary-color);
   display: flex;
   align-items: stretch;
   background-image: url('../assets/admin-bg.png');
+  flex-direction: row;
 }
 
 .left-section {
-  width: 50%; 
+  width: 50%;
 }
+
 .left-section img {
   object-fit: contain;
   height: 500px;
@@ -52,12 +54,13 @@ body {
   transition: all 1s;
   animation: icon-move 1.5s;
 }
+
 @keyframes icon-move {
   0% {transform: translateX(-400px);}
 }
 
 .admin-container {
-  padding: 50px; 
+  padding: 50px;
   text-align: center;
   width: 50%;
   background-color: var(--primary-color);
@@ -65,22 +68,21 @@ body {
 
 .admin-container img {
   object-fit: contain;
-  height: 70px; 
+  height: 70px;
   margin-bottom: 10px;
 }
 
 .admin-container h2 {
   margin-bottom: 10px;
   font-weight: 600;
-  font-size: 20px; 
+  font-size: 20px;
   color: var(--card-background);
 }
 
-/* Admin form container styling */
 .admin-form {
   display: flex;
   flex-direction: column;
-  gap: 15px; 
+  gap: 15px;
 }
 
 .admin-form label {
@@ -90,26 +92,25 @@ body {
   font-weight: 500;
 }
 
-/* Input field container to position icon */
 .input-container {
-  position: relative; /* Position relative for absolute children */
+  position: relative;
 }
 
 #toggle-password {
   cursor: pointer;
-  position: absolute; /* Positioning it inside the input */
-  right: 15px; /* Adjust as needed */
-  top: 50%; /* Center it vertically */
-  transform: translateY(-50%); /* Adjust for vertical centering */
-  color: var(--text-color-secondary); /* Icon color */
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color-secondary);
 }
 
 .admin-form input {
   padding: 10px;
-  padding-right: 40px; /* Space for the icon */
+  padding-right: 40px;
   width: 100%;
   border: 1px solid var(--input-border-color);
-  border-radius: 15px; 
+  border-radius: 15px;
   font-size: 13px;
   transition: border-color 0.2s ease-in-out;
 }
@@ -119,8 +120,7 @@ body {
   outline: none;
 }
 
-/* Positioning the icons inside the input fields */
-.email-icon, .password-icon {
+.email-icon {
   position: absolute;
   right: 15px;
   top: 50%;
@@ -138,14 +138,13 @@ body {
   color: var(--text-color-secondary);
 }
 
-/* Submit button styling */
 .submit {
   margin-top: 20px;
 }
 
 .submit button {
   width: 100%;
-  padding: 12px; 
+  padding: 12px;
   background-color: var(--button-background);
   color: var(--text-color-primary);
   border: none;
@@ -157,12 +156,58 @@ body {
 }
 
 .submit button:hover {
-  background-color: var(--button-hover-color); 
+  background-color: var(--button-hover-color);
 }
-.swal-modal{
+
+.swal-modal {
   background-color: var(--button-background);
   border-radius: 30px;
   color: var(--text-color-primary);
   width: 30%;
   font-size: 13px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; /* Stack sections vertically */
+    max-width: 100%;
+  }
+  
+  .left-section, .admin-container {
+    width: 100%; /* Full width for both sections */
+  }
+
+  .left-section img {
+    height: 300px; /* Adjust image size */
+    width: auto;
+  }
+
+  .admin-container {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    border-radius: 20px; /* Smaller border radius on small screens */
+    border-width: 4px;
+  }
+  
+  .admin-container h2 {
+    font-size: 18px; /* Smaller font size */
+  }
+  
+  .admin-form input {
+    font-size: 12px; /* Adjust font size in inputs */
+  }
+
+  .submit button {
+    padding: 10px;
+    font-size: 14px; /* Slightly smaller button */
+  }
+
+  .swal-modal {
+    width: 90%; /* Adjust modal width for small screens */
+  }
 }

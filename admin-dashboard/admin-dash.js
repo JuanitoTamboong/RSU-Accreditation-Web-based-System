@@ -16,7 +16,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);  // Initialize authentication
+const auth = getAuth(app);
+
+// Retrieve viewed notifications from local storage
+let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications')) || [];
 
 // Redirect unauthenticated users
 onAuthStateChanged(auth, (user) => {
@@ -56,6 +59,7 @@ function updateApplicantCount(count) {
         console.error("Applicant count element not found");
     }
 }
+
 // Display notifications for each organization submitted
 function displayNotifications(querySnapshot) {
     const notificationsList = document.getElementById('notification-list');
@@ -74,11 +78,15 @@ function displayNotifications(querySnapshot) {
         return;
     }
 
+    let newNotificationsCount = 0;
+
     // Populate notifications list with organization submissions
     querySnapshot.forEach((doc) => {
         const appData = doc.data();
-        console.log("Document ID:", doc.id); // Log the document ID
-        console.log("Document Data:", appData); // Log the entire document data
+        const docId = doc.id;
+
+        // Check if this notification has been viewed before
+        const isViewed = viewedNotifications.includes(docId);
 
         // Accessing nested properties correctly
         const applicationDetails = appData.applicationDetails || {};
@@ -87,17 +95,23 @@ function displayNotifications(querySnapshot) {
         const email = applicationDetails.emailAddress || "Unknown Email";
 
         // Create notification message
-        const notificationItem = document.createElement('li'); // Use <li> for each notification
+        const notificationItem = document.createElement('li');
         notificationItem.textContent = `${orgName} submitted by ${repName} (Email: ${email})`;
+        notificationItem.setAttribute('data-doc-id', docId); // Store doc ID for future reference
 
         // Append the notification item to the list
         notificationsList.appendChild(notificationItem);
+
+        // Increment the notification count only if it's not viewed yet
+        if (!isViewed) {
+            newNotificationsCount++;
+        }
     });
 
-    // Update notification count
+    // Update notification count (show only new/unread notifications)
     const notificationCountElement = document.getElementById('notification-count');
     if (notificationCountElement) {
-        notificationCountElement.textContent = querySnapshot.size; // Update notification count
+        notificationCountElement.textContent = newNotificationsCount;
     }
 }
 
@@ -105,7 +119,32 @@ function displayNotifications(querySnapshot) {
 document.getElementById('notification-icon').addEventListener('click', () => {
     const modal = document.getElementById('notification-modal');
     modal.classList.toggle('active'); // Toggle visibility with 'active' class
+
+    // Mark notifications as viewed when modal is opened
+    if (modal.classList.contains('active')) {
+        markNotificationsAsViewed();
+    }
 });
+
+// Mark all notifications as viewed and update local storage
+function markNotificationsAsViewed() {
+    const notificationItems = document.querySelectorAll('#notification-list li');
+    notificationItems.forEach((item) => {
+        const docId = item.getAttribute('data-doc-id');
+        if (!viewedNotifications.includes(docId)) {
+            viewedNotifications.push(docId); // Add this notification to viewed
+        }
+    });
+
+    // Save the updated list of viewed notifications in local storage
+    localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
+
+    // Reset the notification count to 0
+    const notificationCountElement = document.getElementById('notification-count');
+    if (notificationCountElement) {
+        notificationCountElement.textContent = '0';
+    }
+}
 
 // Close the modal when the close button is clicked
 document.getElementById('close-notification-modal').addEventListener('click', () => {
