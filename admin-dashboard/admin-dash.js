@@ -1,10 +1,10 @@
 // Firebase imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
-import { getFirestore, collection, query, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+import { getFirestore, collection, query, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 // Firebase configuration
-const firebaseConfig = {  
+const firebaseConfig = {
     apiKey: "AIzaSyDXQCFoaCSWsCV2JI7wrOGZPKEpQuNzENA",
     authDomain: "student-org-5d42a.firebaseapp.com",
     projectId: "student-org-5d42a",
@@ -33,18 +33,18 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Function to fetch and display applicants and notifications
-async function fetchApplicants() {
+function fetchApplicants() {
     try {
-        // Fetch all student organization applications from Firestore
+        // Listen for real-time updates to the collection
         const q = query(collection(db, 'student-org-applications'));
-        const querySnapshot = await getDocs(q);
+        onSnapshot(q, (querySnapshot) => {
+            // Update the applicant count
+            const applicantCount = querySnapshot.size; // Get number of applications
+            updateApplicantCount(applicantCount);
 
-        // Update the applicant count
-        const applicantCount = querySnapshot.size; // Get number of applications
-        updateApplicantCount(applicantCount);
-
-        // Display notifications for submitted applications
-        displayNotifications(querySnapshot);
+            // Display notifications for submitted applications
+            displayNotifications(querySnapshot);
+        });
     } catch (error) {
         console.error("Error fetching applications: ", error);
     }
@@ -79,6 +79,7 @@ function displayNotifications(querySnapshot) {
     }
 
     let newNotificationsCount = 0;
+    const notificationsArray = []; // Array to hold notifications for sorting
 
     // Populate notifications list with organization submissions
     querySnapshot.forEach((doc) => {
@@ -93,19 +94,48 @@ function displayNotifications(querySnapshot) {
         const orgName = applicationDetails.organizationName || "Unknown Organization";
         const repName = applicationDetails.representativeName || "Unknown Representative";
         const email = applicationDetails.emailAddress || "Unknown Email";
+        const dateFiling = applicationDetails.dateFiling || new Date().toISOString(); // Use current date as fallback
+
+        // Create a formatted date for the notification
+        const dateObject = new Date(dateFiling);
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+        const formattedDate = dateObject.toLocaleString(undefined, options); // Convert string to Date and format
+
+        // Create a notification object for sorting
+        notificationsArray.push({
+            orgName,
+            repName,
+            email,
+            formattedDate,
+            docId,
+            isViewed,
+            submittedAt: dateObject // Use the actual date object for sorting
+        });
+    });
+
+    // Sort notifications by submittedAt (newest first)
+    notificationsArray.sort((a, b) => b.submittedAt - a.submittedAt);
+
+    // Create notification items
+    notificationsArray.forEach((notification) => {
+        const { orgName, repName, email, formattedDate, docId, isViewed } = notification;
 
         // Create notification message
         const notificationItem = document.createElement('li');
-        notificationItem.textContent = `${orgName} submitted by ${repName} (Email: ${email})`;
+        notificationItem.innerHTML = `
+            <span>${orgName} submitted by ${repName} (Email: ${email})</span>
+            <br><small>Filed on: ${formattedDate}</small>
+        `;
         notificationItem.setAttribute('data-doc-id', docId); // Store doc ID for future reference
+
+        // Highlight new notifications (e.g., bold text)
+        if (!isViewed) {
+            notificationItem.style.fontWeight = 'bold'; // New notification styling
+            newNotificationsCount++;
+        }
 
         // Append the notification item to the list
         notificationsList.appendChild(notificationItem);
-
-        // Increment the notification count only if it's not viewed yet
-        if (!isViewed) {
-            newNotificationsCount++;
-        }
     });
 
     // Update notification count (show only new/unread notifications)

@@ -170,9 +170,10 @@ body {
   margin: 4px;
   padding: 13px;
   border-radius: 20px;
-
   background-color: var(--card-background);
 }
+
+
 .top-container{
 background-color: var(--background-color);
   width: 100%;
