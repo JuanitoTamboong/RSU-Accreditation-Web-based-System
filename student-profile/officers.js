@@ -272,6 +272,13 @@ function updateProfile() {
 document.querySelector('.update-btn').addEventListener('click', updateProfile);
 
 
+// Function to get the current time in 'HH:MM AM/PM' format
+function getCurrentTime() {
+    const now = new Date();
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    return now.toLocaleString('en-US', options);
+}
+
 // Submit all profiles to Firestore
 async function submitAllProfiles() {
     if (tempProfiles.length === 0) {
@@ -292,6 +299,9 @@ async function submitAllProfiles() {
         // Load application data (t2) from localStorage for the authenticated user
         const applicationData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
 
+        // Get the current time
+        const currentTime = getCurrentTime();
+
         // Check for duplicate Student IDs in Firestore for the temporary profiles
         for (const profile of tempProfiles) {
             const { studentId } = profile;
@@ -308,7 +318,8 @@ async function submitAllProfiles() {
         // Combine application data and profiles
         const combinedData = {
             applicationDetails: applicationData,  // Data from the application form
-            profiles: tempProfiles  // Temp profiles stored locally
+            profiles: tempProfiles,  // Temp profiles stored locally
+            submissionTime: currentTime // Add the current time to the combined data
         };
 
         // Reference to Firestore collection (using 'student-org-applications')
@@ -324,7 +335,7 @@ async function submitAllProfiles() {
         localStorage.removeItem(`applicationFormData_${user.uid}`);
         updateTable(tempProfiles); // Update the table after clearing profiles
 
-        alert("All profiles and application data submitted successfully! and please your email");
+        alert("All profiles and application data submitted successfully! Please check your email.");
         window.location.href = "../index.html"; // Redirect after submission
     } catch (error) {
         console.error("Error submitting profiles and application data: ", error);

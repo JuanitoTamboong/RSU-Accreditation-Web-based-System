@@ -1,4 +1,4 @@
-// Firebase imports
+// Firebase imports   
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 import { getFirestore, collection, query, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
@@ -74,7 +74,7 @@ function displayNotifications(querySnapshot) {
 
     // Check if there are any applications
     if (querySnapshot.empty) {
-        notificationsList.innerHTML = '<li>No new notifications</li>'; // Use <li> for empty state
+        notificationsList.innerHTML = '<li>No new notifications</li>';
         return;
     }
 
@@ -95,36 +95,42 @@ function displayNotifications(querySnapshot) {
         const repName = applicationDetails.representativeName || "Unknown Representative";
         const email = applicationDetails.emailAddress || "Unknown Email";
         const dateFiling = applicationDetails.dateFiling || new Date().toISOString(); // Use current date as fallback
+        const submissionTime = appData.submissionTime || ''; // Fetch submissionTime from the document
 
-        // Create a formatted date for the notification
-        const dateObject = new Date(dateFiling);
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-        const formattedDate = dateObject.toLocaleString(undefined, options); // Convert string to Date and format
+        // Convert `dateFiling` to a proper Date object
+        const filingDate = new Date(dateFiling);
 
-        // Create a notification object for sorting
+        // Ensure proper formatting for both date and time
+        const formattedDate = filingDate.toLocaleDateString(undefined, {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const formattedTime = submissionTime || filingDate.toLocaleTimeString(); // Format submission time
+
+        // Create notification object with proper Date handling for sorting
         notificationsArray.push({
             orgName,
             repName,
             email,
             formattedDate,
+            formattedTime,
             docId,
             isViewed,
-            submittedAt: dateObject // Use the actual date object for sorting
+            filingDate // Use filingDate (Date object) for sorting
         });
     });
 
-    // Sort notifications by submittedAt (newest first)
-    notificationsArray.sort((a, b) => b.submittedAt - a.submittedAt);
+    // Sort notifications by `filingDate` (newest first)
+    notificationsArray.sort((a, b) => b.filingDate.getTime() - a.filingDate.getTime()); // Newest first
 
     // Create notification items
     notificationsArray.forEach((notification) => {
-        const { orgName, repName, email, formattedDate, docId, isViewed } = notification;
+        const { orgName, repName, email, formattedDate, formattedTime, docId, isViewed } = notification;
 
         // Create notification message
         const notificationItem = document.createElement('li');
         notificationItem.innerHTML = `
             <span>${orgName} submitted by ${repName} (Email: ${email})</span>
-            <br><small>Filed on: ${formattedDate}</small>
+            <br><small>Filed on: ${formattedDate} at ${formattedTime}</small>
         `;
         notificationItem.setAttribute('data-doc-id', docId); // Store doc ID for future reference
 
@@ -134,8 +140,8 @@ function displayNotifications(querySnapshot) {
             newNotificationsCount++;
         }
 
-        // Append the notification item to the list
-        notificationsList.appendChild(notificationItem);
+        // Prepend the notification item to the list (newest at the top)
+        notificationsList.prepend(notificationItem); // Ensure the newest notifications are on top
     });
 
     // Update notification count (show only new/unread notifications)
