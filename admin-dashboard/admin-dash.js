@@ -1,6 +1,5 @@
 // Firebase imports   
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 import { getFirestore, collection, query, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 // Firebase configuration
@@ -16,21 +15,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
 
 // Retrieve viewed notifications from local storage
 let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications')) || [];
 
-// Redirect unauthenticated users
-onAuthStateChanged(auth, (user) => {
-    if (!user) {
-        console.error("User is not logged in");
-        window.location.href = "../admin-login/admin-login.html"; // Redirect to login page
-    } else {
-        console.log("User is logged in: ", user);
-        fetchApplicants();  // Fetch applicants and notifications when admin is authenticated
-    }
-});
+// Fetch applicants and notifications without requiring authentication
+fetchApplicants();  // Fetch applicants and notifications right away
 
 // Function to fetch and display applicants and notifications
 function fetchApplicants() {
