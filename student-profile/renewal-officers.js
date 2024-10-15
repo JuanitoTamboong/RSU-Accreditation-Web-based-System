@@ -343,4 +343,34 @@ async function submitAllProfiles() {
     } finally {
         hideLoading();
     }
+
 }
+
+async function fetchAndDisplayProfiles() {
+    try {
+        const profilesRef = collection(db, "student-org-applications");
+        const querySnapshot = await getDocs(profilesRef);
+
+        const allProfiles = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            console.log("Fetched document:", doc.id, data); // Log the document ID and data
+            
+            // Ensure 'profiles' exists and is an array in the fetched data
+            if (data.profiles && Array.isArray(data.profiles)) {
+                allProfiles.push(...data.profiles);
+            }
+        });
+
+        console.log("All profiles fetched:", allProfiles); // Log the fetched profiles
+        updateTable(allProfiles); // Update the table with fetched profiles
+    } catch (error) {
+        console.error("Error fetching profiles: ", error);
+        alert("Error fetching profiles. Please try again.");
+    }
+}
+
+// Call the function to fetch and display profiles when the page loads
+window.addEventListener('load', function() {
+    fetchAndDisplayProfiles();
+});

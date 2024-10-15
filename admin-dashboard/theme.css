@@ -1,0 +1,79 @@
+/* Theme Icon Transition */
+#theme-icon {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform: scale(1);
+    cursor: pointer;
+  }
+  .dark-theme #theme-icon{
+    color: var(--text-color-primary);
+  }
+  .light-theme #theme-icon {
+    transform: scale(1.3) rotate(360deg);
+    opacity: 0.8;
+  }
+  /* admin theme*/
+  .dark-theme .main-container{
+    background-color: var(--primary-color);
+  }
+  .dark-theme.section {
+  background-color: var(--accent-color);
+    
+  }
+  
+  .dark-theme .top-container {
+    background-color: var(--accent-color);
+  }
+  .dark-theme .top-content h2{
+    color: var(--text-color-primary);
+  }
+  .dark-theme .notifications-dropdown  {
+  background-color: var(--primary-color);
+  }
+  .dark-theme .notifications-dropdown i{
+   color: var(--text-color-primary);
+  }
+  .dark-theme .notification-modal {
+   background-color: var(--button-hover-color);
+  }
+  
+  .dark-theme .notification-content {
+    color: var(--text-color-secondary); /* Change text color in modal */
+  }
+  
+  .dark-theme .right-content {
+    background-color: var(--button-background); /* Change background color */
+  }
+  .dark-theme .time{
+    background-color: var(--button-hover-color);
+    color: var(--text-color-primary);
+  }
+  .dark-theme .right-content td{
+    color: var(--text-color-primary);
+  }
+  /* Additional Dark Theme Styles */
+  .dark-theme .close-button{
+    color: var(--input-border-color);
+  }
+  .dark-theme #notification-list li {
+    border-bottom: 1px solid var(--input-border-color); /* Change border color */
+  }
+  .dark-theme #notification-list li{
+  color: var(--text-color-primary);
+  }
+  .dark-theme #notification-list li small{
+   color: var(--text-color-secondary);
+  }
+  
+  /*pending theme*/
+  .dark-theme .pending-requests{
+    background-color: var(--accent-color);
+  }
+  .dark-theme .pending-requests th, .dark-theme .pending-requests td {
+    color:var(--text-color-secondary) ;
+  
+}
+.dark-theme .pending-requests th {
+    background-color: var(--background-color);
+    color: rgb(0, 128, 87);
+ }
+ 

@@ -43,7 +43,7 @@ function saveFormData(docUrls) {
     // Collect form data
     const formData = {
         uid: user.uid,
-        typeOfAccreditation: "New Organization",
+        typeOfAccreditation: "Renewal",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
@@ -205,7 +205,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     saveFormData(allDocUrls);
 
     // Redirect to the next page
-    window.location.href = '../student-profile/list-officers.html';
+    window.location.href = '../student-profile/renewal-list-officers.html';
     hideLoading();
 });
 
@@ -246,6 +246,7 @@ document.getElementById('add-position').addEventListener('click', () => {
         }
     });
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));

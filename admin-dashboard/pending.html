@@ -7,17 +7,17 @@
     <link rel="icon" href="../assets/rsu-logo.png">
     <title>Admin Dashboard</title>
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-    <link rel="stylesheet" href="sidebar.css">
-    
-    <!-- Scripts -->
-    <script type="module" src="admin-dash.js" defer></script>
-    <script type="module" src="time-calendar.js" defer></script>
-    <script type="module" src="toogle-sidebar.js" defer></script>
-    <script type="module" src="setting.js" defer></script>
+       <!-- css-->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+       <link rel="stylesheet" href="sidebar.css">
+       <link rel="stylesheet" href="pending-request.css">
+       <link rel="stylesheet" href="theme.css">
+          <!-- Scripts -->
+       <script type="module" src="admin-dash.js" defer></script>
+       <script type="module" src="toogle-sidebar.js" defer></script>
+       <script type="module" src="setting.js" defer></script>
+       <script type="module" src="pendingRequest.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -39,7 +39,7 @@
         <div class="main-container">
             <div class="top-container">
                 <div class="top-content">
-                    <h2>Welcome Admin</h2>
+                    <h2>Pending Request</h2>
                 </div>
                 <div class="notifications-dropdown">
                     <div id="notification-icon" class="notification-icon">
@@ -55,9 +55,28 @@
                         </div>
                     </div>
                     <div class="setting">
-                        <p><i class="fa-solid fa-sun" id="theme-icon"></i></p> <!-- Default sun icon -->
+                        <p><i class="fa-solid fa-sun" id="theme-icon"></i></p>
                     </div>                    
                 </div>
+            </div>
+
+            <!-- Table for Pending Requests -->
+            <div class="table-container">
+                <table class="pending-requests">
+                    <thead>
+                        <tr>
+                            <th>Email Address</th>
+                            <th>Organization Name</th>
+                            <th>Type of Accreditation</th>
+                            <th>Date of Filing</th>
+                            <th>Actions</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-table-body">
+                        <!-- Dynamic rows will be added here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
