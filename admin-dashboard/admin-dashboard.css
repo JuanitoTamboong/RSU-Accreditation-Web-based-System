@@ -18,7 +18,7 @@
   --button-hover-color: #415A77;
   --button-background: #1B263B;
   --declined-button: #740303f5;
-  --applicants: #023a02;
+  --applicants: #0a490a;
 }
 
 body {
@@ -149,11 +149,15 @@ small {
   align-items: center;
 }
 
+.sub-container{
+  display: flex;
+  gap: 40px;
+  padding-top: 40px;
+}
 /* Left Side Container */
 .left-side-container {
-  margin-top: 20px;
-  border-radius: 20px;
-  flex-direction: column;
+  width: 50%;
+  padding: 10px;
 }
 
 .left-content {
@@ -161,25 +165,29 @@ small {
   text-align: center;
   display: flex;
   gap: 50px;
+  display: grid;
+  height: 400px;
+  width: 60%;
 }
-
 .left-content i {
   text-align: center;
-  font-size: 18px;
-  padding: 10px;
-  width: 15%;
+  font-size: 80px;
   border-radius: 5px;
+  padding: 50px;
+  display: flex;
+  gap: 20px;
+  width: 100%;
 }
 
 .left-content p {
   font-weight: 500;
-  font-size: 10px;
+  font-size: 30px;
   text-align: center;
   margin-top: 10px;
 }
 
 .left-content span {
-  font-size: 20px;
+  font-size: 60px;
 }
 
 /* Status Colors */
@@ -193,17 +201,12 @@ small {
   color: var(--text-color-primary);
 }
 
-#declined {
-  background-color: var(--declined-button);
-  color: var(--text-color-primary);
-}
-
 /* Right Side Container */
 .right-side-container {
   float: right;
   position: relative;
-  width: 45%;
-  margin-top: -58px;
+  width: 50%;
+  top: 0;
 }
 
 .right-content {
@@ -220,24 +223,35 @@ small {
   text-align: center;
   color: var(--primary-color);
   background-color: var(--card-background);
-  padding: 10px;
+  padding: 10px 0px 10px 0px;
   border-radius: 20px;
+  position: relative; /* To position the pseudo-element relative to this parent */
+}
+.time::before {
+  content: "";
+  background-image: url('../assets/Rocket.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 190px;  /* Adjusted size for better fit */
+  height: 190px; /* Adjusted size for better fit */
+  left: -50px;  /* Moves the rocket to the left of the time */
+  top: 50%;      /* Vertically center the rocket */
+  transform: translateY(-50%) rotate(20deg); /* Center and tilt the rocket */
+  filter: drop-shadow(0px 0px 4px var(--button-hover-color));
 }
 
-.current-date {
-  color: var(--accent-color);
-  padding: 10px;
-}
+
 
 /* Calendar Styling */
 .calendar {
   width: 100%;
-  max-width: 300px;
   margin: 0 auto;
+  padding-top: 30px;
 }
 
 .calendar table {
-  width: 100%;
+  width: 90%;
   border-collapse: collapse;
 }
 

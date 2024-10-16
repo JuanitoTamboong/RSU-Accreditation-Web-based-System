@@ -50,6 +50,11 @@
   .dark-theme .right-content td{
     color: var(--text-color-primary);
   }
+  .dark-theme .current-date {
+    color: var(--text-color-primary);
+    padding: 10px;
+
+  }
   /* Additional Dark Theme Styles */
   .dark-theme .close-button{
     color: var(--input-border-color);
@@ -69,7 +74,8 @@
     background-color: var(--accent-color);
   }
   .dark-theme .pending-requests th, .dark-theme .pending-requests td {
-    color:var(--text-color-secondary) ;
+    color:var(--text-color-primary) ;
+
   
 }
 .dark-theme .pending-requests th {

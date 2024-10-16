@@ -263,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('course-dropdown').value = appDetails.studentCourse || '';
         document.getElementById('organization-name-dropdown').value = appDetails.organizationName || '';
         document.getElementById('email-address').value = appDetails.emailAddress || '';
-        document.getElementById('date-filing').value = appDetails.dateFiling || ''; // Ensure this field exists
     } else {
         // Handle case where no organization data was found
         Swal.fire({

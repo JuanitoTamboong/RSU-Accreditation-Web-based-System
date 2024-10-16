@@ -19,6 +19,7 @@ const firebaseConfig = {
   messagingSenderId: "1073695504078",
   appId: "1:1073695504078:web:d2cd33e1b0fc6c82e0829f"
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
@@ -27,15 +28,12 @@ const provider = new GoogleAuthProvider();
 // Function to toggle password visibility
 function togglePasswordVisibility(inputElement, toggleElement) {
   if (inputElement && toggleElement) {
-      // Toggle the type attribute
-      const type = inputElement.getAttribute("type") === "password" ? "text" : "password";
-      inputElement.setAttribute("type", type);
-
-      // Toggle the icon class
-      toggleElement.classList.toggle('bx-show', type === "text");
-      toggleElement.classList.toggle('bx-hide', type === "password");
+    const type = inputElement.getAttribute("type") === "password" ? "text" : "password";
+    inputElement.setAttribute("type", type);
+    toggleElement.classList.toggle('bx-show', type === "text");
+    toggleElement.classList.toggle('bx-hide', type === "password");
   } else {
-      console.error("Input or toggle element not found.");
+    console.error("Input or toggle element not found.");
   }
 }
 
@@ -46,11 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const togglePassword = document.getElementById("togglePassword");
 
   if (togglePassword) {
-      togglePassword.addEventListener("click", function () {
-          togglePasswordVisibility(passwordInput, togglePassword);
-      });
-  } else {
-      console.error("Toggle Password button not found.");
+    togglePassword.addEventListener("click", function () {
+      togglePasswordVisibility(passwordInput, togglePassword);
+    });
   }
 
   // Sign-up password fields and their toggle buttons
@@ -59,22 +55,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const confirmPasswordInput = document.getElementById("confirm-password");
   const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
 
-  // Event listener for toggling sign-up password visibility
   if (toggleSignupPassword) {
-      toggleSignupPassword.addEventListener("click", function () {
-          togglePasswordVisibility(signupPasswordInput, toggleSignupPassword);
-      });
-  } else {
-      console.error("Toggle Signup Password button not found.");
+    toggleSignupPassword.addEventListener("click", function () {
+      togglePasswordVisibility(signupPasswordInput, toggleSignupPassword);
+    });
   }
 
-  // Event listener for toggling confirm password visibility
   if (toggleConfirmPassword) {
-      toggleConfirmPassword.addEventListener("click", function () {
-          togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
-      });
-  } else {
-      console.error("Toggle Confirm Password button not found.");
+    toggleConfirmPassword.addEventListener("click", function () {
+      togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
+    });
   }
 });
 
@@ -93,20 +83,26 @@ function validateSignUpForm(email, password, confirmPassword) {
   let isValid = true;
   const errors = [];
 
-  // Check if fields are filled
   if (!email || !password || !confirmPassword) {
     errors.push("All fields are required.");
     isValid = false;
   }
 
-  // Check if passwords match
   if (password !== confirmPassword) {
     errors.push("Passwords do not match.");
     isValid = false;
   }
 
+  // Password complexity validation
+  const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+  if (!passwordRequirements.test(password)) {
+    errors.push("Password must be at least 6 characters long, contain uppercase and lowercase letters, a number, and a special character.");
+    isValid = false;
+  }
+
   return { isValid, errors };
 }
+
 // Event listener for the "Register" link
 const registerLink = document.getElementById("register-link");
 if (registerLink) {
@@ -151,13 +147,14 @@ if (signUpForm) {
     const confirmPassword = signUpForm.elements["confirm-password"].value;
 
     // Validate form fields
-    const { isValid, errors } = validateSignUpForm(
-      email,
-      password,
-      confirmPassword
-    );
+    const { isValid, errors } = validateSignUpForm(email, password, confirmPassword);
     if (!isValid) {
-      alert(errors.join("\n"));
+      Swal.fire({
+        icon: "error",
+        title: "Validation Error",
+        text: errors.join("\n"),
+        customClass: "swal-wide",
+      });
       return;
     }
 
@@ -173,15 +170,25 @@ if (signUpForm) {
         sendEmailVerification(user)
           .then(() => {
             hideLoading();
-            alert(
-              "Sign up successful! Please check your email for verification."
-            );
-            window.location.href = "index.html";
+            Swal.fire({
+              icon: "success",
+              title: "Sign up successful!",
+              text: "Please check your email for verification. You won't be able to log in until your email is verified.",
+              customClass: "swal-wide",
+              confirmButtonText: "Okay",
+            });
+            // Optionally, clear the form fields after successful sign-up
+            signUpForm.reset();
           })
           .catch((error) => {
             hideLoading();
             console.error("Error sending email verification:", error);
-            alert("Failed to send verification email. Please try again.");
+            Swal.fire({
+              icon: "error",
+              title: "Verification Error",
+              text: "Failed to send verification email. Please try again.",
+              customClass: "swal-wide",
+            });
           });
       })
       .catch((error) => {
@@ -190,11 +197,17 @@ if (signUpForm) {
         console.error(`Error ${errorCode}: ${error.message}`);
 
         if (errorCode === "auth/email-already-in-use") {
-          alert(
-            "The email address is already registered. Please use a different email."
-          );
+          Swal.fire({
+            icon: "error",
+            title: "Email Already Registered",
+            text: "The email address is already registered. Please use a different email.",
+          });
         } else {
-          alert("Sign up failed. Please try again.");
+          Swal.fire({
+            icon: "error",
+            title: "Sign Up Failed",
+            text: "Failed to sign up. Please try again.",
+          });
         }
       });
   });
@@ -260,110 +273,52 @@ if (signInForm) {
     const email = signInForm.elements["email"].value;
     const password = signInForm.elements["password"].value;
 
-    // Show the loading spinner
+    // Show loading spinner
     showLoading();
 
+    // Sign in user
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-
-        // Check if the user's email is verified
-        if (user.emailVerified) {
-          hideLoading();
-
-          // Show privacy agreement dialog
-          Swal.fire({
-            title: "Privacy Agreement",
-            html: 'Do you agree to the <a href="https://rsu.edu.ph/wp-content/uploads/2024/03/Privacy-Notice-For-website.pdf" target="_blank">Privacy Policy</a> before proceeding?', // Using 'html' instead of 'text' to allow HTML links
-            imageUrl: "../assets/privacy_agreement.png",
-            imageWidth: 130, // Set the image width
-            imageHeight: 120, // Set the image height
-            imageAlt: "Privacy Agreement Image", // Alt text for the image
-            showCancelButton: true,
-            confirmButtonText: "Yes, I agree",
-            cancelButtonText: "No, I disagree",
-            customClass:{ 
-              popup:"swal-wide",
-             image:"swal-image",
-            }
-            
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // If the user agrees, redirect to the welcome page
-              window.location.href = "../welcome-page/welcome.html";
-            } else {
-              // If the user disagrees, show an alert and do not proceed
-              Swal.fire({
-                icon: "info",
-                title: "You must agree to the privacy policy to proceed.",
-                customClass: "swal-wide",
-                timer: 2000,
-              });
-            }
-          });
-        } else {
-          hideLoading();
-          Swal.fire({
-            icon: "info",
-            title:
-              "Please verify your email before logging in. A verification email has been sent to your email address.",
-            showConfirmButton: false,
-            customClass: "swal-wide",
-            timer: 2600,
-          });
-        }
+        hideLoading();
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Welcome back!",
+          customClass: "swal-wide",
+          timer: 2000,
+        }).then(() => {
+          window.location.href = "../welcome-page/welcome.html";
+        });
       })
       .catch((error) => {
         hideLoading();
-        console.error(`Error ${error.code}: ${error.message}`);
-        Swal.fire({
-          icon: "warning",
-          title: "Invalid email or password. Please try again.",
-          showConfirmButton: false,
-          customClass: "swal-wide",
-          timer: 1500,         
-        });
+        const errorCode = error.code;
+        console.error(`Error ${errorCode}: ${error.message}`);
+
+        if (errorCode === "auth/wrong-password") {
+          Swal.fire({
+            icon: "error",
+            title: "Login Failed",
+            text: "Incorrect password. Please try again.",
+            customClass: "swal-wide",
+          });
+        } else if (errorCode === "auth/user-not-found") {
+          Swal.fire({
+            icon: "error",
+            title: "Login Failed",
+            text: "No user found with this email. Please register.",
+            customClass: "swal-wide",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Login Failed",
+            text: "An error occurred. Please try again.",
+            customClass: "swal-wide",
+          });
+        }
       });
   });
 }
 
-
-// Google Sign-In Functionality
-const googleLogin = document.getElementById("google-login-btn");
-if (googleLogin) {
-  googleLogin.addEventListener("click", function () {
-    // Show the loading spinner
-    showLoading();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-
-        // Check if the user's email is verified
-        if (user.emailVerified) {
-          hideLoading();
-          window.location.href = "welcome.html";
-        } else {
-          hideLoading();
-          Swal.fire({
-            icon: "info",
-            title: "Please verify your email before logging in.",
-            showConfirmButton: false,
-            customClass: "swal-wide",
-            timer: 1500,
-          });
-        }
-      })
-      .catch((error) => {
-        hideLoading();
-        console.error("Error during Google sign-in:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Failed to sign in with Google. Please try again.",
-          showConfirmButton: false,
-          customClass: "swal-wide",
-          timer: 1500,
-        });
-      });
-  });
-}
