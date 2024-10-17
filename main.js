@@ -151,7 +151,7 @@ if (signUpForm) {
     if (!isValid) {
       Swal.fire({
         icon: "error",
-        title: "Validation Error",
+        title: "Invalid password",
         text: errors.join("\n"),
         customClass: "swal-wide",
       });

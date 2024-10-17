@@ -98,7 +98,7 @@ document.getElementById('preview-documents').addEventListener('click', () => {
             const pdfData = event.target.result;
             Swal.fire({
                 title: 'Selected PDF Document',
-                html: `<iframe src="${pdfData}" style="width:100%; height:400px;" frameborder="0"></iframe>`,
+                html: `<iframe src="${pdfData}" style="width:100%; min-height:100vh;" frameborder="0"></iframe>`,
                 icon: 'info',
                 showCloseButton: true,
                 focusConfirm: false,
@@ -246,7 +246,24 @@ document.getElementById('add-position').addEventListener('click', () => {
         }
     });
 });
-
+// Add course dynamically
+document.getElementById('add-course').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new course name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New course name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const courseDropdown = document.getElementById('course-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            courseDropdown.appendChild(option);
+            courseDropdown.value = result.value; // Set it as selected
+        }
+    });
+})
 
 document.addEventListener('DOMContentLoaded', () => {
     const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));

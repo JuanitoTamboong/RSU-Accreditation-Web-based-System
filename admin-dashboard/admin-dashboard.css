@@ -240,6 +240,9 @@ small {
   transform: translateY(-50%) rotate(20deg); /* Center and tilt the rocket */
   filter: drop-shadow(0px 0px 4px var(--button-hover-color));
 }
+.current-date{
+  padding: 10px;
+}
 
 
 

@@ -26,7 +26,7 @@ function renderRow(doc) {
             <td>${organizationName}</td>
             <td>${typeOfAccreditation}</td>
             <td>${dateFiling}</td>
-            <td><a href="#" class="view-link" data-id="${doc.id}">View</a></td>
+           <td><a href="../admin-dashboard/view-request.html?id=${doc.id}" class="view-link" data-id="${doc.id}">View</a></td>
             <td><button class="delete-btn" data-id="${doc.id}">Delete</button></td>
         </tr>
     `;

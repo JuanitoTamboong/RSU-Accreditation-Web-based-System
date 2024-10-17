@@ -1,4 +1,4 @@
-// Firebase imports   
+// Firebase imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
 import { getFirestore, collection, query, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
@@ -19,24 +19,21 @@ const db = getFirestore(app);
 // Retrieve viewed notifications from local storage
 let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications')) || [];
 
-// Fetch applicants and notifications without requiring authentication
-fetchApplicants();  // Fetch applicants and notifications right away
+// Fetch applicants and notifications immediately
+fetchApplicants();
 
 // Function to fetch and display applicants and notifications
 function fetchApplicants() {
     try {
-        // Listen for real-time updates to the collection
         const q = query(collection(db, 'student-org-applications'));
         onSnapshot(q, (querySnapshot) => {
-            // Update the applicant count
-            const applicantCount = querySnapshot.size; // Get number of applications
-            updateApplicantCount(applicantCount);
+            const applicantCount = querySnapshot.size;
+            updateApplicantCount(applicantCount); // Update count
 
-            // Display notifications for submitted applications
-            displayNotifications(querySnapshot);
+            displayNotifications(querySnapshot); // Display notifications
         });
     } catch (error) {
-        console.error("Error fetching applications: ", error);
+        console.error("Error fetching applications:", error);
     }
 }
 
@@ -44,7 +41,7 @@ function fetchApplicants() {
 function updateApplicantCount(count) {
     const applicantCountElement = document.querySelector('#applicant-count');
     if (applicantCountElement) {
-        applicantCountElement.textContent = count; // Update count here
+        applicantCountElement.textContent = count;
     } else {
         console.error("Applicant count element not found");
     }
@@ -59,121 +56,104 @@ function displayNotifications(querySnapshot) {
         return;
     }
 
-    // Clear the notifications list before appending new items
-    notificationsList.innerHTML = '';
+    notificationsList.innerHTML = ''; // Clear previous notifications
 
-    // Check if there are any applications
     if (querySnapshot.empty) {
         notificationsList.innerHTML = '<li>No new notifications</li>';
         return;
     }
 
     let newNotificationsCount = 0;
-    const notificationsArray = []; // Array to hold notifications for sorting
+    const notificationsArray = [];
 
-    // Populate notifications list with organization submissions
+    // Gather notification data
     querySnapshot.forEach((doc) => {
         const appData = doc.data();
         const docId = doc.id;
-
-        // Check if this notification has been viewed before
         const isViewed = viewedNotifications.includes(docId);
 
-        // Accessing nested properties correctly
-        const applicationDetails = appData.applicationDetails || {};
-        const orgName = applicationDetails.organizationName || "Unknown Organization";
-        const repName = applicationDetails.representativeName || "Unknown Representative";
-        const email = applicationDetails.emailAddress || "Unknown Email";
-        const dateFiling = applicationDetails.dateFiling || new Date().toISOString(); // Use current date as fallback
-        const submissionTime = appData.submissionTime || ''; // Fetch submissionTime from the document
+        const { 
+            organizationName = "Unknown Organization", 
+            representativeName = "Unknown Representative", 
+            emailAddress = "Unknown Email", 
+            dateFiling = new Date().toISOString() 
+        } = appData.applicationDetails || {};
 
-        // Convert `dateFiling` to a proper Date object
+        const submissionTime = appData.submissionTime || '';
         const filingDate = new Date(dateFiling);
+        const formattedDate = filingDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        const formattedTime = submissionTime || filingDate.toLocaleTimeString();
 
-        // Ensure proper formatting for both date and time
-        const formattedDate = filingDate.toLocaleDateString(undefined, {
-            year: 'numeric', month: 'long', day: 'numeric'
-        });
-        const formattedTime = submissionTime || filingDate.toLocaleTimeString(); // Format submission time
-
-        // Create notification object with proper Date handling for sorting
         notificationsArray.push({
-            orgName,
-            repName,
-            email,
+            orgName: organizationName,
+            repName: representativeName,
+            email: emailAddress,
             formattedDate,
             formattedTime,
             docId,
             isViewed,
-            filingDate // Use filingDate (Date object) for sorting
+            filingDate
         });
     });
 
-    // Sort notifications by `filingDate` (newest first)
-    notificationsArray.sort((a, b) => b.filingDate.getTime() - a.filingDate.getTime()); // Newest first
+    // Sort notifications by filing date (newest first)
+    notificationsArray.sort((a, b) => b.filingDate - a.filingDate);
 
-    // Create notification items
-    notificationsArray.forEach((notification) => {
-        const { orgName, repName, email, formattedDate, formattedTime, docId, isViewed } = notification;
-
-        // Create notification message
+    // Render notifications
+    notificationsArray.forEach(({ orgName, repName, email, formattedDate, formattedTime, docId, isViewed }) => {
         const notificationItem = document.createElement('li');
         notificationItem.innerHTML = `
             <span>${orgName} submitted by ${repName} (Email: ${email})</span>
             <br><small>Filed on: ${formattedDate} at ${formattedTime}</small>
         `;
-        notificationItem.setAttribute('data-doc-id', docId); // Store doc ID for future reference
+        notificationItem.dataset.docId = docId; // Store doc ID
 
-        // Highlight new notifications (e.g., bold text)
         if (!isViewed) {
-            notificationItem.style.fontWeight = 'bold'; // New notification styling
+            notificationItem.style.fontWeight = 'bold'; // Highlight new notifications
             newNotificationsCount++;
         }
 
-        // Prepend the notification item to the list (newest at the top)
-        notificationsList.prepend(notificationItem); // Ensure the newest notifications are on top
+        notificationsList.prepend(notificationItem); // Add the newest notification on top
     });
 
-    // Update notification count (show only new/unread notifications)
+    // Update the notification count
+    updateNotificationCount(newNotificationsCount);
+}
+
+// Update notification count (new/unread notifications)
+function updateNotificationCount(count) {
     const notificationCountElement = document.getElementById('notification-count');
     if (notificationCountElement) {
-        notificationCountElement.textContent = newNotificationsCount;
+        notificationCountElement.textContent = count;
     }
 }
 
 // Show/hide the notification modal when the icon is clicked
 document.getElementById('notification-icon').addEventListener('click', () => {
     const modal = document.getElementById('notification-modal');
-    modal.classList.toggle('active'); // Toggle visibility with 'active' class
+    modal.classList.toggle('active');
 
-    // Mark notifications as viewed when modal is opened
     if (modal.classList.contains('active')) {
-        markNotificationsAsViewed();
+        markNotificationsAsViewed(); // Mark notifications as viewed
     }
 });
 
 // Mark all notifications as viewed and update local storage
 function markNotificationsAsViewed() {
     const notificationItems = document.querySelectorAll('#notification-list li');
+
     notificationItems.forEach((item) => {
-        const docId = item.getAttribute('data-doc-id');
+        const docId = item.dataset.docId;
         if (!viewedNotifications.includes(docId)) {
-            viewedNotifications.push(docId); // Add this notification to viewed
+            viewedNotifications.push(docId);
         }
     });
 
-    // Save the updated list of viewed notifications in local storage
     localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
-
-    // Reset the notification count to 0
-    const notificationCountElement = document.getElementById('notification-count');
-    if (notificationCountElement) {
-        notificationCountElement.textContent = '0';
-    }
+    updateNotificationCount(0); // Reset notification count
 }
 
 // Close the modal when the close button is clicked
 document.getElementById('close-notification-modal').addEventListener('click', () => {
-    const modal = document.getElementById('notification-modal');
-    modal.classList.remove('active'); // Hide modal
+    document.getElementById('notification-modal').classList.remove('active');
 });

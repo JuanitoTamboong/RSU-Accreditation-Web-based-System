@@ -1,0 +1,61 @@
+:root {
+    --primary-color: #0D1B2A;
+    --accent-color: #1B263B;
+    --background-color: #F0F4F8;
+    --card-background: #FFFFFF;
+    --input-border-color: #E0E0E0;
+    --text-color-primary: #FFFFFF;
+    --text-color-secondary: #D0D0D0;
+    --button-hover-color: #415A77;
+    --button-background: #1B263B;
+    --declined-button: #740303f5;
+    --applicants: #0a490a;
+  }
+  
+ /* Modal styles */
+ .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px; 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; 
+    padding: 50px;
+    border: 1px solid #888;
+    width: 80%; 
+    max-width: 500px; 
+    border-radius: 20px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+#sendApprovalEmail{
+    margin-top: 10px;
+    padding: 10px;
+   border-radius: 20px;
+   width: 100%;
+   cursor: pointer;
+   background-color: var(--button-hover-color);
+   color: var(--text-color-primary);
+}

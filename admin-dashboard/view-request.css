@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --primary-color: #0D1B2A;
+  --accent-color: #1B263B;
+  --background-color: #F0F4F8;
+  --card-background: #FFFFFF;
+  --input-border-color: #E0E0E0;
+  --text-color-primary: #FFFFFF;
+  --text-color-secondary: #D0D0D0;
+  --button-hover-color: #415A77;
+  --button-background: #1B263B;
+  --declined-button: #740303f5;
+  --applicants: #0a490a;
+}
+
+body {
+  background-color: var(--card-background);
+}
+
+.container {
+  background-color: var(--background-color);
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  background-color: var(--primary-color);
+  padding: 20px;
+}
+
+.back-button {
+  border: none;
+  outline: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  background-color: var(--button-background);
+  border-radius: 20px;
+  color: var(--text-color-primary);
+}
+
+.back-button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.back-button i {
+  margin-right: 8px;
+}
+
+.main-content {
+  display: flex; /* Create a flex layout for main content */
+  gap: 20px; /* Adjust gap for a cleaner look */
+  flex-wrap: wrap; /* Allow wrapping to handle smaller screens */
+  width: 100%;
+}
+
+.left-section {
+  flex: 1; /* Take up the remaining width for the left section */
+}
+
+.right-section {
+  flex: 0 0 39%; /* Set the right section to take 30% of the container width */
+  display: flex;
+  flex-direction: column; /* Stack sections vertically */
+  gap: 20px; /* Space between sections */
+}
+
+.applications-container,
+.officers-container,
+.documents-container {
+  background-color: var(--card-background);
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1; /* Make the containers take equal space */
+  display: flex;
+  flex-direction: column;
+  max-width: 100%; /* Prevent containers from stretching beyond parent container */
+  width: 100%; /* Ensure full width usage */
+  box-sizing: border-box; /* Include padding and border in the width calculation */
+  flex-shrink: 0; /* Prevent shrinking */
+  flex-grow: 1; /* Allow growth without breaking the layout */
+  min-width: 300px; /* Set a minimum width to avoid squishing the content */
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.applicant-details p,
+.officers-details p {
+  font-size: 18px;
+  margin: 10px 0;
+  border: 1px solid var(--primary-color);
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.applicant-details p strong,
+.officers-details p strong {
+  color: #555;
+}
+
+.officers-details {
+  flex: 1; /* Make the officers section grow to fill space */
+  max-height: 200px; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+  border: 1px solid #ccc; /* Optional: add a border for better visual separation */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.request-documents {
+  flex: 1;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.request-documents a {
+  display: block;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #007BFF;
+  transition: color 0.3s;
+}
+
+.request-documents a:hover {
+  color: #0056b3;
+}
+
+.approved {
+  padding-top: 20px;
+}
+
+.approved button {
+  padding: 10px;
+  border-radius: 20px;
+  width: 100px;
+  font-size: 13px;
+  border: none;
+  background-color: var(--applicants);
+  color: var(--text-color-primary);
+  cursor: pointer;
+}
+
+#applicant-details,
+#request-documents,
+#check-list,
+#officers-details {
+  background: white;
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.officer {
+  margin: 10px 0;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.officer img {
+  max-width: 100%; /* Ensure the image is responsive */
+  height: auto;
+  display: block; /* Center content */
+  margin: 0 auto; /* Horizontally center the image */
+}
