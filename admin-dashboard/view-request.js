@@ -103,17 +103,17 @@ document.getElementById('closeModal').addEventListener('click', function() {
 document.getElementById('sendApprovalEmail').addEventListener('click', function() {
     // Get the email address from the applicant details
     const emailElement = document.querySelector('.applicant-details p strong:nth-of-type(1)');
-    const applicantEmail = emailElement && emailElement.nextSibling ? emailElement.nextSibling.nodeValue.trim() : '';
+    const applicantEmail = emailElement ? emailElement.parentNode.textContent.split(':')[1].trim() : '';
 
     // Get the organization name
     const organizationElement = document.querySelector('.applicant-details p strong:nth-of-type(2)');
-    const organizationName = organizationElement && organizationElement.nextSibling ? organizationElement.nextSibling.nodeValue.trim() : 'Organization';
+    const organizationName = organizationElement ? organizationElement.parentNode.textContent.split(':')[1].trim() : '';
 
     const subject = 'Application Approved';
     const body = `
         Dear Applicant,
 
-        We are pleased to inform you that your application for accreditation with the organization ${organizationName} has been approved.
+        We are pleased to inform you that your application for accreditation with the ${organizationName} has been approved.
 
         Thank you for your submission.
 
@@ -130,6 +130,7 @@ document.getElementById('sendApprovalEmail').addEventListener('click', function(
 
     document.getElementById('approvalModal').style.display = 'none'; // Close the modal
 });
+
 
 // Initialize when the DOM is loaded
 window.addEventListener('DOMContentLoaded', fetchApplicantDetails);

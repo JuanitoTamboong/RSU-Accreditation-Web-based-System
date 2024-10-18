@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div style="font-family: Arial, sans-serif; max-width: 400px; margin: auto;">
                     <div style="margin-bottom: 20px; text-align:left;">
                         <label for="organization-search" style="display: block; margin-bottom: 5px;">Search Organization:</label>
+                        <p style="font-size:15px;color:#597d9b;">use uppercase ex. CCMADI</p>
                         <input type="text" id="organization-search" class="swal2-input" placeholder="Enter organization name" required style="width: 100%; padding: 10px; box-sizing: border-box;">
                     </div>
                     <div style="margin-bottom: 20px; text-align:left;">
