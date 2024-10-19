@@ -120,15 +120,14 @@ document.getElementById('preview-documents').addEventListener('click', () => {
     }
 });
 
-// Set the current year to the school year input
-function setCurrentYear() {
+// Set the current year and next year for the school-year input
+function setSchoolYear() {
     const currentYear = new Date().getFullYear();
-    document.getElementById('school-year').value = currentYear;
+    const nextYear = currentYear + 1;
+    document.getElementById('school-year').value = `${currentYear}-${nextYear}`;
 }
-
-// Load data on page load
 window.addEventListener('load', () => {
-    setCurrentYear(); // Set the current year on load
+    setSchoolYear(); // Set the school year on load
 });
 
 // Date picker initialization

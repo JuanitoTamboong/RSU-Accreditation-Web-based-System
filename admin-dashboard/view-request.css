@@ -145,21 +145,26 @@ h1 {
   color: #0056b3;
 }
 
-.approved {
+.approved-reject {
   padding-top: 20px;
 }
 
-.approved button {
+.approved-reject button {
   padding: 10px;
   border-radius: 20px;
   width: 100px;
   font-size: 13px;
   border: none;
-  background-color: var(--applicants);
   color: var(--text-color-primary);
   cursor: pointer;
+  margin: 10px;
 }
-
+#approve-button {
+  background-color: var(--applicants);
+}
+#reject-button{
+background-color: var(--declined-button);
+}
 #applicant-details,
 #request-documents,
 #check-list,

@@ -4,27 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Request Applicant</title>
-    <link rel="icon" href="../assets/rsu-logo.png"> <!-- Ensure the path is correct -->
-    <!-- Fonts -->
+    <link rel="icon" href="../assets/rsu-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <!-- CSS -->
+    <!--css-->
     <link rel="stylesheet" href="view-request.css">
     <link rel="stylesheet" href="approved-modal.css">
-    <!-- Script -->
+    <!--script-->
     <script type="module" src="./view-request.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
-<script type="text/javascript">
-   (function(){
-      emailjs.init({
-        publicKey: "YOUR_PUBLIC_KEY",
-      });
-   })();
-</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("2mWA0heD5fPFyVrIn");
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
+        <input type="hidden" id="applicantEmail" value="">
         <div class="header">
             <button class="back-button" onclick="history.back()">
                 <i class="fas fa-arrow-left"></i> Back
@@ -45,28 +41,34 @@
                 <h1>Documents</h1>
                 <div class="request-documents" id="request-documents"></div>
                 <div class="check-list" id="check-list"></div>
-                <div class="approved">
+                <div class="approved-reject">
                     <button id="approve-button">Approve</button>
+                    <button id="reject-button">Reject</button>
+                </div>
+                <!--modal email form-->
+                <div id="emailModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <div class="form-modal">
+                        <span class="close" id="closeEmailModal">&times;</span>
+                        <h2>Send Email to Applicant</h2>
+                        <p><strong>To:</strong> <span id="to_name"></span></p>
+                        <p><strong>Applicant Email:</strong> <span id="fsender_email"></span></p>
+                        <p><strong>Custom Message:</strong> <span id="custom_message"></span></p>
+                        <p><strong>Application Status:</strong> <span id="application_status"></span></p>
+                        <p><strong>Additional Message:</strong></p>
+                        <textarea id="additional-message" placeholder="Type your additional message here..." rows="4" style="width: 100%;"></textarea>
+                        <p id="emailStatus"></p>
+                        <button id="send-email-button">Send Email</button>
+                     </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Approval Modal -->
-    <div id="approvalModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2>Approval Confirmation</h2>
-            <p>Are you sure you want to approve this application?</p>
-            <button id="sendApprovalEmail">Send Approval Email</button>
-        </div>
-    </div>
-
-    <!-- Document Viewing Modal -->
-    <div id="documentModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" id="closeDocumentModal">&times;</span>
-            <iframe id="documentIframe" style="width:100%; height:80%; margin-top:5%;" src="" frameborder="0"></iframe>
+        <div id="documentModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close" id="closeDocumentModal">&times;</span>
+                <iframe id="documentIframe" style="width:100%; height:80%; margin-top:5%;" src="" frameborder="0"></iframe>
+            </div>
         </div>
     </div>
 </body>

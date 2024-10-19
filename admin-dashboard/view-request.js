@@ -22,6 +22,14 @@ function getQueryParameter(param) {
     return urlParams.get(param);
 }
 
+// Variables to hold applicant data
+let applicantName; 
+let senderEmail; 
+let applicationStatus; 
+let customMessage; 
+let additionalMessage; // New variable for additional message
+let typeOfAccreditation; // New global variable for accreditation type
+
 // Fetch and render applicant details
 async function fetchApplicantDetails() {
     const applicantId = getQueryParameter('id');
@@ -42,29 +50,39 @@ async function fetchApplicantDetails() {
         const data = docSnap.data();
         const applicationDetails = data.applicationDetails || {};
 
+        console.log("Fetched application details:", applicationDetails);
+
+        // Store typeOfAccreditation globally
+        typeOfAccreditation = applicationDetails.typeOfAccreditation || 'N/A'; 
+
         // Render applicant details
         document.getElementById('applicant-details').innerHTML = `
-            <p><strong>Email Address:</strong> ${applicationDetails.emailAddress || 'N/A'}</p>
-            <p><strong>Organization Name:</strong> ${applicationDetails.organizationName || 'N/A'}</p>
-            <p><strong>Type of Accreditation:</strong> ${applicationDetails.typeOfAccreditation || 'N/A'}</p>
-            <p><strong>Date of Filing:</strong> ${applicationDetails.dateFiling || 'N/A'}</p>
-            <p><strong>Representative Name:</strong> ${applicationDetails.representativeName || 'N/A'}</p>
+           <p><strong>Representative Name:</strong> ${applicationDetails.representativeName || 'N/A'}</p>
             <p><strong>Position:</strong> ${applicationDetails.representativePosition || 'N/A'}</p>
+            <p><strong>School Year:</strong> ${applicationDetails.schoolYear || 'N/A'}</p>
             <p><strong>Course:</strong> ${applicationDetails.studentCourse || 'N/A'}</p>
+            <p><strong>Organization Name:</strong> ${applicationDetails.organizationName || 'N/A'}</p>
+            <p><strong>Email Address:</strong> ${applicationDetails.emailAddress || 'N/A'}</p>
+            <p><strong>Type of Accreditation:</strong> ${typeOfAccreditation}</p>
+            <p><strong>Date of Filing:</strong> ${applicationDetails.dateFiling || 'N/A'}</p>
+        
         `;
+
+        senderEmail = applicationDetails.emailAddress || 'N/A';
+        applicantName = applicationDetails.representativeName || 'N/A';
 
         // Render documents directly in an iframe
         const documents = applicationDetails.documents || [];
         const documentsHTML = documents.map(doc => `
             <div style="margin-bottom: 20px;">
                 <h4>${doc.split('/').pop()}</h4>
-                <iframe src="${doc}" style="width: 100%; min-height: 100vh;" frameborder="0"></iframe>
+                <iframe src="${doc}" style="width: 100%; min-height:100vh;" frameborder="0"></iframe>
             </div>
         `).join('');
         document.getElementById('request-documents').innerHTML = documentsHTML || '<p>No documents available.</p>';
 
         // Render checklist for missing documents
-        const requiredDocuments = ["Document 1", "Document 2", "Document 3"]; // Example required documents
+        const requiredDocuments = ["Document 1", "Document 2", "Document 3"];
         const checkListHTML = requiredDocuments.map(doc => {
             const isPresent = documents.includes(doc);
             return `<p style="color: ${isPresent ? 'green' : 'red'};">${doc}: ${isPresent ? '✔️' : '❌'}</p>`;
@@ -89,48 +107,70 @@ async function fetchApplicantDetails() {
     }
 }
 
-// Event listener for Approve button
-document.getElementById('approve-button').addEventListener('click', function() {
-    document.getElementById('approvalModal').style.display = 'block';
-});
+// Show the email modal
+function showModal() {
+    document.getElementById('to_name').textContent = applicantName;
+    document.getElementById('fsender_email').textContent = senderEmail;
+    document.getElementById('application_status').textContent = applicationStatus;
+    document.getElementById('custom_message').textContent = customMessage;
+    
+    // Clear previous email status messages (success/error)
+    document.getElementById('emailStatus').textContent = ''; 
+    
+    // Clear the additional message textarea each time the modal is opened
+    document.getElementById('additional-message').value = ''; 
+    
+    // Display the modal
+    document.getElementById('emailModal').style.display = 'block';  
+}
 
-// Event listener for closing the modal
-document.getElementById('closeModal').addEventListener('click', function() {
-    document.getElementById('approvalModal').style.display = 'none';
-});
+// Send email function
+async function sendEmail() {
+    const emailParams = {
+        to_name: applicantName,
+        sender_email: senderEmail,
+        from_name: 'Osas Admin',
+        status_color: applicationStatus === 'Approved' ? 'green' : 'red', // Green for Approved, Red for Rejected
+        typeOfAccreditation: typeOfAccreditation, // Include the accreditation type here
+        application_status: applicationStatus || 'Approved',
+        additional_message: document.getElementById('additional-message').value || '' // Get additional message
+    };
 
-// Event listener for sending approval email
-document.getElementById('sendApprovalEmail').addEventListener('click', function() {
-    // Get the email address from the applicant details
-    const emailElement = document.querySelector('.applicant-details p strong:nth-of-type(1)');
-    const applicantEmail = emailElement ? emailElement.parentNode.textContent.split(':')[1].trim() : '';
-
-    // Get the organization name
-    const organizationElement = document.querySelector('.applicant-details p strong:nth-of-type(2)');
-    const organizationName = organizationElement ? organizationElement.parentNode.textContent.split(':')[1].trim() : '';
-
-    const subject = 'Application Approved';
-    const body = `
-        Dear Applicant,
-
-        We are pleased to inform you that your application for accreditation with the ${organizationName} has been approved.
-
-        Thank you for your submission.
-
-        Best Regards,
-        Osas Admin Team
-    `;
-
-    // Send the email
-    if (applicantEmail) {
-        window.open(`mailto:${applicantEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-    } else {
-        alert('Unable to send email: applicant email address is not available.');
+    try {
+        const response = await emailjs.send('service_vsx36ej', 'template_7y6pol8', emailParams);
+        console.log('Email sent successfully:', response);
+        
+        // Show success message after email is sent
+        document.getElementById('emailStatus').textContent = 'Email sent successfully!';
+    } catch (error) {
+        console.error('Error sending email:', error);
+        
+        // Show error message in case of failure
+        document.getElementById('emailStatus').textContent = 'Error sending email.';
     }
+}
 
-    document.getElementById('approvalModal').style.display = 'none'; // Close the modal
+// Close modal
+function closeModal() {
+    document.getElementById('emailModal').style.display = 'none';
+}
+
+// Event listeners
+document.getElementById('send-email-button').addEventListener('click', sendEmail);
+document.getElementById('closeEmailModal').addEventListener('click', closeModal);
+
+// Approve or reject buttons
+document.getElementById('approve-button').addEventListener('click', function() {
+    applicationStatus = 'Approved';
+    customMessage = 'Congratulations! Your application has been approved.';
+    showModal();
 });
 
+document.getElementById('reject-button').addEventListener('click', function() {
+    applicationStatus = 'Rejected';
+    customMessage = 'We regret to inform you that your application has been rejected.';
+    showModal();
+});
 
-// Initialize when the DOM is loaded
-window.addEventListener('DOMContentLoaded', fetchApplicantDetails);
+// Initial data fetch
+fetchApplicantDetails();

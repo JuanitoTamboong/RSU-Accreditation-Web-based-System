@@ -75,7 +75,6 @@
                         <option value="CASSO">CASSO</option>
                         <option value="CCMADISO">CCMADISO</option>
                     </select>
-                    
                     <button type="button" id="add-organization" class="add-btn">+</button>
                 </div>
             </div>
@@ -90,6 +89,7 @@
                 <label for="date-filing">Date of Filing:</label>
                 <input type="date" id="date-filing" required>
             </div>
+            
             <div class="form-group">
                 <label for="requirement-documents">Upload Requirement Documents:</label>
                 <p>(Only accepts PDF file with max size 5MB)</p>
@@ -98,6 +98,10 @@
                     <button type="button" id="preview-documents" class="preview-btn" disabled>View Documents
                         <i class="fas fa-eye"></i>
                     </button>
+                    <button type="button" id="remove-documents" class="remove-btn" style="display: none;">Remove</button>
+                </div>
+                <div class="uploaded-documents-container"> <!-- New container -->
+                    <ul id="uploaded-documents-list"></ul>
                 </div>
             </div>
             <div class="form-group submit-btn">
@@ -105,7 +109,7 @@
                 <div id="loading" class="loading-spinner" style="display:none;">
                     <div class="spinner"></div>
                 </div>
-            </div>
+            </div> 
         </form>
     </div>
 </body>

@@ -1,19 +1,27 @@
 :root {
-    --primary-color: #0D1B2A;
-    --accent-color: #1B263B;
-    --background-color: #F0F4F8;
-    --card-background: #FFFFFF;
-    --input-border-color: #E0E0E0;
-    --text-color-primary: #FFFFFF;
-    --text-color-secondary: #D0D0D0;
-    --button-hover-color: #415A77;
-    --button-background: #1B263B;
-    --declined-button: #740303f5;
-    --applicants: #0a490a;
-  }
-  
- /* Modal styles */
- .modal {
+    --primary-color: #0D1B2A; /* Dark Blue */
+    --accent-color: #1B263B; /* Darker Blue */
+    --background-color: #F0F4F8; /* Light Background */
+    --card-background: #FFFFFF; /* White Card Background */
+    --input-border-color: #E0E0E0; /* Light Border Color */
+    --text-color-primary: #FFFFFF; /* White Text */
+    --text-color-secondary: #D0D0D0; /* Light Gray Text */
+    --button-hover-color: #415A77; /* Hover Color */
+    --button-background: #1B263B; /* Button Background */
+    --declined-button: #740303f5; /* Declined Button Color */
+    --applicants: #0a490a; /* Applicants Color */
+}
+
+/* Body styles */
+body {
+    font-family: 'Poppins', sans-serif; /* Modern font */
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Modal styles */
+.modal {
     display: none; 
     position: fixed; 
     z-index: 1; 
@@ -22,19 +30,30 @@
     width: 100%; 
     height: 100%; 
     overflow: auto; 
-    background-color: rgb(0,0,0); 
-    background-color: rgba(0,0,0,0.4); 
+    background-color: rgba(0, 0, 0, 0.5); 
     padding-top: 60px; 
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: var(--card-background);
     margin: 5% auto; 
-    padding: 50px;
-    border: 1px solid #888;
+    padding: 40px;
+    border: none;
     width: 80%; 
     max-width: 500px; 
-    border-radius: 20px;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+}
+
+.modal-content.show {
+    transform: translateY(0); /* Slide down effect */
+    opacity: 1; /* Fade-in effect */
+}
+
+.modal-content.hide {
+    transform: translateY(-20px); /* Slide up effect */
+    opacity: 0; /* Fade-out effect */
 }
 
 .close {
@@ -42,20 +61,13 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
+    transition: color 0.2s; /* Smooth color change */
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: var(--button-hover-color); /* Change to hover color */
     text-decoration: none;
     cursor: pointer;
 }
-#sendApprovalEmail{
-    margin-top: 10px;
-    padding: 10px;
-   border-radius: 20px;
-   width: 100%;
-   cursor: pointer;
-   background-color: var(--button-hover-color);
-   color: var(--text-color-primary);
-}
+

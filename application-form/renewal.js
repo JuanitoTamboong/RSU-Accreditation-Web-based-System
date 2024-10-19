@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"; 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,7 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const storage = getStorage(app);
-
+const db = getFirestore(app);
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -120,15 +122,14 @@ document.getElementById('preview-documents').addEventListener('click', () => {
     }
 });
 
-// Set the current year to the school year input
-function setCurrentYear() {
+// Set the current year and next year for the school-year input
+function setSchoolYear() {
     const currentYear = new Date().getFullYear();
-    document.getElementById('school-year').value = currentYear;
+    const nextYear = currentYear + 1;
+    document.getElementById('school-year').value = `${currentYear}-${nextYear}`;
 }
-
-// Load data on page load
 window.addEventListener('load', () => {
-    setCurrentYear(); // Set the current year on load
+    setSchoolYear(); // Set the school year on load
 });
 
 // Date picker initialization
@@ -280,6 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('course-dropdown').value = appDetails.studentCourse || '';
         document.getElementById('organization-name-dropdown').value = appDetails.organizationName || '';
         document.getElementById('email-address').value = appDetails.emailAddress || '';
+
+        // Display previously uploaded documents in a list
+        displayUploadedDocuments(appDetails.documents || []);
     } else {
         // Handle case where no organization data was found
         Swal.fire({
@@ -292,3 +296,40 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Function to display uploaded documents
+function displayUploadedDocuments(docUrls) {
+    const documentsContainer = document.getElementById('uploaded-documents-list');
+    documentsContainer.innerHTML = ''; // Clear the list
+
+    if (docUrls.length > 0) {
+        docUrls.forEach((docUrl, index) => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <a href="${docUrl}" target="_blank">Document ${index + 1}</a>
+                <button class="remove-doc-button" data-index="${index}">Remove</button>
+            `;
+            documentsContainer.appendChild(listItem);
+        });
+    } else {
+        const noDocsMessage = document.createElement('p');
+        noDocsMessage.textContent = 'No documents uploaded yet.';
+        documentsContainer.appendChild(noDocsMessage);
+    }
+
+    // Handle the removal of documents
+    handleDocumentRemoval(docUrls, documentsContainer);
+}
+
+// Function to handle document removal
+function handleDocumentRemoval(docUrls, documentsContainer) {
+    documentsContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-doc-button')) {
+            const indexToRemove = event.target.dataset.index; // Get the index of the document to remove
+            docUrls.splice(indexToRemove, 1); // Remove the document from the array
+
+            // Refresh the displayed documents
+            displayUploadedDocuments(docUrls);
+        }
+    });
+}

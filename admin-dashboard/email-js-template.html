@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+</head>
+<body style="font-family: 'Poppins', sans-serif; line-height: 1.6; padding: 20px; background-color: #f9f9f9; margin: 0; background-image: url('https://www.dropbox.com/scl/fi/w6vta72jdk505q6vb4b7x/admin.jpg?rlkey=9ar0ytks6xw520l3gw6b2uzma&st=i9d71hme&dl=1'); background-size: cover; background-position: center;">
+
+    <div style="max-width: 600px; margin: 0 auto; background-color: rgba(13, 27, 42, 0.8); color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        
+        <div style="text-align: center; margin-bottom: 20px; padding: 10px; background-color: rgb(3, 4, 39); border-radius: 10px;">
+            <img src="https://www.dropbox.com/scl/fi/g7ihdhuutv62efgm6xlr4/rsu-logo.png?rlkey=alay9nipumhm7dubvm1dqr7re&st=j8opo0jd&dl=1" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
+        </div>
+
+        <p style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Hello {{to_name}},</p>
+
+        <p style="font-size: 13px; margin-bottom: 20px;">
+            You have received a new message from <span style="font-weight: bold;">{{from_name}}</span>:
+        </p>
+
+        <p style="font-size: 13px; margin-bottom: 20px;">Dear Applicant,</p>
+
+        <p style="font-size: 13px; margin-bottom: 20px;">
+            We are pleased to inform you that your application for {{typeOfAccreditation}} with the organization has been 
+            <span style="color: {{status_color}}; font-weight: bold;">{{application_status}}</span>.
+        </p>
+
+        <p style="font-size: 13px; margin-bottom: 20px;">Additional Information:</p>
+        <p style="font-size: 13px; margin-bottom: 20px;">{{additional_message}}</p>
+
+        <p style="font-size: 13px; margin-bottom: 20px;">
+            Best wishes,<br>
+            <span style="font-weight: bold; color: #007bff;">Osas Admin</span>
+        </p>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap;"> <!-- Added flex-wrap for better responsiveness -->
+            <div style="text-align: left; margin-right: 20px; flex: 1; min-width: 120px;"> <!-- Added min-width -->
+                <p style="font-size: 10px; font-weight: 600; margin-bottom: 10px;">Get in Touch</p>
+                <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;"> <!-- Adjusted gap and added margin-top -->
+                    <a href="https://www.facebook.com/yourfacebookpage" target="_blank" style="text-decoration: none; color: #fff;">
+                        <img src="https://www.dropbox.com/scl/fi/0p24ge84mui0p6i9clr7u/facebook.png?rlkey=v5ez4ke5yl611rjpv3xyckxyk&st=wcwglq3a&dl=1" alt="Facebook" style="width:15px;height:15px;">
+                    </a>
+                    <a href="https://www.google.com" target="_blank" style="text-decoration: none; color: #fff;">
+                        <img src="https://www.dropbox.com/scl/fi/tw4b0owrn1bly0qs8y16y/social.png?rlkey=1r6ex1methxdgekcs09qzuzib&st=ihvgmcnq&dl=1" alt="Google" style="width:15px;height:15px;">
+                    </a>
+                </div>
+            </div>
+            <div style="font-size: 10px; color: #05a532; display: flex; align-items: center; gap: 10px; flex: 1; min-width: 120px; justify-content: flex-end;"> <!-- Added min-width for consistency -->
+                <img src="https://www.dropbox.com/scl/fi/g7ihdhuutv62efgm6xlr4/rsu-logo.png?rlkey=alay9nipumhm7dubvm1dqr7re&st=j8opo0jd&dl=1" alt="RSU Logo" style="width:15px;height:15px;">
+                <p>Romblon State University 2024</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
