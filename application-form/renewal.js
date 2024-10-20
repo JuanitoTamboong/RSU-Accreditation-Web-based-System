@@ -229,7 +229,6 @@ document.getElementById('add-organization').addEventListener('click', () => {
     });
 });
 
-// Add position dynamically
 document.getElementById('add-position').addEventListener('click', () => {
     Swal.fire({
         title: 'Enter the new position name:',
@@ -243,10 +242,11 @@ document.getElementById('add-position').addEventListener('click', () => {
             option.value = result.value;
             option.textContent = result.value;
             representativePositionDropdown.appendChild(option);
-            representativePositionDropdown.value = result.value; // Set it as selected
+            representativePositionDropdown.value = result.value; // Set the newly added option as selected
         }
     });
 });
+
 // Add course dynamically
 document.getElementById('add-course').addEventListener('click', () => {
     Swal.fire({
@@ -277,6 +277,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set the form fields
         document.getElementById('representative-name').value = appDetails.representativeName || '';
         document.getElementById('representative-position-dropdown').value = appDetails.representativePosition || '';
+
+        if (appDetails.representativePosition && !document.querySelector(`#representative-position-dropdown option[value="${appDetails.representativePosition}"]`)) {
+            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
+            const option = document.createElement('option');
+            option.value = appDetails.representativePosition;
+            option.textContent = appDetails.representativePosition;
+            representativePositionDropdown.appendChild(option);
+            representativePositionDropdown.value = appDetails.representativePosition;
+        }
+
         document.getElementById('school-year').value = appDetails.schoolYear || '';
         document.getElementById('course-dropdown').value = appDetails.studentCourse || '';
         document.getElementById('organization-name-dropdown').value = appDetails.organizationName || '';
@@ -296,7 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
+ // If the representative position was added dynamically, ensure it is in the dropdown
+       
 // Function to display uploaded documents
 function displayUploadedDocuments(docUrls) {
     const documentsContainer = document.getElementById('uploaded-documents-list');
