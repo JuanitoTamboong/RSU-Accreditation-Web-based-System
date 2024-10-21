@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
-import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+import { getFirestore, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -65,7 +65,6 @@ async function fetchApplicantDetails() {
             <p><strong>Email Address:</strong> ${applicationDetails.emailAddress || 'N/A'}</p>
             <p><strong>Type of Accreditation:</strong> ${typeOfAccreditation}</p>
             <p><strong>Date of Filing:</strong> ${applicationDetails.dateFiling || 'N/A'}</p>
-        
         `;
 
         senderEmail = applicationDetails.emailAddress || 'N/A';
@@ -125,7 +124,7 @@ function showModal() {
 }
 
 // Send email function
-async function sendEmail() {
+async function sendEmail(applicantId) {
     const emailParams = {
         to_name: applicantName,
         sender_email: senderEmail,
@@ -140,6 +139,12 @@ async function sendEmail() {
         const response = await emailjs.send('service_vsx36ej', 'template_7y6pol8', emailParams);
         console.log('Email sent successfully:', response);
         
+        // Update the Firestore document with application status
+        const docRef = doc(db, 'student-org-applications', applicantId);
+        await updateDoc(docRef, {
+            applicationStatus: applicationStatus // Update application status
+        });
+
         // Show success message after email is sent
         document.getElementById('emailStatus').textContent = 'Email sent successfully!';
     } catch (error) {
@@ -156,7 +161,10 @@ function closeModal() {
 }
 
 // Event listeners
-document.getElementById('send-email-button').addEventListener('click', sendEmail);
+document.getElementById('send-email-button').addEventListener('click', function() {
+    const applicantId = getQueryParameter('id'); // Get applicant ID
+    sendEmail(applicantId);
+});
 document.getElementById('closeEmailModal').addEventListener('click', closeModal);
 
 // Approve or reject buttons

@@ -6,12 +6,9 @@
     <link rel="stylesheet" href="admin-dashboard.css">
     <link rel="website icon" href="../assets/rsu-logo.png">
     <title>Admin Dashboard</title>
-      <!-- css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="theme.css">
-       <!-- Scripts -->
     <script type="module" src="admin-dash.js" defer></script>
     <script type="module" src="time-calendar.js" defer></script>
     <script type="module" src="toogle-sidebar.js" defer></script>
@@ -28,6 +25,7 @@
             <li><a href="#"><i class="fa-solid fa-tachometer-alt"></i><span>Dashboard</span></a></li>
             <li><a href="pending.html"><i class="fa-solid fa-clock"></i><span>Pending</span></a></li>
             <li><a href="#"><i class="fa-solid fa-check-circle"></i><span>Accredited</span></a></li>
+            <li><a href="#"><i class="fa-solid fa-file"></i><span>Reports</span></a></li>
             <li><a href="#"><i class="fa-solid fa-archive"></i><span>Archive</span></a></li>
             <li><a href="../admin-login/admin-login.html"><i class="fa-solid fa-sign-out-alt"></i><span>Logout</span></a></li>
         </ul>
@@ -59,24 +57,31 @@
                 </div>
             </div>
             <div class="sub-container">
-            <div class="left-side-container">
-                <div class="left-content">
-                    <i class="fa fa-users" id="applicants">
-                        <p>Applicants: <span id="applicant-count">0</span></p>
-                    </i>
-                   <i class="fa fa-check-circle" id="approved">
-                        <p>Approved: <span id="approved-count">0</span></p>
-                    </i>
+                <div class="left-side-container">
+                    <div class="left-content">
+                        <i class="fa fa-users" id="applicants">
+                            <p>Applicants: <span id="applicant-count">0</span></p>
+                        </i>
+                        <i class="fa fa-hourglass-half" id="pending">
+                            <p>Pending: <span id="pending-count">0</span></p>
+                        </i>
+                        <i class="fa fa-check-circle" id="approved">
+                            <p>Approved: <span id="approved-count">0</span></p>
+                        </i>
+                        <i class="fa fa-times-circle" id="rejected">
+                            <p>Rejected: <span id="rejected-count">0</span></p>
+                        </i>
+                    
+                    </div>
                 </div>
-            </div>
-            <div class="right-side-container">
-                <div class="right-content">
-                    <div class="time"></div>
-                    <div class="calendar"></div>
+                <div class="right-side-container">
+                    <div class="right-content">
+                        <div class="time"></div>
+                        <div class="calendar"></div>
+                    </div>
                 </div>
+                <div class="bottom-container"></div>
             </div>
-            <div class="bottom-container"></div>
-        </div>
         </div>
     </div>
 </body>

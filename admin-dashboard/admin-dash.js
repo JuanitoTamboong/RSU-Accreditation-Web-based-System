@@ -28,9 +28,16 @@ function fetchApplicants() {
         const q = query(collection(db, 'student-org-applications'));
         onSnapshot(q, (querySnapshot) => {
             const applicantCount = querySnapshot.size;
-            updateApplicantCount(applicantCount); // Update count
+            updateApplicantCount(applicantCount); // Update total applicant count
 
-            displayNotifications(querySnapshot); // Display notifications
+            const statusCounts = {
+                approved: 0,
+                rejected: 0,
+                pending: 0 // Optional, if you want to include pending status
+            };
+
+            displayNotifications(querySnapshot, statusCounts); // Display notifications
+            updateStatusCounts(statusCounts); // Update the counts of statuses
         });
     } catch (error) {
         console.error("Error fetching applications:", error);
@@ -48,7 +55,7 @@ function updateApplicantCount(count) {
 }
 
 // Display notifications for each organization submitted
-function displayNotifications(querySnapshot) {
+function displayNotifications(querySnapshot, statusCounts) {
     const notificationsList = document.getElementById('notification-list');
 
     if (!notificationsList) {
@@ -69,15 +76,25 @@ function displayNotifications(querySnapshot) {
     // Gather notification data
     querySnapshot.forEach((doc) => {
         const appData = doc.data();
+        console.log('Retrieved appData:', appData); // Log the entire appData
         const docId = doc.id;
         const isViewed = viewedNotifications.includes(docId);
 
-        const { 
-            organizationName = "Unknown Organization", 
-            representativeName = "Unknown Representative", 
-            emailAddress = "Unknown Email", 
-            dateFiling = new Date().toISOString() 
-        } = appData.applicationDetails || {};
+        // Ensure applicationDetails and status exist
+        const organizationName = appData.applicationDetails?.organizationName || "N/A";
+        const representativeName = appData.applicationDetails?.representativeName || "N/A";
+        const emailAddress = appData.applicationDetails?.emailAddress || "N/A";
+        const dateFiling = appData.applicationDetails?.dateFiling || new Date().toISOString();
+        const applicationStatus = appData.applicationStatus || "Pending";
+
+        // Count the application status
+        if (applicationStatus.toLowerCase() === "approved") {
+            statusCounts.approved++;
+        } else if (applicationStatus.toLowerCase() === "rejected") {
+            statusCounts.rejected++;
+        } else {
+            statusCounts.pending++;
+        }
 
         const submissionTime = appData.submissionTime || '';
         const filingDate = new Date(dateFiling);
@@ -92,7 +109,8 @@ function displayNotifications(querySnapshot) {
             formattedTime,
             docId,
             isViewed,
-            filingDate
+            filingDate,
+            status: applicationStatus // Add status to notifications
         });
     });
 
@@ -100,31 +118,41 @@ function displayNotifications(querySnapshot) {
     notificationsArray.sort((a, b) => b.filingDate - a.filingDate);
 
     // Render notifications
-    notificationsArray.forEach(({ orgName, repName, email, formattedDate, formattedTime, docId, isViewed }) => {
+    notificationsArray.forEach(({ orgName, repName, email, formattedDate, formattedTime, docId, isViewed, status }) => {
         const notificationItem = document.createElement('li');
         notificationItem.innerHTML = `
-            <span>${orgName} submitted by ${repName} (Email: ${email})</span>
+            <span>${orgName} submitted by ${repName} (Email: ${email}) - Status: ${status}</span>
             <br><small>Filed on: ${formattedDate} at ${formattedTime}</small>
         `;
         notificationItem.dataset.docId = docId; // Store doc ID
 
         if (!isViewed) {
-            notificationItem.style.fontWeight = 'bold'; // Highlight new notifications
             newNotificationsCount++;
+            notificationItem.classList.add('new-notification'); // Add class for new notifications
         }
 
-        notificationsList.prepend(notificationItem); // Add the newest notification on top
+        notificationsList.appendChild(notificationItem); // Append the notification item to the list
     });
 
-    // Update the notification count
-    updateNotificationCount(newNotificationsCount);
+    // Update notification count badge
+    const notificationCountElement = document.getElementById('notification-count');
+    notificationCountElement.textContent = newNotificationsCount;
 }
 
-// Update notification count (new/unread notifications)
-function updateNotificationCount(count) {
-    const notificationCountElement = document.getElementById('notification-count');
-    if (notificationCountElement) {
-        notificationCountElement.textContent = count;
+// Update status counts displayed on the dashboard
+function updateStatusCounts(statusCounts) {
+    const approvedCountElement = document.querySelector('#approved-count');
+    const rejectedCountElement = document.querySelector('#rejected-count');
+    const pendingCountElement = document.querySelector('#pending-count');
+
+    if (approvedCountElement) {
+        approvedCountElement.textContent = statusCounts.approved;
+    }
+    if (rejectedCountElement) {
+        rejectedCountElement.textContent = statusCounts.rejected;
+    }
+    if (pendingCountElement) {
+        pendingCountElement.textContent = statusCounts.pending;
     }
 }
 
@@ -150,10 +178,9 @@ function markNotificationsAsViewed() {
     });
 
     localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
-    updateNotificationCount(0); // Reset notification count
 }
 
-// Close the modal when the close button is clicked
+// Close notification modal when the close button is clicked
 document.getElementById('close-notification-modal').addEventListener('click', () => {
     document.getElementById('notification-modal').classList.remove('active');
 });
