@@ -57,7 +57,7 @@ async function fetchApplicantDetails() {
 
         // Render applicant details
         document.getElementById('applicant-details').innerHTML = `
-           <p><strong>Representative Name:</strong> ${applicationDetails.representativeName || 'N/A'}</p>
+            <p><strong>Representative Name:</strong> ${applicationDetails.representativeName || 'N/A'}</p>
             <p><strong>Position:</strong> ${applicationDetails.representativePosition || 'N/A'}</p>
             <p><strong>School Year:</strong> ${applicationDetails.schoolYear || 'N/A'}</p>
             <p><strong>Course:</strong> ${applicationDetails.studentCourse || 'N/A'}</p>
@@ -139,10 +139,14 @@ async function sendEmail(applicantId) {
         const response = await emailjs.send('service_vsx36ej', 'template_7y6pol8', emailParams);
         console.log('Email sent successfully:', response);
         
-        // Update the Firestore document with application status
+        // Get the current date and time for the approval/rejection
+        const currentDateTime = new Date();
+        
+        // Update the Firestore document with application status and timestamp
         const docRef = doc(db, 'student-org-applications', applicantId);
         await updateDoc(docRef, {
-            applicationStatus: applicationStatus // Update application status
+            applicationStatus: applicationStatus, // Update application status
+            statusUpdateTimestamp: currentDateTime.toISOString() // Store the exact date and time
         });
 
         // Show success message after email is sent

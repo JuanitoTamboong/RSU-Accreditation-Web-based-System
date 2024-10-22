@@ -1,0 +1,63 @@
+:root {
+  --primary-color: #0D1B2A;
+  --accent-color: #1B263B;
+  --background-color: #F0F4F8;
+  --card-background: #FFFFFF;
+  --input-border-color: #E0E0E0;
+  --text-color-primary: #FFFFFF;
+  --text-color-secondary: #D0D0D0;
+  --button-hover-color: #415A77;
+  --button-background: #1B263B;
+  --declined-button: #740303f5;
+  --applicants: #023a02;
+}
+
+.table-container {
+  margin-top: 10px;
+  max-width: 100%; /* Prevents the table from exceeding the container width */
+  overflow-x: auto; /* Enables horizontal scrolling if needed */
+}
+
+.accredited-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13px;
+  text-align: left;
+  background-color: var(--background-color);
+  border-radius: 10px;
+
+}
+
+.accredited-table th, .accredited-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--input-border-color);
+  white-space: nowrap; /* Prevents text from wrapping and causing unwanted height expansion */
+}
+
+.accredited-table th {
+  background-color: var(--background-color);
+  color: rgb(0, 128, 87); 
+}
+
+.accredited-table tr:hover {
+  background-color: #51759019; 
+}
+
+tbody {
+  overflow-x: auto; /* Allows vertical scrolling if there are too many rows */
+}
+
+
+
+.delete-btn {
+  background-color: rgb(205, 23, 23);
+  padding: 5px 15px;
+  color: var(--text-color-primary);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 20px;
+  font-size: 9px;
+}
+

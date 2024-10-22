@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View and manage accredited student organization applications in the admin dashboard.">
+    <link rel="stylesheet" href="admin-dashboard.css">
+    <link rel="icon" href="../assets/rsu-logo.png">
+    <title>Accredited Applicants</title>
+    <!-- fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- css -->
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="swal-popup.css">
+    <link rel="stylesheet" href="accredited.css">
+    
+    <!-- Scripts -->
+    <script type="module" src="admin-dash.js" defer></script>
+    <script type="module" src="toogle-sidebar.js" defer></script>
+    <script type="module" src="setting.js" defer></script>
+    <script type="module" src="accredited.js" defer></script>
+    <!-- sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="admin-user">
+            <img src="../assets/rsu-logo.png" alt="User Avatar" class="user-avatar"> 
+            <span class="user-name">Admin</span> 
+        </div>
+        <i class="fa-solid fa-xmark close-btn"></i>
+        <ul class="side-container">
+            <li><a href="admin-dashboard.html"><i class="fa-solid fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li><a href="pending.html"><i class="fa-solid fa-clock"></i><span>Pending</span></a></li>
+            <li><a href="accredited.html"><i class="fa-solid fa-check-circle"></i><span>Accredited</span></a></li>
+            <li><a href="#"><i class="fa-solid fa-file"></i><span>Reports</span></a></li>
+            <li><a href="#"><i class="fa-solid fa-archive"></i><span>Archive</span></a></li>
+            <li><a href="../admin-login/admin-login.html"><i class="fa-solid fa-sign-out-alt"></i><span>Logout</span></a></li>
+        </ul>
+        <i class="fa-solid fa-bars menu-btn"></i>
+    </div>
+    <div class="section">
+        <div class="main-container">
+            <div class="top-container">
+                <div class="top-content">
+                    <h2>Accredited Applicants</h2>
+                </div>
+                <div class="notifications-dropdown">
+                    <div id="notification-icon" class="notification-icon">
+                        <span id="notification-count" class="notification-count">0</span>
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div id="notification-modal" class="notification-modal hidden">
+                        <button id="close-notification-modal" class="close-button">Close</button>
+                        <div class="notification-content">
+                            <ul id="notification-list">
+                                <!-- Notifications will be populated here -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <p><i class="fa-solid fa-sun" id="theme-icon"></i></p>
+                    </div>                    
+                </div>
+            </div>
+          
+            <div class="table-container">
+                <table class="accredited-table">
+                    <thead>
+                        <tr>
+                            <th>Organization Name</th>
+                            <th>Representative Name</th>
+                            <th>Email Address</th>
+                            <th>Accreditation Type</th>
+                            <th>Date Filing</th>
+                            <th>Date Approved</th>
+                            <th>Status</th>
+                            <th>Delete</th> 
+                        </tr>
+                    </thead>                  
+                    <tbody id="applicants-table-body">
+                        <!-- Rows will be populated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

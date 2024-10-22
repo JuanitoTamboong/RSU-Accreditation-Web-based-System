@@ -163,6 +163,7 @@ document.getElementById('notification-icon').addEventListener('click', () => {
 
     if (modal.classList.contains('active')) {
         markNotificationsAsViewed(); // Mark notifications as viewed
+        resetNotificationCount(); // Reset notification count to zero
     }
 });
 
@@ -178,6 +179,14 @@ function markNotificationsAsViewed() {
     });
 
     localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
+}
+
+// Reset notification count after viewing
+function resetNotificationCount() {
+    const notificationCountElement = document.getElementById('notification-count');
+    if (notificationCountElement) {
+        notificationCountElement.textContent = '0'; // Reset notification count to zero
+    }
 }
 
 // Close notification modal when the close button is clicked
