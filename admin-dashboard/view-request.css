@@ -5,6 +5,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+
 }
 
 :root {
@@ -35,19 +36,18 @@ body {
 .header {
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 20px;
   background-color: var(--primary-color);
-  padding: 20px;
+  padding: 10px;
 }
 
 .back-button {
   border: none;
   outline: none;
-  padding: 10px 15px;
+  padding: 5px 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 13px;
   background-color: var(--button-background);
   border-radius: 20px;
   color: var(--text-color-primary);
@@ -97,15 +97,15 @@ body {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 17px;
   margin-bottom: 20px;
 }
 
 .applicant-details p,
 .officers-details p {
-  font-size: 18px;
+  font-size: 15px;
   margin: 10px 0;
-  border: 1px solid var(--primary-color);
+  background-color: var(--background-color);
   padding: 10px;
   border-radius: 20px;
 }
@@ -117,32 +117,21 @@ h1 {
 
 .officers-details {
   flex: 1; /* Make the officers section grow to fill space */
-  max-height: 200px; /* Set a maximum height */
+  max-height: 500px; /* Set a maximum height */
   overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
   border: 1px solid #ccc; /* Optional: add a border for better visual separation */
   padding: 10px;
   border-radius: 5px;
 }
-
-.request-documents {
-  flex: 1;
-  max-height: 500px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
+.officers-details::-webkit-scrollbar{
+width: 3px;
 }
-
-.request-documents a {
-  display: block;
-  margin-bottom: 5px;
-  text-decoration: none;
-  color: #007BFF;
-  transition: color 0.3s;
+.officers-details::-webkit-scrollbar-track{
+  background: #e0e0e0; /* Light gray track */
 }
-
-.request-documents a:hover {
-  color: #0056b3;
+.officers-details::-webkit-scrollbar-thumb{
+  background-color: var(--primary-color);
+  border-radius: 20px;
 }
 
 .approved-reject {
@@ -153,7 +142,7 @@ h1 {
   padding: 10px;
   border-radius: 20px;
   width: 100px;
-  font-size: 13px;
+  font-size: 10px;
   border: none;
   color: var(--text-color-primary);
   cursor: pointer;
@@ -181,6 +170,7 @@ background-color: var(--declined-button);
   gap: 10px;
   padding: 20px;
   border-radius: 20px;
+  background-color: var(--button-hover-color);
 }
 
 .officer img {

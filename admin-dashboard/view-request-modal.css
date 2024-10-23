@@ -32,6 +32,7 @@ body {
     overflow: auto; 
     background-color: rgba(0, 0, 0, 0.5); 
     padding-top: 60px; 
+    font-size: 15px;
 }
 
 .modal-content {
@@ -44,8 +45,30 @@ body {
     border-radius: 15px; /* Rounded corners */
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
     transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+    background-color: var(--background-color);
 }
-
+.form-modal{
+ line-height: 30px;
+ text-align: left;
+ color: var(--primary-color);
+}
+#additional-message{
+border-radius: 10px;
+padding: 10px;
+}
+#send-email-button{
+    width: 100%;
+    padding: 7px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background-color: var(--accent-color);
+    color: var(--text-color-primary);
+}
+#send-email-button:hover{
+    background-color: var(--button-hover-color);
+}
 .modal-content.show {
     transform: translateY(0); /* Slide down effect */
     opacity: 1; /* Fade-in effect */

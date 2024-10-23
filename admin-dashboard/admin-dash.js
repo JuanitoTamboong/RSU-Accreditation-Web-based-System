@@ -19,6 +19,9 @@ const db = getFirestore(app);
 // Retrieve viewed notifications from local storage
 let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications')) || [];
 
+// Preload notification sound
+const notificationSound = new Audio('../assets/notification-sound.mp3'); // Adjust the path to your sound file
+
 // Fetch applicants and notifications immediately
 fetchApplicants();
 
@@ -76,18 +79,15 @@ function displayNotifications(querySnapshot, statusCounts) {
     // Gather notification data
     querySnapshot.forEach((doc) => {
         const appData = doc.data();
-        console.log('Retrieved appData:', appData); // Log the entire appData
         const docId = doc.id;
         const isViewed = viewedNotifications.includes(docId);
 
-        // Ensure applicationDetails and status exist
         const organizationName = appData.applicationDetails?.organizationName || "N/A";
         const representativeName = appData.applicationDetails?.representativeName || "N/A";
         const emailAddress = appData.applicationDetails?.emailAddress || "N/A";
         const dateFiling = appData.applicationDetails?.dateFiling || new Date().toISOString();
         const applicationStatus = appData.applicationStatus || "Pending";
 
-        // Count the application status
         if (applicationStatus.toLowerCase() === "approved") {
             statusCounts.approved++;
         } else if (applicationStatus.toLowerCase() === "rejected") {
@@ -137,6 +137,11 @@ function displayNotifications(querySnapshot, statusCounts) {
     // Update notification count badge
     const notificationCountElement = document.getElementById('notification-count');
     notificationCountElement.textContent = newNotificationsCount;
+
+    // Play sound effect if new notifications are found
+    if (newNotificationsCount > 0) {
+        notificationSound.play().catch(error => console.error("Error playing notification sound:", error));
+    }
 }
 
 // Update status counts displayed on the dashboard

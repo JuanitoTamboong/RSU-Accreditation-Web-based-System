@@ -6,13 +6,13 @@
     <title>View Request Applicant</title>
     <link rel="icon" href="../assets/rsu-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <!--css-->
+   <!--css-->
     <link rel="stylesheet" href="view-request.css">
-    <link rel="stylesheet" href="approved-modal.css">
+    <link rel="stylesheet" href="view-request-modal.css">
     <!--script-->
     <script type="module" src="./view-request.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
         (function(){
             emailjs.init("2mWA0heD5fPFyVrIn");
         })();
@@ -45,29 +45,22 @@
                     <button id="approve-button">Approve</button>
                     <button id="reject-button">Reject</button>
                 </div>
-                <!--modal email form-->
                 <div id="emailModal" class="modal" style="display:none;">
                     <div class="modal-content">
                         <div class="form-modal">
-                        <span class="close" id="closeEmailModal">&times;</span>
-                        <h2>Send Email to Applicant</h2>
-                        <p><strong>To:</strong> <span id="to_name"></span></p>
-                        <p><strong>Applicant Email:</strong> <span id="fsender_email"></span></p>
-                        <p><strong>Custom Message:</strong> <span id="custom_message"></span></p>
-                        <p><strong>Application Status:</strong> <span id="application_status"></span></p>
-                        <p><strong>Additional Message:</strong></p>
-                        <textarea id="additional-message" placeholder="Type your additional message here..." rows="4" style="width: 100%;"></textarea>
-                        <p id="emailStatus"></p>
-                        <button id="send-email-button">Send Email</button>
-                     </div>
+                            <span class="close" id="closeEmailModal">&times;</span>
+                            <h2>Send Email to Applicant</h2>
+                            <p><strong>To:</strong> <span id="to_name"></span></p>
+                            <p><strong>Applicant Email:</strong> <span id="fsender_email"></span></p>
+                            <p><strong>Custom Message:</strong> <span id="custom_message"></span></p>
+                            <p><strong>Application Status:</strong> <span id="application_status"></span></p>
+                            <p><strong>Additional Message:</strong></p>
+                            <textarea id="additional-message" placeholder="Type your additional message here..." rows="4" style="width: 100%;"></textarea>
+                            <p id="emailStatus"></p>
+                            <button id="send-email-button">Send Email</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div id="documentModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close" id="closeDocumentModal">&times;</span>
-                <iframe id="documentIframe" style="width:100%; height:80%; margin-top:5%;" src="" frameborder="0"></iframe>
             </div>
         </div>
     </div>
