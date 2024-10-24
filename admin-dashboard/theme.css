@@ -14,10 +14,11 @@
     opacity: 0.8;
   }
   /* admin theme*/
+  
   .dark-theme .main-container{
     background-color: var(--primary-color);
   }
-  .dark-theme.section {
+  .dark-theme .section {
   background-color: var(--accent-color);
     
   }
@@ -85,3 +86,8 @@
     color: rgb(0, 128, 87);
  }
  
+ /*accredited theme*/
+ .dark-theme .accredited-table{
+  background-color: var(--accent-color);
+  color: var(--text-color-primary);
+ }

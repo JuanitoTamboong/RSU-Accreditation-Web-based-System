@@ -157,8 +157,8 @@ small {
 
 .notification-count {
   position: absolute;
-  top: -8px;
-  right: -13px;
+  top: -11px;
+  right: -14px;
   background-color: red;
   color: white;
   border-radius: 50%;
@@ -213,19 +213,23 @@ small {
 
 /* Status Colors */
 #applicants {
-  background-color: var(--applicants);
+background: rgba(33, 152, 95, 1.0);
+background: linear-gradient(135deg, rgba(33, 152, 95, 1.0), rgba(1, 74, 52, 1.0));
   color: var(--text-color-primary);
 }
 #pending{
-background-color: var(--pending);
+background: rgba(137, 36, 60, 1.0);
+background: linear-gradient(135deg, rgba(137, 36, 60, 1.0), rgba(91, 63, 158, 1.0));
 color: var(--text-color-primary);
 }
 #approved {
-  background-color: var(--button-hover-color);
+background: rgba(8, 150, 175, 1.0);
+background: linear-gradient(135deg, rgba(8, 150, 175, 1.0), rgba(85, 45, 107, 1.0));
   color: var(--text-color-primary);
 }
 #rejected{
-background-color: var(--declined-button);
+background: rgba(148, 1, 3, 1.0);
+background: linear-gradient(135deg, rgba(148, 1, 3, 1.0), rgba(83, 101, 36, 1.0));
 color: var(--text-color-primary);
 }
 

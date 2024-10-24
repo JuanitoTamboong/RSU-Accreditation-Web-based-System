@@ -1,0 +1,135 @@
+:root {
+    --primary-color: #0D1B2A; /* Dark primary color */
+    --accent-color: #1B263B; /* Darker accent color */
+    --background-color: #F0F4F8; /* Light background for contrast */
+    --card-background: #FFFFFF; /* White background for cards */
+    --input-border-color: #E0E0E0; /* Light border color for inputs */
+    --text-color-primary: #FFFFFF; /* Primary text color */
+    --text-color-secondary: #D0D0D0; /* Secondary text color */
+    --button-hover-color: #415A77; /* Button hover color */
+    --button-background: #1B263B; /* Button background color */
+    --declined-button: #740303f5; /* Declined status color */
+    --applicants: #023a02; /* Applicants color */
+}
+
+/* General Body Styles */
+body {
+    background-color: var(--background-color); /* Background color */
+    font-family: 'Poppins', sans-serif; /* Font style */
+}
+
+/* Table Container */
+.table-container {
+    margin-top: 10px;
+    max-width: 100%; /* Prevents exceeding container width */
+    overflow-x: auto; /* Enables horizontal scrolling */
+}
+
+/* Reports Table Styles */
+.reports-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove space between borders */
+    margin: 20px 0; /* Space above and below the table */
+    font-size: 14px; /* Slightly larger font for better readability */
+    text-align: left;
+    background-color: var(--background-color);
+    border-radius: 10px; /* Rounded corners */
+    min-width: 900px; /* Ensures table size on small screens */
+}
+
+.reports-table th, .reports-table td {
+    padding: 12px; /* Padding for cells */
+    border-bottom: 1px solid var(--input-border-color); /* Light border for separation */
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+/* Header Styles */
+.reports-table th {
+    background-color: var(--card-background); /* Accent color for header */
+    color: rgb(0, 128, 87); 
+}
+
+/* Row Hover Effect */
+.reports-table tr:hover {
+    background-color: rgba(81, 117, 143, 0.1); /* Subtle hover effect */
+}
+
+/* Body Scroll */
+tbody {
+    height: 200px; /* Fixed height for tbody */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+
+/* Action Links */
+.view-link, .delete-btn {
+    white-space: nowrap; /* Prevents button text wrapping */
+    text-align: center; /* Center the buttons */
+    display: inline-block; /* Inline-block for buttons */
+}
+
+.view-link {
+    color: var(--text-color-primary); /* Primary text color */
+    background-color: var(--button-background); /* Button background color */
+    padding: 5px 15px; /* Padding for button */
+    border-radius: 20px; /* Rounded button corners */
+    font-size: 12px; /* Slightly larger font for buttons */
+    text-decoration: none; /* No underline */
+    transition: background 0.3s; /* Smooth transition on hover */
+}
+
+.view-link:hover {
+    background-color: var(--button-hover-color); /* Change on hover */
+}
+
+.delete-btn {
+    background-color: rgb(205, 23, 23); /* Red color for delete button */
+    padding: 5px 15px; /* Padding for delete button */
+    color: var(--text-color-primary); /* Text color for delete button */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor */
+    border-radius: 20px; /* Rounded button corners */
+    font-size: 12px; /* Slightly larger font */
+    transition: background 0.3s; /* Smooth transition on hover */
+}
+
+.delete-btn:hover {
+    background-color: rgb(175, 15, 15); /* Darker red on hover */
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: var(--card-background); /* White background for modal */
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px; /* Padding inside modal */
+    border: 1px solid #888; /* Border for modal */
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px; /* Limit max width */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Close Button Styles */
+.close {
+    color: #aaa; /* Close button color */
+    float: right; /* Float to the right */
+    font-size: 28px; /* Size of close button */
+    font-weight: bold; /* Bold text */
+}
+
+.close:hover,
+.close:focus {
+    color: black; /* Darker color on hover */
+    text-decoration: none; /* No underline */
+    cursor: pointer; /* Pointer cursor */
+}

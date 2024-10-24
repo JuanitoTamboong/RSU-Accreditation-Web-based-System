@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="View and manage pending student organization applications in the admin dashboard.">
+    <meta name="description" content="View and manage student organization reports in the admin dashboard.">
     <link rel="stylesheet" href="admin-dashboard.css">
     <link rel="icon" href="../assets/rsu-logo.png">
-    <title>Pending Request</title>
-       <!-- fonts-->
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-          <!-- css-->
-       <link rel="stylesheet" href="sidebar.css">
-       <link rel="stylesheet" href="pending-request.css">
-       <link rel="stylesheet" href="theme.css">
-       <link rel="stylesheet" href="swal-popup.css">
+    <title>Reports</title>
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="swal-popup.css">
+    <link rel="stylesheet" href="report.css">
 
-          <!-- Scripts -->
-       <script type="module" src="admin-dash.js" defer></script>
-       <script type="module" src="toogle-sidebar.js" defer></script>
-       <script type="module" src="setting.js" defer></script>
-       <script type="module" src="pendingRequest.js" defer></script>
-          <!-- sweet alert-->
-       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="admin-dash.js" defer></script>
+    <script type="module" src="toogle-sidebar.js" defer></script>
+    <script type="module" src="setting.js" defer></script>
+    <script type="module" src="report.js" defer></script>
+    <!-- Libraries for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
     <div class="sidebar">
@@ -45,7 +47,7 @@
         <div class="main-container">
             <div class="top-container">
                 <div class="top-content">
-                    <h2><i class="fa-solid fa-clock"></i> Pending Request</h2>
+                    <h2><i class="fa-solid fa-file"></i> Reports</h2>
                 </div>
                 <div class="notifications-dropdown">
                     <div id="notification-icon" class="notification-icon">
@@ -65,9 +67,9 @@
                     </div>                    
                 </div>
             </div>
-            <!-- Table for Pending Requests -->
+            <!-- Table for Reports -->
             <div class="table-container">
-                <table class="pending-requests">
+                <table class="reports-table">
                     <thead>
                         <tr>
                             <th>Email Address</th>
@@ -75,16 +77,27 @@
                             <th>Organization Name</th>
                             <th>Type of Accreditation</th>
                             <th>Date of Filing</th>
-                            <th>Status</th> <!-- New Status Column -->
+                            <th>Status</th>
                             <th>Actions</th>
                             <th>Delete</th>
+                            <th>Download</th>
                         </tr>
                     </thead>
-                    <tbody id="pending-table-body">
+                    <tbody id="reports-table-body">
                         <!-- Dynamic rows will be added here -->
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Details -->
+    <div id="details-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Report Details</h2>
+            <div id="modal-details"></div>
+            <button id="download-file" class="download-button">Download as PDF</button>
         </div>
     </div>
 </body>

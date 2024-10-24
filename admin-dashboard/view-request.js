@@ -138,15 +138,25 @@ async function sendEmail(applicantId) {
     try {
         const response = await emailjs.send('service_vsx36ej', 'template_7y6pol8', emailParams);
         console.log('Email sent successfully:', response);
-        
+
         // Get the current date and time for the approval/rejection
         const currentDateTime = new Date();
+         // Format date as MM/DD/YYYY - HH:MM AM/PM
+        const formattedDateTime = currentDateTime.toLocaleString('en-US', { 
+         month: '2-digit', 
+         day: '2-digit', 
+         year: 'numeric', 
+         hour: '2-digit', 
+         minute: '2-digit', 
+         hour12: true 
+        }).replace(',', ' -'); // Replace comma with a dash to get the desired format
+         // Example result: 10/22/2024 - 4:33 PM
         
-        // Update the Firestore document with application status and timestamp
+        // Update the Firestore document with application status and formatted timestamp
         const docRef = doc(db, 'student-org-applications', applicantId);
         await updateDoc(docRef, {
             applicationStatus: applicationStatus, // Update application status
-            statusUpdateTimestamp: currentDateTime.toISOString() // Store the exact date and time
+            statusUpdateTimestamp: formattedDateTime // Store the formatted date and time
         });
 
         // Show success message after email is sent

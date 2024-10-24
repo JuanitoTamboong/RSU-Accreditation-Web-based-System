@@ -19,7 +19,7 @@ const db = getFirestore(app);
 
 // Function to render a table row
 function renderRow(doc) {
-    const { emailAddress = 'N/A', organizationName = 'N/A', typeOfAccreditation = 'N/A', dateFiling = 'N/A' } = doc.data().applicationDetails || {};
+    const { emailAddress = 'N/A',representativeName = 'N/A', organizationName = 'N/A', typeOfAccreditation = 'N/A', dateFiling = 'N/A' } = doc.data().applicationDetails || {};
     
     // Check application status
     const applicationStatus = doc.data().applicationStatus || 'Pending'; // Default to 'Pending' if no status is found
@@ -27,6 +27,7 @@ function renderRow(doc) {
     return `
         <tr data-id="${doc.id}">
             <td>${emailAddress}</td>
+            <td>${representativeName}</td>
             <td>${organizationName}</td>
             <td>${typeOfAccreditation}</td>
             <td>${dateFiling}</td>

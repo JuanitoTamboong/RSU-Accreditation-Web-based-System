@@ -16,11 +16,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Retrieve viewed notifications from local storage
+// Retrieve viewed notifications and sound play status from local storage
 let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications')) || [];
+let notificationSoundPlayed = JSON.parse(localStorage.getItem('notificationSoundPlayed')) || false; // Track if sound has been played
 
 // Preload notification sound
 const notificationSound = new Audio('../assets/notification-sound.mp3'); // Adjust the path to your sound file
+
+// Retrieve notification count from localStorage on page load
+const savedNotificationCount = localStorage.getItem('notificationCount');
+if (savedNotificationCount) {
+    document.getElementById('notification-count').textContent = savedNotificationCount;
+}
 
 // Fetch applicants and notifications immediately
 fetchApplicants();
@@ -138,9 +145,14 @@ function displayNotifications(querySnapshot, statusCounts) {
     const notificationCountElement = document.getElementById('notification-count');
     notificationCountElement.textContent = newNotificationsCount;
 
-    // Play sound effect if new notifications are found
-    if (newNotificationsCount > 0) {
+    // Store the notification count in localStorage
+    localStorage.setItem('notificationCount', newNotificationsCount);
+
+    // Play sound effect if new notifications are found and sound hasn't been played
+    if (newNotificationsCount > 0 && !notificationSoundPlayed) {
         notificationSound.play().catch(error => console.error("Error playing notification sound:", error));
+        notificationSoundPlayed = true; // Mark sound as played
+        localStorage.setItem('notificationSoundPlayed', JSON.stringify(notificationSoundPlayed)); // Update localStorage
     }
 }
 
@@ -184,6 +196,10 @@ function markNotificationsAsViewed() {
     });
 
     localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
+
+    // Reset sound play flag after viewing notifications
+    notificationSoundPlayed = false;
+    localStorage.setItem('notificationSoundPlayed', JSON.stringify(notificationSoundPlayed));
 }
 
 // Reset notification count after viewing
@@ -191,6 +207,7 @@ function resetNotificationCount() {
     const notificationCountElement = document.getElementById('notification-count');
     if (notificationCountElement) {
         notificationCountElement.textContent = '0'; // Reset notification count to zero
+        localStorage.setItem('notificationCount', '0'); // Reset the count in localStorage
     }
 }
 
