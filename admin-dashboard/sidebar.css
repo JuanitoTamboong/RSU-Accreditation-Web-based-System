@@ -1,131 +1,160 @@
 /* Sidebar Styles */
 .sidebar {
-    background-color: var(--primary-color); 
-    min-height: 100vh; 
-    width: 160px; 
-    padding: 20px 10px; 
-    position: sticky; 
-    transition: width 0.3s ease; 
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
-    display: flex; 
-    flex-direction: column; 
-    
+  background-color: var(--primary-color);
+  min-height: 100vh;
+  width: 160px; /* Default width */
+  padding: 20px 10px;
+  position: sticky;
+  top: 0; /* Ensures it stays at the top */
+  transition: width 0.3s ease, padding 0.3s ease;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distributes space between top and bottom */
+}
+
+/* Admin User Details */
+.admin-user {
+  display: flex; 
+  align-items: center; 
+  padding: 15px 0; 
+}
+
+.admin-user img {
+  margin-right: 10px; 
+  width: 50px; 
+  height: 50px; 
+  border-radius: 50%; 
+  border: 2px solid var(--accent-color); 
+  margin-top: 20px;
+}
+
+.user-name {
+  font-weight: 600; 
+  color: var(--text-color-primary); 
+  text-transform: uppercase; 
+}
+
+/* Button Styles */
+.close-btn, .menu-btn {
+  font-size: 17px; 
+  color: var(--text-color-primary); 
+  cursor: pointer; 
+  position: absolute; 
+  right: 10px; 
+  top: 10px; 
+  display: none; 
+}
+
+/* Side Container for Links */
+.side-container {
+  margin-top: 20px; 
+  flex-grow: 1; 
+  font-size: 13px;
+}
+
+/* Links in Side Container */
+.side-container a {
+  text-decoration: none; 
+  color: var(--text-color-secondary); 
+  transition: background-color 0.3s, color 0.3s; 
+  display: flex; 
+  align-items: center; 
+  padding: 10px 15px; 
+  border-radius: 5px; 
+  position: relative; 
+}
+
+/* Hover Effect for Links */
+.side-container a:hover {
+  background-color: var(--accent-color); 
+  color: white; 
+}
+
+/* List Styles */
+.side-container li {
+  list-style: none; 
+}
+
+/* Span Styles for Icons */
+.side-container span {
+  color: var(--text-color-primary); 
+  font-size: 14px; 
+  margin-left: 10px; 
+}
+
+/* Collapsed State Styles */
+.sidebar.collapsed {
+  width: 67px; 
+  padding: 10px; /* Adjust padding when collapsed */
+}
+
+.sidebar.collapsed .user-name {
+  display: none; 
+}
+
+.sidebar.collapsed .side-container span {
+  display: none; 
+}
+
+.sidebar.collapsed .side-container a {
+  justify-content: center; 
+  font-size: 13px; 
+  padding: 20px; 
+}
+
+/* Show the close button when sidebar is open */
+.sidebar:not(.collapsed) .close-btn {
+  display: block; 
+}
+
+/* Show menu button only when sidebar is collapsed */
+.sidebar.collapsed .menu-btn {
+  display: block; 
+  color: var(--primary-color); 
+  padding: 9px; 
+  left: 63px;
+}
+
+/* Icon Transition Effects */
+.side-container a i {
+  transition: transform 0.3s; 
+}
+
+.sidebar.collapsed .side-container a i {
+  transform: scale(1.5); 
+}
+
+/* Improve Text Visibility */
+.side-container a {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); 
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    z-index: 999;
+    width: 100%; /* Full width on smaller screens */
   }
-  
-  /* Admin User Details */
-  .admin-user {
-    display: flex; 
-    align-items: center; 
-    padding: 15px 0; 
+
+  .sidebar.collapsed {
+    width: 60px; /* Adjust width for collapsed state on mobile */
   }
-  
-  .admin-user img {
-    margin-right: 10px; 
-    width: 50px; 
-    height: 50px; 
-    border-radius: 50%; 
-    border: 2px solid var(--accent-color); 
+  .sidebar.collapsed .menu-btn{
+    left: 55px;
+  }
+
+  .sidebar .admin-user img {
+    width: 40px; /* Smaller image size for mobile */
+    height: 40px; 
   }
   
   .user-name {
-    font-weight: 600; 
-    color: var(--text-color-primary); 
-    text-transform: uppercase; 
+    font-size: 12px; /* Smaller text on mobile */
   }
-  
-  /* Button Styles */
-  .close-btn, .menu-btn {
-    font-size: 17px; 
-    color: var(--text-color-primary); 
-    cursor: pointer; 
-    position: absolute; 
-    right: 10px; 
-    top: 10px; 
-    display: none; 
-  }
-  
-  /* Side Container for Links */
-  .side-container {
-    margin-top: 20px; 
-    flex-grow: 1; 
-    font-size: 13px;
-  }
-  
-  /* Links in Side Container */
+
   .side-container a {
-    text-decoration: none; 
-    color: var(--text-color-secondary); 
-    transition: background-color 0.3s, color 0.3s; 
-    display: flex; 
-    align-items: center; 
-    padding: 10px 15px; 
-    border-radius: 5px; 
-    position: relative; 
+    font-size: 12px; /* Smaller link text */
+    padding: 8px 10px; /* Adjust padding for smaller screens */
   }
-  
-  /* Hover Effect for Links */
-  .side-container a:hover {
-    background-color: var(--accent-color); 
-    color: white; 
-  }
-  
-  /* List Styles */
-  .side-container li {
-    list-style: none; 
-  }
-  
-  /* Span Styles for Icons */
-  .side-container span {
-    color: var(--text-color-primary); 
-    font-size: 14px; 
-    margin-left: 10px; 
-  }
-  
-  /* Collapsed State Styles */
-  .sidebar.collapsed {
-    width: 67px; 
-  }
-  
-  .sidebar.collapsed .user-name {
-    display: none; 
-  }
-  
-  .sidebar.collapsed .side-container span {
-    display: none; 
-  }
-  
-  .sidebar.collapsed .side-container a {
-    justify-content: center; 
-    font-size: 13px; 
-    padding: 20px; 
-  }
-  
-  /* Show the close button when sidebar is open */
-  .sidebar:not(.collapsed) .close-btn {
-    display: block; 
-  }
-  
-  /* Show menu button only when sidebar is collapsed */
-  .sidebar.collapsed .menu-btn {
-    display: block; 
-    margin-right: -33px; 
-    color: var(--text-color-primary); 
-    background-color: var(--primary-color); 
-    border-radius: 50%; 
-    padding: 9px; 
-  }
-  
-  /* Icon Transition Effects */
-  .side-container a i {
-    transition: transform 0.3s; 
-  }
-  
-  .sidebar.collapsed .side-container a i {
-    transform: scale(1.5); 
-  }
-  
-  /* Improve Text Visibility */
-  .side-container a {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); 
-  }
-  
+}

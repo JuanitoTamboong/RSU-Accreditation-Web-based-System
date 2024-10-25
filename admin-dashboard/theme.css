@@ -13,6 +13,10 @@
     transform: scale(1.3) rotate(360deg);
     opacity: 0.8;
   }
+  /*sidebar theme*/
+  .dark-theme .sidebar.collapsed .menu-btn{
+    color: var(--text-color-primary);
+  }
   /* admin theme*/
   
   .dark-theme .main-container{

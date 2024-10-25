@@ -1,135 +1,173 @@
 :root {
-    --primary-color: #0D1B2A; /* Dark primary color */
-    --accent-color: #1B263B; /* Darker accent color */
-    --background-color: #F0F4F8; /* Light background for contrast */
-    --card-background: #FFFFFF; /* White background for cards */
-    --input-border-color: #E0E0E0; /* Light border color for inputs */
-    --text-color-primary: #FFFFFF; /* Primary text color */
-    --text-color-secondary: #D0D0D0; /* Secondary text color */
-    --button-hover-color: #415A77; /* Button hover color */
-    --button-background: #1B263B; /* Button background color */
-    --declined-button: #740303f5; /* Declined status color */
-    --applicants: #023a02; /* Applicants color */
+    --primary-color: #0D1B2A;
+    --accent-color: #1B263B;
+    --background-color: #F0F4F8;
+    --card-background: #FFFFFF;
+    --input-border-color: #E0E0E0;
+    --text-color-primary: #FFFFFF;
+    --text-color-secondary: #D0D0D0;
+    --button-hover-color: #415A77;
+    --button-background: #1B263B;
+    --declined-button: #740303f5;
+    --applicants: #0a490a;
+    --pending: #810a88;
 }
 
-/* General Body Styles */
-body {
-    background-color: var(--background-color); /* Background color */
-    font-family: 'Poppins', sans-serif; /* Font style */
+/* Report Container Styles */
+.report-container {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr; /* Single column by default */
+    gap: 20px; /* Space between items */
 }
 
-/* Table Container */
-.table-container {
-    margin-top: 10px;
-    max-width: 100%; /* Prevents exceeding container width */
-    overflow-x: auto; /* Enables horizontal scrolling */
-}
-
-/* Reports Table Styles */
-.reports-table {
-    width: 100%;
-    border-collapse: collapse; /* Remove space between borders */
-    margin: 20px 0; /* Space above and below the table */
-    font-size: 14px; /* Slightly larger font for better readability */
-    text-align: left;
+/* Form Styles */
+.report-form {
     background-color: var(--background-color);
-    border-radius: 10px; /* Rounded corners */
-    min-width: 900px; /* Ensures table size on small screens */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center text inside the form */
 }
 
-.reports-table th, .reports-table td {
-    padding: 12px; /* Padding for cells */
-    border-bottom: 1px solid var(--input-border-color); /* Light border for separation */
-    white-space: nowrap; /* Prevents text wrapping */
+.report-form input[type="text"] {
+    width: 100%;
+    border-radius: 20px;
+    outline: none;
+    background-color: var(--text-color-primary);
+    color: var(--primary-color);
+    box-shadow: inset 0px 0px 3px;
 }
 
-/* Header Styles */
-.reports-table th {
-    background-color: var(--card-background); /* Accent color for header */
-    color: rgb(0, 128, 87); 
+.content {
+    background-color: var(--background-color);
+    padding: 10px;
+    border-radius: 10px;
 }
 
-/* Row Hover Effect */
-.reports-table tr:hover {
-    background-color: rgba(81, 117, 143, 0.1); /* Subtle hover effect */
+.download-report {
+    display: flex;
+    justify-content: flex-end; /* Aligns button to the right */
+    margin-top: 0px; /* Adds space above the button */
 }
 
-/* Body Scroll */
-tbody {
-    height: 200px; /* Fixed height for tbody */
-    overflow-y: auto; /* Enables vertical scrolling */
+.download-button {
+    padding: 10px 20px; /* Adds padding for better spacing */
+    background-color: var(--primary-color); /* Background color for button */
+    color: var(--text-color-primary);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    font-size: 12px;
 }
 
-/* Action Links */
-.view-link, .delete-btn {
-    white-space: nowrap; /* Prevents button text wrapping */
-    text-align: center; /* Center the buttons */
-    display: inline-block; /* Inline-block for buttons */
+.download-button i {
+    margin-right: 8px; /* Adds space between icon and text */
+    font-size: 12px; /* Adjust icon size if needed */
+    vertical-align: middle; /* Aligns icon with text */
 }
 
-.view-link {
-    color: var(--text-color-primary); /* Primary text color */
-    background-color: var(--button-background); /* Button background color */
-    padding: 5px 15px; /* Padding for button */
-    border-radius: 20px; /* Rounded button corners */
-    font-size: 12px; /* Slightly larger font for buttons */
-    text-decoration: none; /* No underline */
-    transition: background 0.3s; /* Smooth transition on hover */
+.download-button:hover {
+    background-color: var(--button-hover-color); /* Changes color on hover */
 }
 
-.view-link:hover {
-    background-color: var(--button-hover-color); /* Change on hover */
+/* Chart Styles */
+.charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid for charts */
+    gap: 20px; /* Space between charts */
+    margin-top: 20px; /* Space above charts */
 }
 
-.delete-btn {
-    background-color: rgb(205, 23, 23); /* Red color for delete button */
-    padding: 5px 15px; /* Padding for delete button */
-    color: var(--text-color-primary); /* Text color for delete button */
-    border: none; /* No border */
-    cursor: pointer; /* Pointer cursor */
-    border-radius: 20px; /* Rounded button corners */
-    font-size: 12px; /* Slightly larger font */
-    transition: background 0.3s; /* Smooth transition on hover */
+/* Chart Container Styles */
+.chart-container {
+    background-color: var(--text-color-primary);
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.289);
+    text-align: center;
 }
 
-.delete-btn:hover {
-    background-color: rgb(175, 15, 15); /* Darker red on hover */
+.chart-container h1 {
+    margin-bottom: 15px;
+    font-size: 15px;
 }
 
-/* Modal Styles */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+/* Full-width Chart Container Styles */
+.full-chart {
+    grid-column: span 2; /* Span both columns */
+    background: white;
+    border-radius: 5px;
+    padding: 10px; /* Reduced padding */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: var(--background-color);
 }
 
-.modal-content {
-    background-color: var(--card-background); /* White background for modal */
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px; /* Padding inside modal */
-    border: 1px solid #888; /* Border for modal */
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 500px; /* Limit max width */
-    border-radius: 10px; /* Rounded corners */
+.chart-container-full {
+    width: 100%; /* Full width until max-width is reached */
+    max-width: 600px;
+    margin: 20px auto; /* Center it with margin on top and bottom */
+    background-color: var(--text-color-primary);
 }
 
-/* Close Button Styles */
-.close {
-    color: #aaa; /* Close button color */
-    float: right; /* Float to the right */
-    font-size: 28px; /* Size of close button */
-    font-weight: bold; /* Bold text */
+.chart-container-full h1 {
+    text-align: center;
+    font-size: 18px;
+    color: var(--primary-color);
 }
 
-.close:hover,
-.close:focus {
-    color: black; /* Darker color on hover */
-    text-decoration: none; /* No underline */
-    cursor: pointer; /* Pointer cursor */
+/* Chart styles */
+#applicantsOverTimeByOrganizationChart {
+    height: 500px;
+    width: 100%; /* Make it responsive */
 }
+
+/* Additional styles for form elements */
+.report-form label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.report-form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.report-form button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px; /* Horizontal padding for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Full width for button */
+}
+
+.report-form button:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* Media Query for Responsive Layout */
+@media (min-width: 768px) {
+    .report-container {
+        grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
+    }
+
+    .charts {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for larger screens */
+    }
+
+    /* Centering the full-width chart container in larger viewports */
+    .chart-container-full {
+        margin: 0; /* Reset margin to zero for full-width effect */
+    }
+}
+
