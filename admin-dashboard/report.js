@@ -1,6 +1,6 @@
-// Import necessary functions from Firebase SDK
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js';
-import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.16.0/firebase-firestore.js';
+import { getFirestore, collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.16.0/firebase-firestore.js';
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -23,6 +23,12 @@ let totalReAccreditedChart = null;
 let totalRejectedChart = null; 
 let applicantsOverTimeChart = null; 
 
+// Define month labels globally
+const monthLabels = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
 async function fetchAllApplicationData(schoolYear) {
     try {
         // Validate schoolYear input
@@ -37,65 +43,80 @@ async function fetchAllApplicationData(schoolYear) {
         }
 
         const applicationsCollection = collection(db, 'student-org-applications');
-        const snapshot = await getDocs(applicationsCollection);
-        
-        const applications = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
 
-        // Log all fetched applications
-        console.log("Total Applications Fetched:", applications.length); 
-        console.log("Fetched Applications Data:", applications); // Log fetched applications data
+        // Listen for real-time updates
+        onSnapshot(applicationsCollection, (snapshot) => {
+            const applications = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
 
-        // Filter applications by the provided schoolYear
-        const filteredApplications = applications.filter(app => {
-            const appSchoolYear = app.applicationDetails?.schoolYear || ''; // Get schoolYear from applicationDetails
-            console.log("Checking application school year:", appSchoolYear); // Log each school's year being checked
-            return appSchoolYear === schoolYear.trim(); // Compare with input schoolYear
-        });
+            // Log all fetched applications
+            console.log("Total Applications Fetched:", applications.length); 
+            console.log("Fetched Applications Data:", applications); // Log fetched applications data
 
-        // Log the filtered applications
-        console.log("Filtered Applications:", filteredApplications); // Log filtered applications
+            // Filter applications by the provided schoolYear
+            const filteredApplications = applications.filter(app => {
+                const appSchoolYear = app.applicationDetails?.schoolYear || ''; // Get schoolYear from applicationDetails
+                console.log("Checking application school year:", appSchoolYear); // Log each school's year being checked
+                return appSchoolYear === schoolYear.trim(); // Compare with input schoolYear
+            });
 
-        // Process the applications data to calculate totals
-        const totalApplications = {
-            accredited: 0,
-            reaccredited: 0,
-            rejected: 0,
-            total: filteredApplications.length
-        };
+            // Log the filtered applications
+            console.log("Filtered Applications:", filteredApplications); // Log filtered applications
 
-        filteredApplications.forEach(applicationDetails => {
-            const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
-            console.log("Application Status:", status); // Log application status
-            if (status === "approved") {
-                totalApplications.accredited += 1;
-            } else if (status === "re-accredited") {
-                totalApplications.reaccredited += 1;
-            } else if (status === "rejected") {
-                totalApplications.rejected += 1;
+            // Process the applications data to calculate totals
+            const totalApplications = {
+                accredited: 0,
+                reaccredited: 0,
+                rejected: 0,
+                total: filteredApplications.length,
+                monthlyData: Array(12).fill(0) // Array to hold monthly data
+            };
+
+            filteredApplications.forEach(applicationDetails => {
+                // Get the date from the applicationDetails
+                const dateFiling = applicationDetails.applicationDetails?.dateFiling; // Ensure you're accessing the correct field
+
+                // Parse the date to create a Date object
+                const date = dateFiling ? new Date(dateFiling) : null; // Handle potential null or undefined values
+
+                // Check if date is valid
+                if (date && !isNaN(date)) {
+                    const month = date.getMonth(); // Get month (0-11)
+                    totalApplications.monthlyData[month] += 1; // Increment the count for the corresponding month
+                }
+
+                // Count statuses
+                const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
+                if (status === "approved") {
+                    totalApplications.accredited += 1;
+                } else if (status === "re-accredited") {
+                    totalApplications.reaccredited += 1;
+                } else if (status === "rejected") {
+                    totalApplications.rejected += 1;
+                }
+            });
+
+            console.log("Total Applications Data:", totalApplications); // Log total application data
+
+            // Create charts if data exists
+            if (totalApplications.total > 0) {
+                createTotalApplicationsChart(totalApplications);
+                createTotalAccreditedChart(totalApplications, filteredApplications);
+                createTotalReAccreditedChart(totalApplications, filteredApplications);
+                createTotalRejectedChart(totalApplications, filteredApplications);
+                createApplicantsOverTimeByOrganizationChart(filteredApplications, schoolYear);
+            } else {
+                console.warn("No applications found for the selected school year.");
+                // Display a message to the user if no applications were found
+                Swal.fire({
+                    icon: 'info',
+                    title: 'No Applications Found',
+                    text: 'There are no applications for the selected school year.',
+                });
             }
         });
-
-        console.log("Total Applications Data:", totalApplications); // Log total application data
-
-        // Create charts if data exists
-        if (totalApplications.total > 0) {
-            createTotalApplicationsChart(totalApplications);
-            createTotalAccreditedChart(totalApplications);
-            createTotalReAccreditedChart(totalApplications);
-            createTotalRejectedChart(totalApplications);
-            createApplicantsOverTimeByOrganizationChart(filteredApplications, schoolYear); // Update the function call
-        } else {
-            console.warn("No applications found for the selected school year.");
-            // Display a message to the user if no applications were found
-            Swal.fire({
-                icon: 'info',
-                title: 'No Applications Found',
-                text: 'There are no applications for the selected school year.',
-            });
-        }
     } catch (error) {
         console.error("Error fetching report data:", error);
         Swal.fire({
@@ -146,148 +167,164 @@ function formatSchoolYear(input) {
         });
         return ''; // Return empty string if format is incorrect
     }
-}// Function to create or update the total applications chart
+}
+
+// Function to create or update the total applications chart
 function createTotalApplicationsChart(totalApplications) {
     const ctx = document.getElementById('totalApplicationsChart').getContext('2d');
     if (totalApplicationsChart instanceof Chart) {
         totalApplicationsChart.destroy(); // Destroy previous chart instance
     }
+
     totalApplicationsChart = new Chart(ctx, {
-        type: 'line', // Change to line chart
+        type: 'line',
         data: {
-            labels: ['Total Applications'],
+            labels: monthLabels,
             datasets: [{
-                label: 'Total Applications Overview',
-                data: [totalApplications.total],
+                label: 'Total Applications by Month',
+                data: totalApplications.monthlyData, // Use the monthly data
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                pointRadius: 5, // Show points on the line
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                fill: false, // Disable area fill under the line
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: { display: true },
-                title: { display: true, text: 'Total Applications Report' }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true // Ensure the Y-axis starts at zero
-                }
+                title: { display: true, text: 'Total Applications by Month' }
             }
         }
     });
 }
 
 // Function to create or update the total accredited applications chart
-function createTotalAccreditedChart(totalApplications) {
+function createTotalAccreditedChart(totalApplications, filteredApplications) {
     const ctx = document.getElementById('totalAccreditedChart').getContext('2d');
     if (totalAccreditedChart instanceof Chart) {
         totalAccreditedChart.destroy(); // Destroy previous chart instance
     }
 
+    const monthlyAccreditedData = Array(12).fill(0); // Initialize monthly data
+    filteredApplications.forEach(applicationDetails => {
+        const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
+        if (status === "approved") {
+            const dateFiling = applicationDetails.applicationDetails?.dateFiling;
+            const date = dateFiling ? new Date(dateFiling) : null;
+
+            // Check if date is valid
+            if (date && !isNaN(date)) {
+                const month = date.getMonth(); // Get month (0-11)
+                monthlyAccreditedData[month] += 1; // Increment the count for the corresponding month
+            }
+        }
+    });
+
     totalAccreditedChart = new Chart(ctx, {
-        type: 'line', // Change to line chart
+        type: 'bar',
         data: {
-            labels: ['Accredited Applications'],
+            labels: monthLabels,
             datasets: [{
-                label: 'Total Accredited',
-                data: [totalApplications.accredited],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                pointRadius: 5, // Show points on the line
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                fill: false, // Disable area fill under the line
+                label: 'Total Accredited Applications by Month',
+                data: monthlyAccreditedData, // Use the accredited monthly data
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: { display: true },
-                title: { display: true, text: 'Total Accredited Applications' }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true // Ensure the Y-axis starts at zero
-                }
+                title: { display: true, text: 'Total Accredited Applications by Month' }
             }
         }
     });
 }
 
 // Function to create or update the total reaccredited applications chart
-function createTotalReAccreditedChart(totalApplications) {
+function createTotalReAccreditedChart(totalApplications, filteredApplications) {
     const ctx = document.getElementById('totalReAccreditedChart').getContext('2d');
     if (totalReAccreditedChart instanceof Chart) {
         totalReAccreditedChart.destroy(); // Destroy previous chart instance
     }
 
+    const monthlyReAccreditedData = Array(12).fill(0); // Initialize monthly data
+    filteredApplications.forEach(applicationDetails => {
+        const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
+        if (status === "re-accredited") {
+            const dateFiling = applicationDetails.applicationDetails?.dateFiling;
+            const date = dateFiling ? new Date(dateFiling) : null;
+
+            // Check if date is valid
+            if (date && !isNaN(date)) {
+                const month = date.getMonth(); // Get month (0-11)
+                monthlyReAccreditedData[month] += 1; // Increment the count for the corresponding month
+            }
+        }
+    });
+
     totalReAccreditedChart = new Chart(ctx, {
-        type: 'line', // Change to line chart
+        type: 'bar',
         data: {
-            labels: ['Re-accredited Applications'],
+            labels: monthLabels,
             datasets: [{
-                label: 'Total Re-accredited',
-                data: [totalApplications.reaccredited],
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 2,
-                pointRadius: 5, // Show points on the line
-                pointBackgroundColor: 'rgba(153, 102, 255, 1)',
-                fill: false, // Disable area fill under the line
+                label: 'Total Reaccredited Applications by Month',
+                data: monthlyReAccreditedData, // Use the reaccredited monthly data
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: { display: true },
-                title: { display: true, text: 'Total Re-accredited Applications' }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true // Ensure the Y-axis starts at zero
-                }
+                title: { display: true, text: 'Total Reaccredited Applications by Month' }
             }
         }
     });
 }
 
 // Function to create or update the total rejected applications chart
-function createTotalRejectedChart(totalApplications) {
+function createTotalRejectedChart(totalApplications, filteredApplications) {
     const ctx = document.getElementById('totalRejectedChart').getContext('2d');
     if (totalRejectedChart instanceof Chart) {
         totalRejectedChart.destroy(); // Destroy previous chart instance
     }
 
+    const monthlyRejectedData = Array(12).fill(0); // Initialize monthly data
+    filteredApplications.forEach(applicationDetails => {
+        const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
+        if (status === "rejected") {
+            const dateFiling = applicationDetails.applicationDetails?.dateFiling;
+            const date = dateFiling ? new Date(dateFiling) : null;
+
+            // Check if date is valid
+            if (date && !isNaN(date)) {
+                const month = date.getMonth(); // Get month (0-11)
+                monthlyRejectedData[month] += 1; // Increment the count for the corresponding month
+            }
+        }
+    });
+
     totalRejectedChart = new Chart(ctx, {
-        type: 'line', // Change to line chart
+        type: 'bar',
         data: {
-            labels: ['Rejected Applications'],
+            labels: monthLabels,
             datasets: [{
-                label: 'Total Rejected',
-                data: [totalApplications.rejected],
+                label: 'Total Rejected Applications by Month',
+                data: monthlyRejectedData, // Use the rejected monthly data
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 2,
-                pointRadius: 5, // Show points on the line
-                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                fill: false, // Disable area fill under the line
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: { display: true },
-                title: { display: true, text: 'Total Rejected Applications' }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true // Ensure the Y-axis starts at zero
-                }
+                title: { display: true, text: 'Total Rejected Applications by Month' }
             }
         }
     });
@@ -300,7 +337,7 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
     // Group applications by organization and status
     const organizationData = filteredApplications.reduce((acc, application) => {
         const organization = application.applicationDetails.organizationName || 'Unknown Organization'; // Default value
-        const status = application.applicationStatus ? application.applicationStatus.toLowerCase().trim() : 'unknown'; // Default value
+        const status = application.applicationStatus ? application.applicationStatus.toLowerCase().trim() : 'pending'; // Default value
 
         // Create a unique key for each organization-status combination
         const key = `${organization} (${status})`; // Create unique key
@@ -327,12 +364,14 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
         'rgba(255, 206, 86, 0.6)',
     ];
 
+    // Destroy previous chart instance if it exists
     if (applicantsOverTimeChart instanceof Chart) {
         applicantsOverTimeChart.destroy(); // Destroy previous chart instance
     }
 
+    // Create the new pie chart
     applicantsOverTimeChart = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: labels.length > 0 ? labels : ['No Data'], // Ensure there's a label
             datasets: [{
@@ -353,7 +392,6 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
     });
 }
 
-
 // Function to generate PDF with chart images and data table
 function generatePDFReport() {
     const { jsPDF } = window.jspdf;
@@ -363,38 +401,53 @@ function generatePDFReport() {
     doc.setFontSize(18);
     doc.text("Applications Report", 14, 22);
 
-    // Define a medium size for images
+    // Define sizes for images
     const imageWidth = 70; // Set desired width
     const imageHeight = 70; // Set desired height
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const imageXPositionLeft = 14; // Left column position
+    const imageXPositionRight = pageWidth - imageWidth - 14; // Right column position
 
-    // Capture the pie chart as an image and add it to the PDF
-    if (applicantsOverTimeChart) {
-        const applicantsChartImage = applicantsOverTimeChart.toBase64Image(); // Convert pie chart to base64 image
-        doc.addImage(applicantsChartImage, 'PNG', 10, 40, imageWidth, imageHeight); // Add pie chart image
-    }
+    // Initialize vertical position for images
+    let yPosition = 40;
 
-    // Add other charts (optional) - if you have them already
-    if (totalApplicationsChart) {
-        const totalApplicationsImage = totalApplicationsChart.toBase64Image(); 
-        doc.addImage(totalApplicationsImage, 'PNG', 10, 130, imageWidth, imageHeight); 
-    }
+    // Create an array of charts to loop through
+    const charts = [
+        applicantsOverTimeChart,
+        totalApplicationsChart,
+        totalAccreditedChart,
+        totalReAccreditedChart,
+        totalRejectedChart
+    ];
 
-    if (totalAccreditedChart) {
-        const totalAccreditedImage = totalAccreditedChart.toBase64Image();
-        doc.addImage(totalAccreditedImage, 'PNG', 10, 220, imageWidth, imageHeight); 
-    }
+    // Loop through each chart and add it to the PDF
+    charts.forEach((chart, index) => {
+        if (chart) {
+            const chartImage = chart.toBase64Image(); // Convert chart to base64 image
+            // Determine the x position based on the column (0 = left, 1 = right)
+            const xPosition = index % 2 === 0 ? imageXPositionLeft : imageXPositionRight;
 
-    // Add applicants over time by organization chart (pie chart) image
-    if (applicantsOverTimeChart) {
-        const applicantsOverTimeImage = applicantsOverTimeChart.toBase64Image();
-        doc.addImage(applicantsOverTimeImage, 'PNG', 10, 310, imageWidth, imageHeight); // Position below other charts
+            // Add the chart image to the PDF
+            doc.addImage(chartImage, 'PNG', xPosition, yPosition, imageWidth, imageHeight); 
+
+            // Update the y position for the next row after every two images
+            if (index % 2 === 1) {
+                yPosition += imageHeight + 10; // Increase yPosition for the next row (10px gap)
+            }
+        }
+    });
+
+    // If there's an odd chart, ensure the next start for table does not overlap
+    if (charts.length % 2 !== 0) {
+        yPosition += imageHeight + 10; // Extra space if there was an unpaired image
     }
 
     // Add data table title
     doc.setFontSize(12);
-    doc.text("Data Table", 14, 410);
+    doc.text("Data Table", 14, yPosition); // Position table title below charts
+    yPosition += 10; // Add space before the table
 
-    // Prepare data to add to the table (including pie chart data)
+    // Prepare data for the table (including pie chart data)
     const pieChartData = applicantsOverTimeChart?.data.datasets[0].data.map((value, index) => {
         return {
             label: applicantsOverTimeChart.data.labels[index],
@@ -402,18 +455,24 @@ function generatePDFReport() {
         };
     }) || [];
 
+    // Gather total applications data
+    const totalApplications = totalApplicationsChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0; // Sum all values
+    const totalAccredited = totalAccreditedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0; // Sum all values
+    const totalReAccredited = totalReAccreditedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0; // Sum all values
+    const totalRejected = totalRejectedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0; // Sum all values
+
     const tableData = [
-        { label: 'Total Applications', value: totalApplicationsChart?.data.datasets[0].data[0] || 0 },
-        { label: 'Accredited Applications', value: totalAccreditedChart?.data.datasets[0].data[0] || 0 },
-        { label: 'Reaccredited Applications', value: totalReAccreditedChart?.data.datasets[0].data[0] || 0 },
-        { label: 'Rejected Applications', value: totalRejectedChart?.data.datasets[0].data[0] || 0 }
+        { label: 'Total Applications', value: totalApplications },
+        { label: 'Accredited Applications', value: totalAccredited },
+        { label: 'Reaccredited Applications', value: totalReAccredited },
+        { label: 'Rejected Applications', value: totalRejected }
     ].concat(pieChartData);  // Combine existing table data with pie chart data
 
     // Add table with jsPDF autoTable plugin
     doc.autoTable({
         head: [['Category', 'Applications']],
         body: tableData.map(item => [item.label, item.value]),
-        startY: 420, // Adjust table start position after charts
+        startY: yPosition, // Adjust table start position after charts
     });
 
     // Save the PDF
