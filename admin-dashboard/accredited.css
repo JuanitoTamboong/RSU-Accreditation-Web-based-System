@@ -13,42 +13,40 @@
 }
 
 .table-container {
-  margin-top: 10px;
-  max-width: 100%; /* Prevents the table from exceeding the container width */
-  overflow-x: auto; /* Enables horizontal scrolling if needed */
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+.table-body-container {
+  max-height: 500px; /* Adjust height as needed */
+  overflow-y: auto; /* Enables vertical scrolling */
 }
 
 .accredited-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
   font-size: 13px;
   text-align: left;
   background-color: var(--background-color);
-  border-radius: 10px;
-
 }
 
 .accredited-table th, .accredited-table td {
   padding: 12px;
   border-bottom: 1px solid var(--input-border-color);
-  white-space: nowrap; /* Prevents text from wrapping and causing unwanted height expansion */
+  white-space: nowrap;
 }
 
 .accredited-table th {
+  position: sticky;
+  top: 0;
   background-color: var(--background-color);
-  color: rgb(0, 128, 87); 
+  color: rgb(0, 128, 87);
+  z-index: 1;
 }
 
 .accredited-table tr:hover {
-  background-color: #51759019; 
+  background-color: #51759019;
 }
-
-tbody {
-  overflow-x: auto; /* Allows vertical scrolling if there are too many rows */
-}
-
-
 
 .delete-btn {
   background-color: rgb(205, 23, 23);
@@ -60,4 +58,3 @@ tbody {
   border-radius: 20px;
   font-size: 9px;
 }
-

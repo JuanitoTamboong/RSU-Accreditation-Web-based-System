@@ -46,7 +46,10 @@
   .dark-theme .notification-content {
     color: var(--text-color-secondary); /* Change text color in modal */
   }
-  
+  .dark-theme .bottom-container{
+    background-color: var(--primary-color);
+    color: var(--text-color-primary);
+  }
   .dark-theme .right-content {
     background-color: var(--button-background); /* Change background color */
   }

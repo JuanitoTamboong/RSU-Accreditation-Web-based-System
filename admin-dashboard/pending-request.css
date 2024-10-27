@@ -10,72 +10,68 @@
     --button-background: #1B263B;
     --declined-button: #740303f5;
     --applicants: #023a02;
-  }
-  
-  .table-container {
-      margin-top: 10px;
-      max-width: 100%; /* Prevents the table from exceeding the container width */
-      overflow-x: auto; /* Enables horizontal scrolling if needed */
-    
-  }
-  
-  .pending-requests {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      font-size: 13px;
-      text-align: left;
-      background-color: var(--background-color);
-      border-radius: 10px;
-      min-width: 900px; /* Ensures the table takes up enough space on smaller screens */
-      
-  }
-  
-  .pending-requests th, .pending-requests td {
-      padding: 12px;
-      border-bottom: 1px solid var(--input-border-color);
-      white-space: nowrap; /* Prevents text from wrapping and causing unwanted height expansion */
-      
-  }
-  
-  .pending-requests th {
-      background-color: var(--background-color);
-      color: rgb(0, 128, 87); 
-  }
-  
-  .pending-requests tr:hover {
-      background-color: #51759019; 
-  }
-  
-  tbody {
-      height:200px;
-      overflow-y: auto; /* Allows vertical scrolling if there are too many rows */
-  }
-  
-  .view-link, .delete-btn {
-      white-space: nowrap; /* Prevents button text from wrapping */
-      text-align: center;
-      display: inline-block;
-  }
-  
-  .view-link {
-      color: var(--button-hover-color);
-      text-decoration: none;
-      background-color: var(--button-hover-color);
-      padding: 5px 15px;
-      color: var(--text-color-primary);
-      border-radius: 20px;
-      font-size: 9px;
-  }
-  
-  .delete-btn {
-      background-color: rgb(205, 23, 23);
-      padding: 5px 15px;
-      color: var(--text-color-primary);
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 20px;
-      font-size: 9px;
-  }
-  
+}
+
+.table-container {
+    margin-top: 20px;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.pending-table {
+    max-height: 500px; /* Limits height for scrollable area */
+    overflow-y: auto;
+}
+
+.pending-requests {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background-color: var(--background-color);
+    min-width: 900px;
+}
+
+.pending-requests th {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    color: rgb(0, 128, 87);
+    z-index: 1;
+}
+
+.pending-requests th, .pending-requests td {
+    padding: 12px;
+    border-bottom: 1px solid var(--input-border-color);
+    white-space: nowrap;
+}
+
+.pending-requests tr:hover {
+    background-color: #51759019;
+}
+
+.view-link, .delete-btn {
+    white-space: nowrap;
+    text-align: center;
+    display: inline-block;
+}
+
+.view-link {
+    color: var(--button-hover-color);
+    text-decoration: none;
+    background-color: var(--button-hover-color);
+    padding: 5px 15px;
+    color: var(--text-color-primary);
+    border-radius: 20px;
+    font-size: 9px;
+}
+
+.delete-btn {
+    background-color: rgb(205, 23, 23);
+    padding: 5px 15px;
+    color: var(--text-color-primary);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 9px;
+}

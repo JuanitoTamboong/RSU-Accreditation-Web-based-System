@@ -91,7 +91,7 @@ async function fetchAllApplicationData(schoolYear) {
                 const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
                 if (status === "approved") {
                     totalApplications.accredited += 1;
-                } else if (status === "re-accredited") {
+                } else if (status === "Renewal") {
                     totalApplications.reaccredited += 1;
                 } else if (status === "rejected") {
                     totalApplications.rejected += 1;
@@ -114,6 +114,7 @@ async function fetchAllApplicationData(schoolYear) {
                     icon: 'info',
                     title: 'No Applications Found',
                     text: 'There are no applications for the selected school year.',
+                    customClass:'swal-pop-up',
                 });
             }
         });
@@ -123,6 +124,7 @@ async function fetchAllApplicationData(schoolYear) {
             icon: 'error',
             title: 'Oops...',
             text: 'Failed to fetch report data. Please try again later.',
+            customClass:'swal-pop-up',
         });
     }
 }
@@ -141,6 +143,7 @@ document.getElementById('applicationReportForm').addEventListener('submit', func
             icon: 'error',
             title: 'Invalid Input',
             text: 'Please provide a school year.',
+            customClass:'swal-pop-up'
         });
         return; // Exit if input is empty
     }
@@ -164,6 +167,7 @@ function formatSchoolYear(input) {
             icon: 'error',
             title: 'Invalid Format',
             text: 'Please enter the school year in the format YYYY-YYYY.',
+            customClass:'swal-pop-up',
         });
         return ''; // Return empty string if format is incorrect
     }
@@ -185,7 +189,11 @@ function createTotalApplicationsChart(totalApplications) {
                 data: totalApplications.monthlyData, // Use the monthly data
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                pointStyle: 'circle', // Change this to your desired point style (circle, triangle, etc.)
+                pointRadius: 5, // Customize the size of the points
+                pointHoverRadius: 7, // Customize the hover size of the points
+                fill: true // Set to true if you want to fill under the line
             }]
         },
         options: {
@@ -193,6 +201,12 @@ function createTotalApplicationsChart(totalApplications) {
             plugins: {
                 legend: { display: true },
                 title: { display: true, text: 'Total Applications by Month' }
+            },
+            elements: {
+                point: {
+                    radius: 5, // Default point size
+                    hoverRadius: 7 // Hover point size
+                }
             }
         }
     });
@@ -241,7 +255,6 @@ function createTotalAccreditedChart(totalApplications, filteredApplications) {
         }
     });
 }
-
 // Function to create or update the total reaccredited applications chart
 function createTotalReAccreditedChart(totalApplications, filteredApplications) {
     const ctx = document.getElementById('totalReAccreditedChart').getContext('2d');
@@ -249,17 +262,21 @@ function createTotalReAccreditedChart(totalApplications, filteredApplications) {
         totalReAccreditedChart.destroy(); // Destroy previous chart instance
     }
 
-    const monthlyReAccreditedData = Array(12).fill(0); // Initialize monthly data
+    const monthlyReAccreditedData = Array(12).fill(0); 
     filteredApplications.forEach(applicationDetails => {
         const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
-        if (status === "re-accredited") {
+        const accreditationType = applicationDetails.applicationDetails?.typeOfAccreditation ? 
+                                  applicationDetails.applicationDetails.typeOfAccreditation.toLowerCase().trim() : '';
+
+        // Check for both approved status and renewal accreditation type
+        if (status === "approved" && accreditationType === "renewal") {
             const dateFiling = applicationDetails.applicationDetails?.dateFiling;
             const date = dateFiling ? new Date(dateFiling) : null;
 
             // Check if date is valid
             if (date && !isNaN(date)) {
-                const month = date.getMonth(); // Get month (0-11)
-                monthlyReAccreditedData[month] += 1; // Increment the count for the corresponding month
+                const month = date.getMonth(); 
+                monthlyReAccreditedData[month] += 1; 
             }
         }
     });
@@ -270,7 +287,7 @@ function createTotalReAccreditedChart(totalApplications, filteredApplications) {
             labels: monthLabels,
             datasets: [{
                 label: 'Total Reaccredited Applications by Month',
-                data: monthlyReAccreditedData, // Use the reaccredited monthly data
+                data: monthlyReAccreditedData,
                 backgroundColor: 'rgba(255, 206, 86, 0.2)',
                 borderColor: 'rgba(255, 206, 86, 1)',
                 borderWidth: 1
@@ -285,7 +302,6 @@ function createTotalReAccreditedChart(totalApplications, filteredApplications) {
         }
     });
 }
-
 // Function to create or update the total rejected applications chart
 function createTotalRejectedChart(totalApplications, filteredApplications) {
     const ctx = document.getElementById('totalRejectedChart').getContext('2d');

@@ -13,22 +13,28 @@
     --pending: #810a88;
 }
 
-/* Report Container Styles */
+/* Main container for report and content */
 .report-container {
+    display: flex; /* Use flexbox for horizontal alignment */
     margin-top: 20px;
     margin-bottom: 30px;
-    display: grid;
-    grid-template-columns: 1fr; /* Single column by default */
-    gap: 20px; /* Space between items */
+    gap: 10px;
 }
 
 /* Form Styles */
 .report-form {
     background-color: var(--background-color);
-    padding: 20px;
+    padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center; /* Center text inside the form */
+    width: 25%; /* Set fixed width for the form container */
+}
+
+.report-form label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 15px;
 }
 
 .report-form input[type="text"] {
@@ -37,13 +43,46 @@
     outline: none;
     background-color: var(--text-color-primary);
     color: var(--primary-color);
-    box-shadow: inset 0px 0px 3px;
+    border: none;
+    box-shadow:inset 0px 0px  2px var(--button-hover-color);
+    margin-bottom: 15px;
+    padding: 10px;
 }
 
+.report-form button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px; /* Horizontal padding for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Full width for button */
+}
+
+.report-form button:hover {
+    background-color: var(--button-hover-color);
+}
+.chart-image {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    margin-top: 15px; /* Optional: adds some space above the image */
+}
+
+.chart-image img {
+    max-width: 100%; /* Ensures the image is responsive */
+    height: 500px;
+    object-fit: cover;
+    filter: drop-shadow(20px 1px 1px var(--accent-color));
+}
+
+
+/* Content Styles */
 .content {
     background-color: var(--background-color);
     padding: 10px;
     border-radius: 10px;
+    width: 100%; /* Set fixed width for content area */
 }
 
 .download-report {
@@ -76,7 +115,7 @@
 /* Chart Styles */
 .charts {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid for charts */
+    grid-template-columns: repeat(2, 1fr); /* Responsive grid for charts */
     gap: 20px; /* Space between charts */
     margin-top: 20px; /* Space above charts */
 }
@@ -98,7 +137,6 @@
 /* Full-width Chart Container Styles */
 .full-chart {
     grid-column: span 2; /* Span both columns */
-    background: white;
     border-radius: 5px;
     padding: 10px; /* Reduced padding */
     text-align: center;
@@ -116,6 +154,7 @@
 }
 
 .chart-container-full h1 {
+    padding-top: 10px;
     text-align: center;
     font-size: 18px;
     color: var(--primary-color);
@@ -126,48 +165,23 @@
     height: 500px;
     width: 100%; /* Make it responsive */
 }
-
-/* Additional styles for form elements */
-.report-form label {
-    display: block;
-    margin-bottom: 8px;
-}
-
-.report-form input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
-
-.report-form button {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 10px 20px; /* Horizontal padding for button */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%; /* Full width for button */
-}
-
-.report-form button:hover {
-    background-color: var(--button-hover-color);
-}
-
-/* Media Query for Responsive Layout */
-@media (min-width: 768px) {
+/* Responsive Styles for Smaller Screens */
+@media (max-width: 768px) {
     .report-container {
-        grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
+        flex-direction: column; /* Stack elements vertically on small screens */
     }
-
-    .charts {
-        grid-template-columns: repeat(2, 1fr); /* Two columns for larger screens */
+    .report-form{
+        width: 100%;
     }
-
-    /* Centering the full-width chart container in larger viewports */
-    .chart-container-full {
-        margin: 0; /* Reset margin to zero for full-width effect */
+    .chart-image img{
+     height: 260px;
+     object-fit: contain;
+    }
+    .content{
+        width: 100%;
+    }
+    .charts{
+        width: 100%;
+        
     }
 }
-

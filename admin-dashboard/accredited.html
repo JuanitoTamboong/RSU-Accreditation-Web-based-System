@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="admin-dashboard.css">
     <link rel="icon" href="../assets/rsu-logo.png">
     <title>Accredited Applicants</title>
-    <!-- fonts -->
+    <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- css -->
+    <!-- CSS -->
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="swal-popup.css">
@@ -21,11 +21,11 @@
     <script type="module" src="toogle-sidebar.js" defer></script>
     <script type="module" src="setting.js" defer></script>
     <script type="module" src="accredited.js" defer></script>
-    <!-- sweet alert -->
+    <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
-   <div class="dashboard-container"> <!-- Added a container for flex layout -->
+   <div class="dashboard-container">
     <div class="sidebar">
         <div class="admin-user">
             <img src="../assets/rsu-logo.png" alt="User Avatar" class="user-avatar"> 
@@ -46,7 +46,7 @@
         <div class="main-container">
             <div class="top-container">
                 <div class="top-content">
-                    <h2><i class="fa-solid fa-check-circle"></i>Accredited Applicants</h2>
+                    <h2><i class="fa-solid fa-check-circle"></i> Accredited Applicants</h2>
                 </div>
                 <div class="notifications-dropdown">
                     <div id="notification-icon" class="notification-icon">
@@ -66,7 +66,7 @@
                     </div>                    
                 </div>
             </div>
-          
+            <!-- Table for Accredited Applicants -->
             <div class="table-container">
                 <table class="accredited-table">
                     <thead>
@@ -80,11 +80,15 @@
                             <th>Status</th>
                             <th>Delete</th> 
                         </tr>
-                    </thead>                  
-                    <tbody id="applicants-table-body">
-                        <!-- Rows will be populated here by JavaScript -->
-                    </tbody>
+                    </thead>
                 </table>
+                <div class="table-body-container">
+                    <table class="accredited-table">
+                        <tbody id="applicants-table-body">
+                            <!-- Rows will be populated here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
