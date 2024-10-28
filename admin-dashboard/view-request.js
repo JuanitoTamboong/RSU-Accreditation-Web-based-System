@@ -80,13 +80,8 @@ async function fetchApplicantDetails() {
         `).join('');
         document.getElementById('request-documents').innerHTML = documentsHTML || '<p>No documents available.</p>';
 
-        // Render checklist for missing documents
-        const requiredDocuments = ["Document 1", "Document 2", "Document 3"];
-        const checkListHTML = requiredDocuments.map(doc => {
-            const isPresent = documents.includes(doc);
-            return `<p style="color: ${isPresent ? 'green' : 'red'};">${doc}: ${isPresent ? '✔️' : '❌'}</p>`;
-        }).join('');
-        document.getElementById('check-list').innerHTML = `<h2>Checklist</h2>${checkListHTML}`;
+        // Render checklist based on type of accreditation
+        renderChecklist(typeOfAccreditation, documents);
 
         // Render officer profiles if available
         const profiles = data.profiles || [];
@@ -103,6 +98,67 @@ async function fetchApplicantDetails() {
     } catch (error) {
         console.error("Error fetching applicant details:", error);
         document.getElementById('applicant-details').innerHTML = '<p>Error loading applicant details.</p>';
+    }
+}
+
+function renderChecklist(accreditationType, submittedDocuments) {
+    let requiredDocuments;
+    if (accreditationType === 'New Organization') {
+        requiredDocuments = [
+            "Accomplish the application",
+            "Letter of application stating the purpose of accreditation",
+            "Recommendation from the SSC President",
+            "List of officers and their respective positions",
+            "Letter of invitation to chosen faculty adviser",
+            "Faculty adviser’s letter of acceptance of responsibility",
+            "Proposed activities and project for one year",
+            "Constitution and By-laws (include Anti-Hazing)",
+            "Parent’s Consent (For Fraternity/Sorority)",
+            "Documents should be submitted in four copies"
+        ];
+    } else if (accreditationType === 'Renewal') {
+        requiredDocuments = [
+            "Accomplish the application form (Re-Accreditation)",
+            "Letter of application stating the purpose of accreditation",
+            "Recommendation from the SSC President",
+            "List of officers and their respective positions",
+            "Letter of invitation to chosen faculty adviser",
+            "Faculty adviser’s letter of acceptance",
+            "Photocopy of Certificate of Recognition",
+            "Photo of certificate of attendance",
+            "Financial statement for the previous year",
+            "Proposed activities and project for one year",
+            "Constitution and By-laws (include Anti-Hazing)",
+            "Parent’s Consent (For Fraternity/Sorority)"
+        ];
+    } else {
+        requiredDocuments = [];
+    }
+
+    const checkListHTML = requiredDocuments.map(doc => {
+        const isPresent = submittedDocuments.includes(doc);
+        return `
+            <label>
+                <input type="checkbox" ${isPresent ? 'checked' : ''} onchange="updateDocumentStatus(this, '${doc}')"> 
+                ${doc}
+            </label>`;
+    }).join('');
+
+    // Wrap the checklist in a container
+    document.getElementById('check-list').innerHTML = `
+        <h2>Checklist</h2>
+        <div class="checklist-container">${checkListHTML}</div>
+    `;
+}
+
+// Function to update the document status based on checkbox state
+function updateDocumentStatus(checkbox, documentName) {
+    if (checkbox.checked) {
+        console.log(`${documentName} is checked.`);
+        // Additional logic to handle when a document is checked can be added here
+    } else {
+        console.log(`${documentName} is unchecked.`);
+        // Additional logic to handle when a document is unchecked can be added here
     }
 }
 
@@ -141,33 +197,30 @@ async function sendEmail(applicantId) {
 
         // Get the current date and time for the approval/rejection
         const currentDateTime = new Date();
-         // Format date as MM/DD/YYYY - HH:MM AM/PM
+        // Format date as MM/DD/YYYY - HH:MM AM/PM
         const formattedDateTime = currentDateTime.toLocaleString('en-US', { 
-         month: '2-digit', 
-         day: '2-digit', 
-         year: 'numeric', 
-         hour: '2-digit', 
-         minute: '2-digit', 
-         hour12: true 
-        }).replace(',', ' -'); // Replace comma with a dash to get the desired format
-         // Example result: 10/22/2024 - 4:33 PM
-        
-        // Update the Firestore document with application status and formatted timestamp
-        const docRef = doc(db, 'student-org-applications', applicantId);
-        await updateDoc(docRef, {
-            applicationStatus: applicationStatus, // Update application status
-            statusUpdateTimestamp: formattedDateTime // Store the formatted date and time
+            month: '2-digit', day: '2-digit', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit', hour12: true 
         });
 
-        // Show success message after email is sent
+        // Update the status in Firestore
+        const docRef = doc(db, 'student-org-applications', applicantId);
+        await updateDoc(docRef, {
+            applicationStatus: emailParams.application_status,
+            updatedAt: formattedDateTime,
+            customMessage: emailParams.additional_message || ''
+        });
+
+        // Show success message
         document.getElementById('emailStatus').textContent = 'Email sent successfully!';
+        document.getElementById('emailStatus').style.color = 'green';
     } catch (error) {
         console.error('Error sending email:', error);
-        
-        // Show error message in case of failure
-        document.getElementById('emailStatus').textContent = 'Error sending email.';
+        document.getElementById('emailStatus').textContent = 'Error sending email. Please try again.';
+        document.getElementById('emailStatus').style.color = 'red';
     }
 }
+
 
 // Close modal
 function closeModal() {

@@ -15,7 +15,7 @@
 
 /* Main container for report and content */
 .report-container {
-    display: flex; /* Use flexbox for horizontal alignment */
+    display: flex;
     margin-top: 20px;
     margin-bottom: 30px;
     gap: 10px;
@@ -27,8 +27,8 @@
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center; /* Center text inside the form */
-    width: 25%; /* Set fixed width for the form container */
+    text-align: center;
+    width: 25%; 
 }
 
 .report-form label {
@@ -52,11 +52,11 @@
 .report-form button {
     background-color: var(--primary-color);
     color: white;
-    padding: 10px 20px; /* Horizontal padding for button */
+    padding: 10px 20px; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%; /* Full width for button */
+    width: 100%;
 }
 
 .report-form button:hover {
@@ -64,13 +64,13 @@
 }
 .chart-image {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-    margin-top: 15px; /* Optional: adds some space above the image */
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 15px; 
 }
 
 .chart-image img {
-    max-width: 100%; /* Ensures the image is responsive */
+    max-width: 100%;
     height: 500px;
     object-fit: cover;
     filter: drop-shadow(20px 1px 1px var(--accent-color));
@@ -82,42 +82,42 @@
     background-color: var(--background-color);
     padding: 10px;
     border-radius: 10px;
-    width: 100%; /* Set fixed width for content area */
+    width: 100%;
 }
 
 .download-report {
     display: flex;
-    justify-content: flex-end; /* Aligns button to the right */
-    margin-top: 0px; /* Adds space above the button */
+    justify-content: flex-end;
+    margin-top: 0px;
 }
 
 .download-button {
-    padding: 10px 20px; /* Adds padding for better spacing */
-    background-color: var(--primary-color); /* Background color for button */
+    padding: 10px 20px;
+    background-color: var(--primary-color); 
     color: var(--text-color-primary);
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    transition: background-color 0.3s ease;
     font-size: 12px;
 }
 
 .download-button i {
-    margin-right: 8px; /* Adds space between icon and text */
-    font-size: 12px; /* Adjust icon size if needed */
-    vertical-align: middle; /* Aligns icon with text */
+    margin-right: 8px; 
+    font-size: 12px; 
+    vertical-align: middle; 
 }
 
 .download-button:hover {
-    background-color: var(--button-hover-color); /* Changes color on hover */
+    background-color: var(--button-hover-color); 
 }
 
 /* Chart Styles */
 .charts {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Responsive grid for charts */
-    gap: 20px; /* Space between charts */
-    margin-top: 20px; /* Space above charts */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px; 
+    margin-top: 20px; 
 }
 
 /* Chart Container Styles */
@@ -163,12 +163,12 @@
 /* Chart styles */
 #applicantsOverTimeByOrganizationChart {
     height: 500px;
-    width: 100%; /* Make it responsive */
+    width: 100%;
 }
 /* Responsive Styles for Smaller Screens */
 @media (max-width: 768px) {
     .report-container {
-        flex-direction: column; /* Stack elements vertically on small screens */
+        flex-direction: column; 
     }
     .report-form{
         width: 100%;
