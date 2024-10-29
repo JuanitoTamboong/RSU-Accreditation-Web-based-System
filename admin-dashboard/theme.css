@@ -90,6 +90,7 @@
   /*pending theme*/
   .dark-theme .pending-requests{
     background-color: var(--accent-color);
+
   }
   .dark-theme .pending-requests th, .dark-theme .pending-requests td {
     color:var(--text-color-primary) ;
@@ -97,12 +98,17 @@
   
 }
 .dark-theme .pending-requests th {
-    background-color: var(--background-color);
-    color: rgb(0, 128, 87);
+    background-color: var(--button-hover-color);
+    color: var(--text-color-primary);
  }
  
  /*accredited theme*/
+ .dark-theme .accredited-table th{
+  background-color: var(--button-hover-color);
+  color: var(--text-color-primary);
+ }
  .dark-theme .accredited-table{
   background-color: var(--accent-color);
   color: var(--text-color-primary);
  }
+ 
