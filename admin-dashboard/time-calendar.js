@@ -4,9 +4,9 @@ function updateTime() {
     const now = new Date();
     let hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const ampm = hours >= 12 ? ' PM' : ' AM';
     hours = hours % 12 || 12; // Convert to 12-hour format
-    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    const formattedTime = `${hours}:${minutes}${ ampm}`; // Include seconds
     timeContainer.textContent = formattedTime;
 }
 
@@ -14,8 +14,8 @@ function updateTime() {
 window.changeMonth = changeMonth;
 window.addEvent = addEvent;
 
-// Call updateTime every minute
-setInterval(updateTime, 60000);
+// Call updateTime every second for real-time update
+setInterval(updateTime, 1000);
 updateTime(); // Initial call to set the time immediately
 
 // Calendar functionality
@@ -27,18 +27,18 @@ function renderCalendar(month, year) {
     const monthYear = document.getElementById('month-year');
     const datesGrid = document.getElementById('dates-grid');
     const today = new Date();
-    
+
     const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July',
         'August', 'September', 'October', 'November', 'December'
     ];
-    
+
     monthYear.textContent = `${monthNames[month]} ${year}`;
     datesGrid.innerHTML = ''; // Clear previous dates
 
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     // Add empty boxes for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
         datesGrid.innerHTML += '<div class="empty-date"></div>';
@@ -49,7 +49,7 @@ function renderCalendar(month, year) {
         const dateBox = document.createElement('div');
         dateBox.classList.add('date-box');
         dateBox.textContent = day;
-        
+
         // Highlight today
         if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
             dateBox.classList.add('today');
@@ -81,14 +81,14 @@ function selectDate(day, month, year) {
     if (events[selectedDate]) {
         events[selectedDate].forEach((event, index) => {
             const li = document.createElement('li');
-            
+
             // Create a span for the event name
             const eventNameSpan = document.createElement('span');
             eventNameSpan.textContent = event.name;
 
             li.appendChild(eventNameSpan); // Append the span to the list item
             li.appendChild(createDeleteButton(event.name, selectedDate, index)); // Append delete button
-            
+
             document.getElementById('event-list').appendChild(li);
         });
     } else {
@@ -106,7 +106,7 @@ function createDeleteButton(eventName, date, index) {
 
 function addEvent() {
     const selectedDate = document.getElementById('selected-date').textContent.split(' ')[2];
-    
+
     // Check if the selected date is valid
     if (!selectedDate || selectedDate.includes('undefined')) {
         Swal.fire('Please select a date first.');
