@@ -8,7 +8,7 @@
 }
 
 :root {
-  --primary-color: #0D1B2A;
+  --primary-color: #0d1b2a;
   --accent-color: #1B263B;
   --background-color: #F0F4F8;
   --card-background: #FFFFFF;
@@ -174,44 +174,62 @@ small {
 
 .sub-container {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  flex-wrap: wrap; 
   padding-top: 10px;
-  justify-content: space-between; /* Aligns items to the space between */
+  justify-content: space-between; 
 }
 
 .left-side-container,
 .right-side-container {
-  flex: 1; /* Allow them to share space equally */
-  margin: 10px; /* Optional: add margin between them */
-  position: relative; /* Make it relative for absolute positioning of image */
+  flex: 1; 
+  margin: 10px; 
+  position: relative; 
 }
 
 /* Bottom Container */
 .bottom-container {
+  position: relative; 
   display: flex;
   margin-top: 20px;
   text-align: center; 
   border-radius: 20px;
-  background-color: var(--background-color);
+  overflow: hidden; 
+  background-image: url('../assets/admin-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
+.bottom-container::before {
+  content: ''; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsla(212, 80%, 32%, 0.685);
+  z-index: 0; 
 }
-.bottom-container p{
-padding-top: 50px;
-font-size: 15px;
-text-align:left;
-margin: 10px;
-letter-spacing: 2px;
+.bottom-container p {
+  position: relative;
+  padding-top: 50px;
+  font-size: 15px;
+  text-align: left;
+  margin: 20px;
+  letter-spacing: 2px;
+  color: var(--text-color-primary);
+  z-index: 1; 
 }
+
 .bottom-container img {
-  width: 100%; /* Make the image responsive */
+  width: 100%;
   height: 250px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
   filter: drop-shadow(0px 10px 1px var(--primary-color));
+  position: relative; 
+  z-index: 1;
 }
-
-
 
 .left-content {
   border-radius: 5px;
@@ -277,7 +295,7 @@ letter-spacing: 2px;
 
 /* Time Styling */
 .time {
-  font-size: 50px;
+  font-size: 40px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
@@ -285,77 +303,192 @@ letter-spacing: 2px;
   background-color: var(--card-background);
   padding: 10px 0;
   border-radius: 20px;
-  position: relative; /* To position the pseudo-element relative to this parent */
+  position: relative;
+  overflow: hidden; 
+}
+
+/* Keyframes for rocket animation */
+@keyframes rocket-move {
+  0% {
+    left: -50px; 
+    top: -50px; 
+    transform: rotate(180deg);
+
+  }
+  25% {
+    left: 0;
+    top: 0; 
+    transform: rotate(80deg);
+  }
+  50% {
+    left: calc(100% - 150px); 
+    top: 0; 
+  }
+  75% {
+    left: calc(100% - 150px);
+    top: calc(100% - 150px);
+  }
+  100% {
+    left: 0; 
+    top: calc(100% - 150px); 
+    transform: rotate(-100deg);
+  }
 }
 
 .time::before {
   content: "";
   background-image: url('../assets/Rocket.png');
-  background-size: 100%;
+  background-size: contain; 
   background-repeat: no-repeat;
   position: absolute;
-  width: 190px;  /* Adjusted size for better fit */
-  height: 190px; /* Adjusted size for better fit */
-  left: -50px;  /* Moves the rocket to the left of the time */
-  top: 50%;      /* Vertically center the rocket */
-  transform: translateY(-50%) rotate(20deg); /* Center and tilt the rocket */
-  filter: drop-shadow(0px 0px 4px var(--button-hover-color));
+  width: 150px;  
+  height: 150px;
+  filter: drop-shadow(0px 10px 0px rgb(112, 33, 33));
+  
+  /* Animation properties */
+  animation: rocket-move 8s ease-in-out infinite ; 
 }
 
-.current-date {
-  padding: 10px;
-}
 
 /* Calendar Styling */
-.calendar {
+.calendar-app {
   width: 100%;
-  margin: 0 auto;
-  padding-top: 30px;
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
 }
 
-.calendar table {
-  width: 100%; /* Changed to 100% for responsiveness */
-  border-collapse: collapse;
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+ background-color: var(--primary-color);
+  color:var(--text-color-primary);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-.calendar th,
-.calendar td {
-  border: 1px solid var(--primary-color);
-  padding: 10px;
+.days-of-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   text-align: center;
+  background: #f9f9f9;
+  padding: 10px 0;
 }
 
-.calendar th {
-  background-color: var(--button-hover-color);
+.days-of-week span {
   font-weight: bold;
+}
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 10px;
+  background-color: var(--background-color);
+}
+
+.date-box {
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.date-box:hover {
+  background-color:var(--button-hover-color);
   color: var(--text-color-primary);
 }
 
-.calendar td:not(:empty) {
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.empty-date {
+  background: transparent;
 }
 
 .today {
   background-color: var(--declined-button);
-  color: var(--text-color-primary);
-  font-weight: bold;
+  color: white;
+  border-radius: 50%;
 }
+
+.event-details {
+  padding: 10px 20px;
+}
+
+.event-details h3 {
+  margin: 0.5em 0;
+}
+
+button {
+  padding: 0.5em 1em;
+  margin: 0.5em 0;
+  cursor: pointer;
+  border: none;
+ background-color: var(--accent-color);
+  color: white;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color:var(--button-hover-color);
+}
+#event-list {
+  max-width: 100%; /* Ensure the event list container takes full width */
+  overflow: hidden; /* Prevent overflow */
+  overflow-y: auto;
+  height: 200px;
+}
+
+#event-list li {
+  display: flex; /* Use flexbox to align items */
+  justify-content: space-between; /* Space between content and button */
+  align-items: center; /* Center items vertically */
+  background: #e9ecef;
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 5px;
+  overflow: hidden; /* Prevent overflow */
+}
+#event-list li span {
+  flex: 1; /* Allow the text to grow */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflow text */
+  white-space: normal; /* Allow line breaks */
+  padding-right: 10px; /* Add padding for better spacing */
+}
+
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  flex-shrink: 0; 
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+
 
 /* Responsive Media Queries */
 @media (max-width: 768px) {
-  
   .left-content {
     grid-template-columns: 1fr; /* Switch to a single column */
   }
-  .bottom-container{
-    display:block;
+
+  .bottom-container {
+    display: block;
     margin: 0;
     padding: 0;
   }
-.bottom-container p{
-  text-align: center;
-  letter-spacing: 3px;
-}
-  
+
+  .bottom-container p {
+    text-align: center;
+    letter-spacing: 0.5px; /* Improved letter spacing */
+  }
 }

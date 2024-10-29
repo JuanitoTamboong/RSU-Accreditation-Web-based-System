@@ -44,33 +44,41 @@
   }
   
   .dark-theme .notification-content {
-    color: var(--text-color-secondary); /* Change text color in modal */
+    color: var(--text-color-secondary);
   }
   .dark-theme .bottom-container{
     background-color: var(--primary-color);
     color: var(--text-color-primary);
   }
   .dark-theme .right-content {
-    background-color: var(--button-background); /* Change background color */
+    background-color: var(--button-background);
   }
   .dark-theme .time{
+    background-color: var(--primary-color);
+    color: var(--text-color-primary);
+  }
+  /*date and event*/
+  .dark-theme .days-of-week{
     background-color: var(--button-hover-color);
     color: var(--text-color-primary);
   }
-  .dark-theme .right-content td{
+  .dark-theme .dates-grid{
+    background-color: var(--button-background);
     color: var(--text-color-primary);
   }
-  .dark-theme .current-date {
+  .dark-theme .event-details{
+    background-color: var(--primary-color);
     color: var(--text-color-primary);
-    padding: 10px;
-
+  }
+  .dark-theme #event-list li{
+    background-color: var(--button-hover-color);
   }
   /* Additional Dark Theme Styles */
   .dark-theme .close-button{
     color: var(--input-border-color);
   }
   .dark-theme #notification-list li {
-    border-bottom: 1px solid var(--input-border-color); /* Change border color */
+    border-bottom: 1px solid var(--input-border-color); 
   }
   .dark-theme #notification-list li{
   color: var(--text-color-primary);

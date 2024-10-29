@@ -220,8 +220,6 @@ async function sendEmail(applicantId) {
         document.getElementById('emailStatus').style.color = 'red';
     }
 }
-
-
 // Close modal
 function closeModal() {
     document.getElementById('emailModal').style.display = 'none';
