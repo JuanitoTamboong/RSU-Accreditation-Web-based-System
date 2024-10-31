@@ -274,17 +274,4 @@ document.getElementById('add-course').addEventListener('click', () => {
         }
     });
 });
-// Fill form with organization data
-function fillFormWithOrganizationData() {
-    const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
-
-    if (orgData) {
-        // Assuming your form fields have specific IDs
-        document.getElementById('representative-name').value = orgData.applicationDetails.organizationName || '';
-        document.getElementById('filing-date-field').value = orgData.applicationDetails.dateFiling || '';
-        document.getElementById('officer-name-field').value = orgData.applicationDetails.officerName || '';
-        // Add more fields as necessary...
-    } else {
-        showInfoAlert('No Data Found', 'No organization data found. Please go back and search for your organization.');
-    }
-}
+ 
