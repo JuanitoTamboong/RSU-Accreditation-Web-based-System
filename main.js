@@ -277,20 +277,43 @@ if (signInForm) {
     showLoading();
 
     // Sign in user
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        hideLoading();
-        Swal.fire({
-          icon: "success",
-          title: "Login Successful",
-          text: "Welcome back!",
-          customClass: "swal-wide",
-          timer: 2000,
-        }).then(() => {
-          window.location.href = "../welcome-page/welcome.html";
-        });
-      })
+signInWithEmailAndPassword(auth, email, password)
+.then((userCredential) => {
+  const user = userCredential.user;
+  hideLoading();
+
+  Swal.fire({
+    title: "Privacy Agreement",
+    html: 'Do you agree to the <a href="https://rsu.edu.ph/wp-content/uploads/2024/03/Privacy-Notice-For-website.pdf" target="_blank">Privacy Policy</a> before proceeding?',
+    imageUrl: "../assets/privacy_agreement.png",
+    imageWidth: 130,
+    imageHeight: 100,
+    imageAlt: "Privacy Agreement Image",
+    showCancelButton: true,
+    confirmButtonText: "Yes, I agree",
+    cancelButtonText: "No, I disagree",
+    customClass: {
+      popup: "swal-wide",
+      image: "swal-image",
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // User agreed to the privacy policy
+      window.location.href = "../welcome-page/welcome.html";
+    } else {
+      // User disagreed with the privacy policy
+      Swal.fire({
+        icon: "warning",
+        title: "Agreement Needed",
+        text: "You need to agree to the Privacy Policy to proceed.",
+        confirmButtonText: "Ok",
+        customClass: {
+          popup: "swal-wide",
+        },
+      });
+    }
+  });
+})
       .catch((error) => {
         hideLoading();
         const errorCode = error.code;
