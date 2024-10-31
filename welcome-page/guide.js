@@ -118,7 +118,7 @@ function reAccreditationFormHTML() {
 
 // Search for organization data in Firestore
 async function searchOrganizationData(uid) {
-    const organizationName = document.getElementById('organization-name').value.trim();
+    const organizationName = document.getElementById('organization-name').value.trim().toUpperCase(); // Convert to uppercase for case-insensitive search
     const filingDateInput = document.getElementById('filing-date');
 
     if (!organizationName) {

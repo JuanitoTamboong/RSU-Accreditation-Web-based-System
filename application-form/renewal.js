@@ -38,7 +38,7 @@ function saveFormData(docUrls) {
 
     const formData = {
         uid: user.uid,
-        typeOfAccreditation: "Renewal",
+        typeOfAccreditation: "New Organization",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
@@ -62,16 +62,25 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
     uploadedFiles = []; // Clear previously stored files
 
     files.forEach(file => {
-        if (file.size > maxSize || file.type !== 'application/pdf') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Upload Error',
-                text: `${file.name} exceeds 50MB or is not a PDF.`,
-            });
-            document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+        // Check for duplicates
+        if (!uploadedFiles.some(uploadedFile => uploadedFile.name === file.name)) {
+            if (file.size > maxSize || file.type !== 'application/pdf') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Upload Error',
+                    text: `${file.name} exceeds 50MB or is not a PDF.`,
+                });
+                document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+            } else {
+                uploadedFiles.push(file); // Store valid files in memory
+                document.getElementById('preview-documents').disabled = false; // Enable preview button
+            }
         } else {
-            uploadedFiles.push(file); // Store valid files in memory
-            document.getElementById('preview-documents').disabled = false; // Enable preview button
+            Swal.fire({
+                icon: 'warning',
+                title: 'Duplicate File',
+                text: `${file.name} has already been added.`,
+            });
         }
     });
 });
@@ -116,6 +125,7 @@ function setSchoolYear() {
     const nextYear = currentYear + 1;
     document.getElementById('school-year').value = `${currentYear}-${nextYear}`;
 }
+
 window.addEventListener('load', () => {
     setSchoolYear(); // Set the school year on load
 });
@@ -217,7 +227,6 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     window.location.href = '../student-profile/list-officers.html';
     toggleLoading(false);
 });
-
 // Add organization name dynamically
 document.getElementById('add-organization').addEventListener('click', () => {
     Swal.fire({
@@ -229,49 +238,56 @@ document.getElementById('add-organization').addEventListener('click', () => {
         if (result.isConfirmed && result.value) {
             const organizationNameDropdown = document.getElementById('organization-name-dropdown');
             const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
+            option.value = result.value.toUpperCase(); // Convert to uppercase
+            option.textContent = result.value.toUpperCase(); // Convert to uppercase
             organizationNameDropdown.appendChild(option);
-            organizationNameDropdown.value = result.value; // Set it as selected
+            organizationNameDropdown.value = option.value; // Set it as selected
         }
     });
 });
 
-// Add position dynamically
-document.getElementById('add-position').addEventListener('click', () => {
-    Swal.fire({
-        title: 'Enter the new position name:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'New position name'
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
-            const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
-            representativePositionDropdown.appendChild(option);
-            representativePositionDropdown.value = result.value; // Set it as selected
-        }
-    });
-});
+// Wait until the document is fully loaded
+document.addEventListener('DOMContentLoaded', loadOrganizationData);
 
-// Add course dynamically
-document.getElementById('add-course').addEventListener('click', () => {
-    Swal.fire({
-        title: 'Enter the new course name:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'New course name'
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const courseDropdown = document.getElementById('course-dropdown');
-            const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
-            courseDropdown.appendChild(option);
-            courseDropdown.value = result.value; // Set it as selected
-        }
-    });
-});
- 
+// Function to load organization data from localStorage
+function loadOrganizationData() {
+    const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
+
+    if (!orgData) {
+        console.error("Organization data not found in localStorage.");
+        return;
+    }
+
+    // Extract applicationDetails from orgData
+    const appDetails = orgData.applicationDetails || {};
+
+    // Set form fields with data or default to empty strings
+    setFieldValue('representative-name', appDetails.representativeName);
+    setFieldValue('school-year', appDetails.schoolYear);
+    setFieldValue('email-address', appDetails.emailAddress);
+
+    // Load and potentially add custom dropdown options
+    loadDropdownOption('representative-position-dropdown', appDetails.representativePosition);
+    loadDropdownOption('course-dropdown', appDetails.studentCourse);
+    loadDropdownOption('organization-name-dropdown', appDetails.organizationName);
+}
+
+// Helper function to set the value of a field
+function setFieldValue(fieldId, value) {
+    document.getElementById(fieldId).value = value || '';
+}
+
+// Helper function to load dropdown options and add custom value if needed
+function loadDropdownOption(dropdownId, value) {
+    const dropdown = document.getElementById(dropdownId);
+    dropdown.value = value || '';
+
+    if (value && !dropdown.querySelector(`option[value="${value}"]`)) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        dropdown.appendChild(option);
+        dropdown.value = value;
+    }
+}
+

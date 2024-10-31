@@ -62,16 +62,25 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
     uploadedFiles = []; // Clear previously stored files
 
     files.forEach(file => {
-        if (file.size > maxSize || file.type !== 'application/pdf') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Upload Error',
-                text: `${file.name} exceeds 50MB or is not a PDF.`,
-            });
-            document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+        // Check for duplicates
+        if (!uploadedFiles.some(uploadedFile => uploadedFile.name === file.name)) {
+            if (file.size > maxSize || file.type !== 'application/pdf') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Upload Error',
+                    text: `${file.name} exceeds 50MB or is not a PDF.`,
+                });
+                document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+            } else {
+                uploadedFiles.push(file); // Store valid files in memory
+                document.getElementById('preview-documents').disabled = false; // Enable preview button
+            }
         } else {
-            uploadedFiles.push(file); // Store valid files in memory
-            document.getElementById('preview-documents').disabled = false; // Enable preview button
+            Swal.fire({
+                icon: 'warning',
+                title: 'Duplicate File',
+                text: `${file.name} has already been added.`,
+            });
         }
     });
 });
@@ -116,6 +125,7 @@ function setSchoolYear() {
     const nextYear = currentYear + 1;
     document.getElementById('school-year').value = `${currentYear}-${nextYear}`;
 }
+
 window.addEventListener('load', () => {
     setSchoolYear(); // Set the school year on load
 });
@@ -229,14 +239,13 @@ document.getElementById('add-organization').addEventListener('click', () => {
         if (result.isConfirmed && result.value) {
             const organizationNameDropdown = document.getElementById('organization-name-dropdown');
             const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
+            option.value = result.value.toUpperCase(); // Convert to uppercase
+            option.textContent = result.value.toUpperCase(); // Convert to uppercase
             organizationNameDropdown.appendChild(option);
-            organizationNameDropdown.value = result.value; // Set it as selected
+            organizationNameDropdown.value = option.value; // Set it as selected
         }
     });
 });
-
 // Add position dynamically
 document.getElementById('add-position').addEventListener('click', () => {
     Swal.fire({
@@ -255,7 +264,6 @@ document.getElementById('add-position').addEventListener('click', () => {
         }
     });
 });
-
 // Add course dynamically
 document.getElementById('add-course').addEventListener('click', () => {
     Swal.fire({
