@@ -74,7 +74,7 @@
     gap: 20px;
     background-color: var(--font-color);
     border-radius: 0px 0px 10px 10px;
-    padding: 20px;
+    padding: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
   }
   
@@ -125,14 +125,21 @@
   color: var(--signIn-Color);
   font-weight: 500;
 }
-
-.guide p {
-  background-color: var(--box-shadow);
-  padding: 40px;
+.guide-content {
+  background-image: url('../assets/guide-design.png');
   color: var(--font-color);
-  font-size: 15px;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: auto; /* Use auto height */
   border-radius: 10px;
-   margin-top: 40px;
+  margin-top: 4px;
+  padding: 30px; /* Add some padding for mobile */
+}
+.guide-content p {
+  color: var(--signIn-Color);
+  padding: 10px; /* Adjust padding for mobile */
+  text-align: center;
+  font-size: 13px;
 }
 
 /* Style for select element */
@@ -311,14 +318,32 @@ button:hover {
       width: 22px;
       height: 22px;
     }
-  
-    .guide p {
-      font-size: 14px;
+    .guide-content {
+     background-image: url('../assets/guide-design-mobile.png');
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: contain;
     }
-    
+  
+    .guide-content p {
+      font-size: 14px; /* Adjust font size for mobile */
+      padding: 10px; /* Adjust padding for mobile */
+    }
     .custom-swal-popup {
       font-size: 15px;
       width: 100%;
     }
 
   }
+  @media (max-width: 480px) { /* For mobile phones */
+    .guide-content {
+      padding: 10px; /* Further reduce padding for smaller screens */
+    }
+  
+    .guide-content p {
+      font-size: 12px; 
+      padding: 5px; 
+    }
+   
+   
+  

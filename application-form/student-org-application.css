@@ -75,7 +75,7 @@ body {
 /* Form Container */
 .form-container {
   background-color: var(--font-color);
-  padding: 30px;
+  padding: 10px;
   max-width: 900px;
   border-radius: 0 0 10px 10px;
   box-shadow: 1px 0px 10px var(--bg-bx-color);
@@ -87,7 +87,7 @@ form {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   box-shadow: inset 1px 0px 10px var(--box-shadow);
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
 }
 
