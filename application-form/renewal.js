@@ -1,8 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"; 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
 
 // Firebase configuration
 const firebaseConfig = {
@@ -18,7 +16,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const storage = getStorage(app);
-const db = getFirestore(app);
+
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -29,12 +27,8 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Show/hide loading spinner
-function showLoading() {
-    document.getElementById("loading").style.display = "flex";
-}
-
-function hideLoading() {
-    document.getElementById("loading").style.display = "none";
+function toggleLoading(show) {
+    document.getElementById("loading").style.display = show ? "flex" : "none";
 }
 
 // Save form data to localStorage using user's uid as key
@@ -42,7 +36,6 @@ function saveFormData(docUrls) {
     const user = auth.currentUser;
     if (!user) return;
 
-    // Collect form data
     const formData = {
         uid: user.uid,
         typeOfAccreditation: "Renewal",
@@ -56,7 +49,6 @@ function saveFormData(docUrls) {
         documents: docUrls || [] // Save document URLs here
     };
 
-    // Save form data to localStorage with user-specific key
     localStorage.setItem(`applicationFormData_${user.uid}`, JSON.stringify(formData));
 }
 
@@ -65,27 +57,23 @@ let uploadedFiles = []; // Store uploaded files locally
 
 document.getElementById('requirement-documents').addEventListener('change', (event) => {
     const files = Array.from(event.target.files);
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 50 * 1024 * 1024; // 50MB
 
-    if (files.length > 0) {
-        document.getElementById('preview-documents').disabled = false; // Enable preview button
-    }
+    uploadedFiles = []; // Clear previously stored files
 
-    // Clear previously stored files
-    uploadedFiles = []; 
-
-    for (const file of files) {
+    files.forEach(file => {
         if (file.size > maxSize || file.type !== 'application/pdf') {
             Swal.fire({
                 icon: 'error',
                 title: 'Upload Error',
-                text: `${file.name} exceeds 5MB or is not a PDF.`,
+                text: `${file.name} exceeds 50MB or is not a PDF.`,
             });
             document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
         } else {
             uploadedFiles.push(file); // Store valid files in memory
+            document.getElementById('preview-documents').disabled = false; // Enable preview button
         }
-    }
+    });
 });
 
 // Preview button logic
@@ -135,19 +123,44 @@ window.addEventListener('load', () => {
 // Date picker initialization
 document.addEventListener('DOMContentLoaded', function() {
     flatpickr("#date-filing", {
-        dateFormat: "Y-m-d", // Format as Year-Month-Day
-        defaultDate: new Date(), // Set the current date as default
-        allowInput: true, // Allow manual input
-        altInput: true, // Use an alternate input to show a more user-friendly date
-        altFormat: "F j, Y", // Show the user-friendly format
-        disableMobile: "true" // Ensures the Flatpickr is used on mobile
+        dateFormat: "Y-m-d",
+        defaultDate: new Date(),
+        allowInput: true,
+        altInput: true,
+        altFormat: "F j, Y",
+        disableMobile: "true"
     });
 });
+
+// Validate required fields
+function validateFields() {
+    const fields = [
+        'representative-name', 
+        'representative-position-dropdown', 
+        'school-year', 
+        'course-dropdown', 
+        'organization-name-dropdown', 
+        'email-address', 
+        'date-filing'
+    ];
+    
+    for (const field of fields) {
+        if (!document.getElementById(field).value) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: `Please fill in the ${field.replace(/-/g, ' ')} field.`,
+            });
+            return false;
+        }
+    }
+    return true;
+}
 
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async (event) => {
     event.preventDefault();
-    showLoading();
+    toggleLoading(true);
 
     const user = auth.currentUser;
     if (!user) {
@@ -156,28 +169,24 @@ document.getElementById('application-form').addEventListener('submit', async (ev
             title: 'Authentication Error',
             text: 'User not authenticated. Please log in.',
         }).then(() => {
-            hideLoading();
+            toggleLoading(false);
         });
         return;
     }
 
-    // Array to store the uploaded document URLs
+    if (!validateFields()) {
+        toggleLoading(false);
+        return; // Stop form submission if validation fails
+    }
+
     let docUrls = [];
 
     // If there are files uploaded, upload them to Firebase Storage
     if (uploadedFiles.length > 0) {
-        const uploadPromises = uploadedFiles.map((file, index) => {
-            // Create a storage reference for each file
+        const uploadPromises = uploadedFiles.map((file) => {
             const fileRef = ref(storage, `documents/${user.uid}/${file.name}`);
-            
-            // Upload the file and return the promise
             return uploadBytes(fileRef, file)
-                .then(snapshot => {
-                    // After uploading, get the download URL
-                    return getDownloadURL(snapshot.ref).then(url => {
-                        return url; // Return the URL
-                    });
-                })
+                .then(snapshot => getDownloadURL(snapshot.ref))
                 .catch(error => {
                     console.error("Error uploading file:", error);
                     Swal.fire({
@@ -190,24 +199,23 @@ document.getElementById('application-form').addEventListener('submit', async (ev
         });
 
         try {
-            // Wait for all files to upload and get their URLs
             docUrls = await Promise.all(uploadPromises);
         } catch (error) {
-            hideLoading();
+            toggleLoading(false);
             return; // Stop form submission if file upload fails
         }
     }
 
     // Get previously saved form data from localStorage
     const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
-    const allDocUrls = [...(savedData.documents || []), ...docUrls]; // Combine existing and new document URLs
+    const allDocUrls = [...(savedData.documents || []), ...docUrls];
 
     // Store the form data and uploaded document URLs in localStorage
     saveFormData(allDocUrls);
 
     // Redirect to the next page
-    window.location.href = '../student-profile/renewal-list-officers.html';
-    hideLoading();
+    window.location.href = '../student-profile/list-officers.html';
+    toggleLoading(false);
 });
 
 // Add organization name dynamically
@@ -229,6 +237,7 @@ document.getElementById('add-organization').addEventListener('click', () => {
     });
 });
 
+// Add position dynamically
 document.getElementById('add-position').addEventListener('click', () => {
     Swal.fire({
         title: 'Enter the new position name:',
@@ -242,7 +251,7 @@ document.getElementById('add-position').addEventListener('click', () => {
             option.value = result.value;
             option.textContent = result.value;
             representativePositionDropdown.appendChild(option);
-            representativePositionDropdown.value = result.value; // Set the newly added option as selected
+            representativePositionDropdown.value = result.value; // Set it as selected
         }
     });
 });
@@ -264,83 +273,18 @@ document.getElementById('add-course').addEventListener('click', () => {
             courseDropdown.value = result.value; // Set it as selected
         }
     });
-})
-
-document.addEventListener('DOMContentLoaded', () => {
+});
+// Fill form with organization data
+function fillFormWithOrganizationData() {
     const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
 
-    console.log('Retrieved organization data:', orgData); // Debugging log
-
-    if (orgData && orgData.applicationDetails) {
-        const appDetails = orgData.applicationDetails;
-
-        // Set the form fields
-        document.getElementById('representative-name').value = appDetails.representativeName || '';
-        document.getElementById('representative-position-dropdown').value = appDetails.representativePosition || '';
-
-        if (appDetails.representativePosition && !document.querySelector(`#representative-position-dropdown option[value="${appDetails.representativePosition}"]`)) {
-            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
-            const option = document.createElement('option');
-            option.value = appDetails.representativePosition;
-            option.textContent = appDetails.representativePosition;
-            representativePositionDropdown.appendChild(option);
-            representativePositionDropdown.value = appDetails.representativePosition;
-        }
-
-        document.getElementById('school-year').value = appDetails.schoolYear || '';
-        document.getElementById('course-dropdown').value = appDetails.studentCourse || '';
-        document.getElementById('organization-name-dropdown').value = appDetails.organizationName || '';
-        document.getElementById('email-address').value = appDetails.emailAddress || '';
-
-        // Display previously uploaded documents in a list
-        displayUploadedDocuments(appDetails.documents || []);
+    if (orgData) {
+        // Assuming your form fields have specific IDs
+        document.getElementById('representative-name').value = orgData.applicationDetails.organizationName || '';
+        document.getElementById('filing-date-field').value = orgData.applicationDetails.dateFiling || '';
+        document.getElementById('officer-name-field').value = orgData.applicationDetails.officerName || '';
+        // Add more fields as necessary...
     } else {
-        // Handle case where no organization data was found
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No organization data found. Please go back and select an organization.',
-            customClass: {
-                popup: "swal-wide",
-            }
-        });
+        showInfoAlert('No Data Found', 'No organization data found. Please go back and search for your organization.');
     }
-});
- // If the representative position was added dynamically, ensure it is in the dropdown
-       
-// Function to display uploaded documents
-function displayUploadedDocuments(docUrls) {
-    const documentsContainer = document.getElementById('uploaded-documents-list');
-    documentsContainer.innerHTML = ''; // Clear the list
-
-    if (docUrls.length > 0) {
-        docUrls.forEach((docUrl, index) => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `
-                <a href="${docUrl}" target="_blank">Document ${index + 1}</a>
-                <button class="remove-doc-button" data-index="${index}">Remove</button>
-            `;
-            documentsContainer.appendChild(listItem);
-        });
-    } else {
-        const noDocsMessage = document.createElement('p');
-        noDocsMessage.textContent = 'No documents uploaded yet.';
-        documentsContainer.appendChild(noDocsMessage);
-    }
-
-    // Handle the removal of documents
-    handleDocumentRemoval(docUrls, documentsContainer);
-}
-
-// Function to handle document removal
-function handleDocumentRemoval(docUrls, documentsContainer) {
-    documentsContainer.addEventListener('click', (event) => {
-        if (event.target.classList.contains('remove-doc-button')) {
-            const indexToRemove = event.target.dataset.index; // Get the index of the document to remove
-            docUrls.splice(indexToRemove, 1); // Remove the document from the array
-
-            // Refresh the displayed documents
-            displayUploadedDocuments(docUrls);
-        }
-    });
 }

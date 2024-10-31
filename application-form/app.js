@@ -26,16 +26,13 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Utility functions
-const showLoading = () => document.getElementById("loading").style.display = "flex";
-const hideLoading = () => document.getElementById("loading").style.display = "none";
-const setSchoolYear = () => {
-    const currentYear = new Date().getFullYear();
-    document.getElementById('school-year').value = `${currentYear}-${currentYear + 1}`;
-};
+// Show/hide loading spinner
+function toggleLoading(show) {
+    document.getElementById("loading").style.display = show ? "flex" : "none";
+}
 
-// Save form data to localStorage
-const saveFormData = (docUrl) => {
+// Save form data to localStorage using user's uid as key
+function saveFormData(docUrls) {
     const user = auth.currentUser;
     if (!user) return;
 
@@ -49,50 +46,82 @@ const saveFormData = (docUrl) => {
         organizationName: document.getElementById('organization-name-dropdown').value,
         emailAddress: document.getElementById('email-address').value,
         dateFiling: document.getElementById('date-filing').value,
-        document: docUrl || ''
+        documents: docUrls || [] // Save document URLs here
     };
 
     localStorage.setItem(`applicationFormData_${user.uid}`, JSON.stringify(formData));
-};
+}
 
 // Handle document upload
-let uploadedFile = null;
-const handleFileSelection = (event) => {
-    const file = event.target.files[0];
+let uploadedFiles = []; // Store uploaded files locally
+
+document.getElementById('requirement-documents').addEventListener('change', (event) => {
+    const files = Array.from(event.target.files);
     const maxSize = 50 * 1024 * 1024; // 50MB
 
-    if (file.size > maxSize || file.type !== 'application/pdf') {
-        Swal.fire({ icon: 'error', title: 'Upload Error', text: `${file.name} exceeds 50MB or is not a PDF.` });
-        document.getElementById('preview-documents').disabled = true;
-        uploadedFile = null;
-    } else {
-        uploadedFile = file;
-        document.getElementById('preview-documents').disabled = false;
-    }
-};
+    uploadedFiles = []; // Clear previously stored files
 
-const previewDocument = () => {
-    if (uploadedFile && uploadedFile.type === 'application/pdf') {
-        const reader = new FileReader();
-        reader.onload = (event) => {
+    files.forEach(file => {
+        if (file.size > maxSize || file.type !== 'application/pdf') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Error',
+                text: `${file.name} exceeds 50MB or is not a PDF.`,
+            });
+            document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+        } else {
+            uploadedFiles.push(file); // Store valid files in memory
+            document.getElementById('preview-documents').disabled = false; // Enable preview button
+        }
+    });
+});
+
+// Preview button logic
+document.getElementById('preview-documents').addEventListener('click', () => {
+    const file = uploadedFiles[0]; // Get the first valid file from memory
+
+    if (file && file.type === 'application/pdf') {
+        const fileReader = new FileReader();
+
+        // Once the file is loaded, display it in an iframe
+        fileReader.onload = function(event) {
+            const pdfData = event.target.result;
             Swal.fire({
                 title: 'Selected PDF Document',
-                html: `<iframe src="${event.target.result}" style="width:100%; min-height:100vh;" frameborder="0"></iframe>`,
+                html: `<iframe src="${pdfData}" style="width:100%; min-height:100vh;" frameborder="0"></iframe>`,
                 icon: 'info',
                 showCloseButton: true,
                 focusConfirm: false,
                 confirmButtonText: 'Close',
-                customClass: { popup: "swal-pdf-viewer" }
+                customClass: {
+                    popup: "swal-pdf-viewer"
+                }
             });
         };
-        reader.readAsDataURL(uploadedFile);
-    } else {
-        Swal.fire({ icon: 'error', title: 'No Valid File', text: 'Please select a valid PDF document to preview.' });
-    }
-};
 
-// Date picker setup
-const initDatePicker = () => {
+        // Read the file as a data URL
+        fileReader.readAsDataURL(file);
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'No Valid File',
+            text: 'Please select a valid PDF document to preview.',
+        });
+    }
+});
+
+// Set the current year and next year for the school-year input
+function setSchoolYear() {
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
+    document.getElementById('school-year').value = `${currentYear}-${nextYear}`;
+}
+window.addEventListener('load', () => {
+    setSchoolYear(); // Set the school year on load
+});
+
+// Date picker initialization
+document.addEventListener('DOMContentLoaded', function() {
     flatpickr("#date-filing", {
         dateFormat: "Y-m-d",
         defaultDate: new Date(),
@@ -101,81 +130,147 @@ const initDatePicker = () => {
         altFormat: "F j, Y",
         disableMobile: "true"
     });
-};
+});
 
-// Check if all required fields are filled
-const allFieldsFilled = () => {
-    const requiredFields = ['representative-name', 'representative-position-dropdown', 'school-year', 'course-dropdown', 'organization-name-dropdown', 'email-address', 'date-filing'];
-    return requiredFields.every(field => document.getElementById(field).value.trim() !== '') && uploadedFile !== null;
-};
+// Validate required fields
+function validateFields() {
+    const fields = [
+        'representative-name', 
+        'representative-position-dropdown', 
+        'school-year', 
+        'course-dropdown', 
+        'organization-name-dropdown', 
+        'email-address', 
+        'date-filing'
+    ];
+    
+    for (const field of fields) {
+        if (!document.getElementById(field).value) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: `Please fill in the ${field.replace(/-/g, ' ')} field.`,
+            });
+            return false;
+        }
+    }
+    return true;
+}
 
-// Form submission handler
-const submitForm = async (event) => {
+// Handle form submission
+document.getElementById('application-form').addEventListener('submit', async (event) => {
     event.preventDefault();
+    toggleLoading(true);
 
-    if (!allFieldsFilled()) {
-        Swal.fire({ icon: 'warning', title: 'Incomplete Form', text: 'Please fill in all required fields and upload the document.' });
+    const user = auth.currentUser;
+    if (!user) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Error',
+            text: 'User not authenticated. Please log in.',
+        }).then(() => {
+            toggleLoading(false);
+        });
         return;
     }
 
-    showLoading();
-    const user = auth.currentUser;
-
-    try {
-        const docUrl = await uploadDocument();
-        saveFormData(docUrl);
-        window.location.href = '../student-profile/list-officers.html';
-    } catch (error) {
-        Swal.fire({ icon: 'error', title: 'Upload Error', text: 'Failed to upload document.' });
-    } finally {
-        hideLoading();
+    if (!validateFields()) {
+        toggleLoading(false);
+        return; // Stop form submission if validation fails
     }
-};
 
-// Upload a single document to Firebase
-const uploadDocument = async () => {
-    if (!uploadedFile) return '';
+    let docUrls = [];
 
-    const user = auth.currentUser;
-    const fileRef = ref(storage, `documents/${user.uid}/${uploadedFile.name}`);
-    try {
-        const snapshot = await uploadBytes(fileRef, uploadedFile);
-        return await getDownloadURL(snapshot.ref);
-    } catch (error) {
-        console.error("Error uploading file:", error);
-        throw error;
+    // If there are files uploaded, upload them to Firebase Storage
+    if (uploadedFiles.length > 0) {
+        const uploadPromises = uploadedFiles.map((file) => {
+            const fileRef = ref(storage, `documents/${user.uid}/${file.name}`);
+            return uploadBytes(fileRef, file)
+                .then(snapshot => getDownloadURL(snapshot.ref))
+                .catch(error => {
+                    console.error("Error uploading file:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Upload Error',
+                        text: `Failed to upload file: ${file.name}`,
+                    });
+                    throw error; // Propagate error to stop form submission
+                });
+        });
+
+        try {
+            docUrls = await Promise.all(uploadPromises);
+        } catch (error) {
+            toggleLoading(false);
+            return; // Stop form submission if file upload fails
+        }
     }
-};
 
-// Add new option dynamically
-const addNewOption = (dropdownId, promptText) => {
+    // Get previously saved form data from localStorage
+    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
+    const allDocUrls = [...(savedData.documents || []), ...docUrls];
+
+    // Store the form data and uploaded document URLs in localStorage
+    saveFormData(allDocUrls);
+
+    // Redirect to the next page
+    window.location.href = '../student-profile/list-officers.html';
+    toggleLoading(false);
+});
+
+// Add organization name dynamically
+document.getElementById('add-organization').addEventListener('click', () => {
     Swal.fire({
-        title: promptText,
+        title: 'Enter the new organization name:',
         input: 'text',
         showCancelButton: true,
-        inputPlaceholder: promptText
+        inputPlaceholder: 'New organization name'
     }).then((result) => {
         if (result.isConfirmed && result.value) {
-            const dropdown = document.getElementById(dropdownId);
+            const organizationNameDropdown = document.getElementById('organization-name-dropdown');
             const option = document.createElement('option');
             option.value = result.value;
             option.textContent = result.value;
-            dropdown.appendChild(option);
-            dropdown.value = result.value;
+            organizationNameDropdown.appendChild(option);
+            organizationNameDropdown.value = result.value; // Set it as selected
         }
     });
-};
+});
 
-// Event listeners
-document.getElementById('requirement-documents').addEventListener('change', handleFileSelection);
-document.getElementById('preview-documents').addEventListener('click', previewDocument);
-document.getElementById('application-form').addEventListener('submit', submitForm);
-document.getElementById('add-organization').addEventListener('click', () => addNewOption('organization-name-dropdown', 'Enter the new organization name:'));
-document.getElementById('add-position').addEventListener('click', () => addNewOption('representative-position-dropdown', 'Enter the new position name:'));
-document.getElementById('add-course').addEventListener('click', () => addNewOption('course-dropdown', 'Enter the new course name:'));
+// Add position dynamically
+document.getElementById('add-position').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new position name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New position name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            representativePositionDropdown.appendChild(option);
+            representativePositionDropdown.value = result.value; // Set it as selected
+        }
+    });
+});
 
-// Initialize on page load
-window.addEventListener('load', () => {
-    setSchoolYear();
-    initDatePicker();
+// Add course dynamically
+document.getElementById('add-course').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new course name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New course name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const courseDropdown = document.getElementById('course-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            courseDropdown.appendChild(option);
+            courseDropdown.value = result.value; // Set it as selected
+        }
+    });
 });

@@ -235,46 +235,55 @@ button:hover {
   background-color: var(--hover-color);
   cursor: pointer;
 }
-.swal-wide {
-  width: 30%;
-  font-size: 13px;
-  height: auto;
-}
-.swal-custom-popup {
-  font-size: 16px; /* Adjust font size */
-  padding: 20px; /* Add padding for better spacing */
-}
+
 
 .swal2-input {
   border-radius: 5px; /* Round the corners of the input fields */
   border: 1px solid #ccc; /* Add a border for better visibility */
   margin: 0;
 }
-
-.swal2-actions {
-  display: flex; /* Use flexbox for button alignment */
-  justify-content: space-between; /* Space between buttons */
+.custom-swal-title {
+  font-size: 24px; /* Adjust font size as needed */
+  font-weight: bold; /* Makes the title bold */
+  color:var(--box-shadow); /* Change text color */
+  margin-bottom: 20px; /* Space below the title */
+  text-align: center; /* Center the title text */
 }
 
-.swal-confirm-btn,
-.swal-cancel-btn {
-  flex: 1; /* Allow buttons to grow equally */
-  margin: 0 5px; /* Optional: Add some margin between buttons */
+/* Other styles can remain the same */
+.custom-swal-popup {
+  width: 100%; /* Adjust this width as needed */
+  max-width: 500px; /* Maximum width of the modal */
+  margin: auto; /* Center the modal */
+  border-radius: 15px; /* Optional: add rounded corners */
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.163); /* Optional: add a shadow for depth */
 }
-
-.swal-confirm-btn {
-  background-color: var(--box-shadow); /* Customize confirm button */
+.swal-actions {
+  display: flex; /* Use flexbox for the button container */
+  justify-content: space-between; /* Space buttons evenly */
+  margin-top: 20px; /* Optional spacing above buttons */
+  
 }
-
-.swal-cancel-btn {
-  background-color: #f44336; /* Customize cancel button */
-  color: white; /* Text color for cancel button */
+.swal-button {
+  flex: 1; /* Allow buttons to grow and fill space */
+  margin: 0 5px; /* Add margin between buttons */
+  padding: 10px 20px; /* Ensure both buttons have equal padding */
+  border-radius: 5px; /* Add border radius for rounded corners */
+  border: none; /* Remove default border */
+  font-size: 16px; /* Adjust font size for better readability */
+  color: white; /* Default text color for both buttons */
 }
-
-.swal-confirm-btn .swal-cancel-btn {
-  display: inline;
+.swal-button-search {
+  background-color:var(--button); /* Green color for Search button */
+  font-size: 13px;
 }
-
+.swal-button-cancel {
+  background-color:var(--box-shadow); /* Red color for Cancel button */
+  font-size: 13px;
+}
+.swal-button:hover {
+  opacity: 0.9; /* Slight opacity change on hover */
+}
 /* Responsive styles */
 @media (max-width: 768px) {
     .header h2{
@@ -306,19 +315,10 @@ button:hover {
     .guide p {
       font-size: 14px;
     }
-    .swal-wide{
-        width: 80%;
-        font-size: 11px;
-    }
-    .swal-custom-popup {
+    
+    .custom-swal-popup {
       font-size: 15px;
+      width: 100%;
     }
-    .swal-title{
-      font-size: 26px;
-    }
-    .swal-confirm-btn,
-    .swal-cancel-btn {
-   font-size: 15px;
-}
 
   }
