@@ -68,7 +68,7 @@ body {
 .top-header h2 {
   color: var(--font-color);
   font-size: 28px; /* 1.75rem = 28px */
-  font-weight: 600;
+  font-weight:bold;
   margin: 0;
 }
 
@@ -284,10 +284,19 @@ iframe {
     grid-column: span 1;
 
   }
+  .top-header{
+    padding: 15px;
+  }
+  .top-header img{
+    height: 50px;
+    width: 50px;
+   object-fit: contain;
+  }
 
   .top-header h2 {
-    font-size: 24px; /* 1.5rem = 24px */
-    font-weight: 600;
+    font-size: 15px; /* 1.5rem = 24px */
+    font-weight:bold;
+    margin-top: 10px;
   }
 
   .form-container {
