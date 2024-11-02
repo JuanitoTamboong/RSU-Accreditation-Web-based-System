@@ -46,7 +46,7 @@
 .nav-bar {
   width: 100%;
   display: flex;
-  padding: 20px;
+  padding: 10px;
   background-color: var(--signIn-Color);
   align-items: center;
   justify-content: space-between;
@@ -61,7 +61,7 @@
 .top-nav h2 {
   padding-left: 20px;
   color: var(--font-color);
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .top-nav img {
@@ -81,7 +81,7 @@
 .search-bar i {
   position: absolute;
   right: 0; 
-  font-size: 30px;
+  font-size: 20px;
   color: var(--box-shadow);
   padding: 8px;
   cursor: pointer;
@@ -127,8 +127,8 @@ border-radius: 5px;
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
+  gap: 10px;
+  padding: 10px;
 
 }
 
@@ -136,12 +136,10 @@ border-radius: 5px;
 .list-officers {
   flex-wrap: wrap;
   box-shadow: inset 1px 1px 10px var(--box-shadow);
-  padding: 25px;
+  padding: 15px;
   border-radius: 10px;
   box-sizing: border-box;
   width: 50%;
-  min-height: 75vh;
-
 }
 .student-profile h3 {
   color: var(--signIn-Color);
@@ -245,7 +243,7 @@ label.upload-label span {
 }
 
 .add-update button {
-  padding: 15px;
+  padding: 10px;
   width: 100%;
   color: var(--font-color);
   border: none;
@@ -303,16 +301,28 @@ label.upload-label span {
 }
 .clear-list button{
 float: right;
-padding: 5px;
+padding:9px;
 border: none;
 cursor: pointer;
+border-radius: 10px;
+width: 70px;
+ box-shadow: 0px 0px 2px var(--bg-bx-color);
+color: #000;;
+
+}
+.clear-list button:hover{
+  background-color:rgb(163, 0, 0);
+  color: var(--font-color);
+  transition: all 0.4s ease-in-out;
 }
 .table-wrapper {
   flex: 1;
   max-height: 300px; /* Set a maximum height for scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-  background-color:var(--signIn-Color);
-  padding: 10px;
+  overflow-y: auto; /* Enable vertical scrolling */ 
+  background-color:rgb(255, 255, 255);
+  border-radius: 10px;
+  box-shadow: 0px 0px 2px rgb(84, 83, 83) ;
+ 
 }
 .added-profiles h3 {
   color: var(--signIn-Color);
@@ -329,30 +339,31 @@ cursor: pointer;
 
 .added-profiles th,
 .added-profiles td {
-  border: 1px solid var(--box-shadow);
+  border: 1px solid rgb(0, 0, 0);
   padding: 8px;
-  text-align: left;
+  text-align:center;
   word-wrap: break-word; 
   overflow: hidden;
-  color: var(--font-color);
+  color: #000;
   
   
 }
-
 .added-profiles th {
-  background-color: var(--signIn-Color);
+  background-color: var(--box-shadow);
   color: var(--font-color);
 }
-
-.added-profiles tbody tr:nth-child(even) {
- /* color: var(--font-color);*/
+.delete-btn{
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 /* Submit Button Styles */
 .submit-btn {
   margin-top: 10px;
   padding-top: 20px;
-  position: relative;;
+  position: relative;
   
 
 }
@@ -375,6 +386,7 @@ cursor: pointer;
 .submit-btn button:hover {
   background-color: var(--hover-color);
 }
+
 @media (max-width:1300px) {
   .container{
   width: 100%;
@@ -460,4 +472,5 @@ label{
     float: none;
     width: 100%;
   }
+  
 }

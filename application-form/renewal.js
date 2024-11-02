@@ -224,7 +224,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     saveFormData(allDocUrls);
 
     // Redirect to the next page
-    window.location.href = '../student-profile/list-officers.html';
+    window.location.href = '../student-profile/renewal-list-officers.html';
     toggleLoading(false);
 });
 // Add organization name dynamically

@@ -51,23 +51,6 @@ body {
 @keyframes con {
   0%{transform: translate(-400px);}
 }
-/*.logo-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.21);
-  z-index: 0;
-}
-
-.logo-container > * {
-  position: relative;
-  z-index: 1;
-  color: white;
-}*/
-
 .logo-wrap img {
   height: 190px;
   object-fit: contain;
@@ -286,15 +269,20 @@ input[type="password"]:focus {
 
 /* SweetAlert Customization */
 .swal-wide {
+  background-color: var(--font-color);
+  color:#000;
   width: 30%;
-  font-size: 13px;
-  height: auto;
+  font-size: 15px;
   
 }
-
+.swal2-title {
+  color: #333; /* Dark text color for title */
+  font-size:23px; /* Larger font size */
+}
 .swal-image {
   object-fit: contain;
   width: 100%;
+
 }
 
 /* Responsive Design */
@@ -326,8 +314,11 @@ input[type="password"]:focus {
   }
 
   .swal-wide {
-    width: 85%;
-    font-size: 11px;
+    width: 100%;
+    font-size: 13px;
+  }
+  .swal2-title {
+    font-size:17px; /* Larger font size */
   }
 
   .login-container {

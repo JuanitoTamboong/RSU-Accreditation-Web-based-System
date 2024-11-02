@@ -291,6 +291,13 @@ button:hover {
 .swal-button:hover {
   opacity: 0.9; /* Slight opacity change on hover */
 }
+.swal2-popup{
+  width: 30%;
+  font-size: 15px;
+}
+.swal2-title {
+  font-size:23px; /* Larger font size */
+}
 /* Responsive styles */
 @media (max-width: 768px) {
     .header h2{
@@ -326,18 +333,24 @@ button:hover {
     }
   
     .guide-content p {
-      font-size: 14px; /* Adjust font size for mobile */
-      padding: 10px; /* Adjust padding for mobile */
+      font-size: 14px; 
+      padding: 10px; 
     }
     .custom-swal-popup {
       font-size: 15px;
       width: 100%;
     }
-
+    .swal2-popup{
+      width: 100%;
+      font-size: 13px;
+    }
+    .swal2-title {
+      font-size:17px;
+    }
   }
   @media (max-width: 480px) { /* For mobile phones */
     .guide-content {
-      padding: 10px; /* Further reduce padding for smaller screens */
+      padding: 10px; 
     }
   
     .guide-content p {
