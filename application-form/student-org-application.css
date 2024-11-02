@@ -234,9 +234,12 @@ form {
   overflow-y: auto;
   font-size: 13px;
 }
+.swal2-title {
+  font-size:23px; /* Larger font size */
+}
 iframe {
   width: 100%; /* Ensure iframe takes full width */
-  height: 100%; /* Ensure iframe takes full height */
+ 
 }
 #uploaded-documents-list {
   padding: 20px; /* Adds space around the list */
@@ -318,10 +321,12 @@ iframe {
     margin-top: 15px;
   }
   .swal-pdf-viewer {
-    width: 90%; /* Adjust the width for mobile */
-    max-width: 500px; /* Maximum width for larger screens */
+    width: 100%; /* Adjust the width for mobile */
+    max-height: 400px;
     margin: auto; /* Center the modal */
-    height: auto; /* Allow height to adjust */
+}
+.swal2-title {
+  font-size:17px; /* Larger font size */
 }
 
 iframe {
@@ -332,12 +337,14 @@ iframe {
 }
 @media (max-width: 600px) {
   .swal-pdf-viewer {
-    width: 90%; /* Adjust the width for mobile */
-    max-width: 500px; /* Maximum width for larger screens */
+    width: 100%; /* Adjust the width for mobile */
     margin: auto; /* Center the modal */
     height: auto; /* Allow height to adjust */
+    max-height: 400px;
 }
-
+.swal2-title {
+  font-size:17px; /* Larger font size */
+}
 iframe {
     width: 100%; /* Full width of the modal */
     height: 100vh; /* Full height of the viewport */
