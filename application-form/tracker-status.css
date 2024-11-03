@@ -1,54 +1,42 @@
+.status-content p {
+    text-align: left; 
+    font-size: 12px; 
+    font-weight: bold; 
+    padding-left: 10px;
+    color: #333333a0; /* Darker text color for better contrast */
+}
+
 .status-tracker {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0;
-    padding: 10px;
+    justify-content: space-around; /* Space out the items evenly */
+   
 }
-
 .status-item {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    position: relative;
+    align-items: center;
+    position: relative; 
+    padding: 10px;
+    transition: transform 0.3s ease; /* Add a hover effect */
 }
 
-.status-circle {
-    width: 20px; /* Increased size for better visibility */
-    height: 20px; /* Increased size for better visibility */
-    border-radius: 50%;
-    background-color: gray; /* Default color */
-    transition: background-color 0.3s ease; /* Smooth color transition */
+.status-item:hover {
+    transform: translateY(-5px); /* Slight lift on hover for interactivity */
 }
 
-.status-circle.rejected {
-    background-color: red; /* Color for rejected */
-}
-
-.status-circle.pending {
-    background-color: green; /* Color for pending */
-}
-
-.status-circle.approved {
-    background-color: blue; /* Color for approved */
+.status-check {
+    font-size: 13px; /* Larger font size for visibility */
 }
 
 .status-label {
     margin-top: 5px;
-    font-size: 13px;
+    font-size: 10px; 
     text-align: center;
     font-weight: 600;
+    color: #666; /* Lighter text color for labels */
+    margin-top: 10px; /* Increased margin for better spacing */
 }
 
-.status-line {
-    width: 40px;
-    height: 2px;
-    background-color: gray; /* Default line color */
-    position: relative;
-    flex-grow: 1; /* Allows the line to grow between circles */
-    margin: 0 10px; /* Adds space around lines */
-}
+@media (max-width: 600px) {
 
-.status-line:last-child {
-    display: none; /* Hide the last line */
 }

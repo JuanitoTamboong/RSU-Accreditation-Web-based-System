@@ -285,7 +285,6 @@ document.getElementById('add-course').addEventListener('click', () => {
         }
     });
 });
-
 // Wait until the document is fully loaded
 document.addEventListener('DOMContentLoaded', loadOrganizationData);
 
@@ -301,6 +300,7 @@ function loadOrganizationData() {
 
     // Extract applicationDetails from orgData
     const appDetails = orgData.applicationDetails;
+    console.log(orgData); // Debug log for entire organization data
 
     // Check if appDetails exists
     if (!appDetails) {
@@ -308,21 +308,21 @@ function loadOrganizationData() {
         return;
     }
 
+    // Check for applicationStatus in orgData
+    const applicationStatus = orgData.applicationStatus; // Adjusted to get applicationStatus directly from appDetails
+    console.log("Application Status Retrieved:", applicationStatus); // Debug log for application status
+
     // Set form fields with data or default to empty strings
     setFieldValue('representative-name', appDetails.representativeName);
     setFieldValue('school-year', appDetails.schoolYear);
     setFieldValue('email-address', appDetails.emailAddress);
 
-    // Load and potentially add custom dropdown options
+    // Load dropdown options
     loadDropdownOption('representative-position-dropdown', appDetails.representativePosition);
     loadDropdownOption('course-dropdown', appDetails.studentCourse);
     loadDropdownOption('organization-name-dropdown', appDetails.organizationName);
 
-    // Get and log the loaded application status
-    const applicationStatus = orgData.applicationStatus || 'unknown'; // Default to 'unknown' if not found
-    console.log("Loaded application status:", applicationStatus);
-
-    // Display the application status
+    // Call displayApplicationStatus with the loaded application status
     displayApplicationStatus(applicationStatus);
 }
 
@@ -354,39 +354,42 @@ function loadDropdownOption(dropdownId, value) {
         console.error(`Dropdown with id ${dropdownId} not found.`);
     }
 }
-document.addEventListener('DOMContentLoaded', function() {
-    // Sample application for testing
-    const application = { applicationStatus: 'Rejected' }; // Change to test other statuses
-    displayApplicationStatus(application);
-});
 
-function displayApplicationStatus(application) {
-    const status = application.applicationStatus ? application.applicationStatus.toLowerCase().trim() : 'pending';
-    const statusItems = document.querySelectorAll('.status-item .status-circle');
+function displayApplicationStatus(status) {
+    const normalizedStatus = status ? status.trim().toLowerCase() : 'pending';
+    console.log("Loaded application status:", normalizedStatus);
 
-    statusItems.forEach(circle => {
-        circle.classList.remove('pending', 'approved', 'rejected');
+    const statusItems = document.querySelectorAll('.status-item .status-check');
+
+    // Reset all status checks before applying the new status
+    statusItems.forEach((check) => {
+        check.textContent = '✗'; // Set default to 'X'
+        check.style.color = 'black'; // Reset to default color
     });
 
-    console.log("Normalized Status:", status);
-
-    switch (status) {
+    // Apply the appropriate checkmark or 'X' based on the normalized status
+    switch (normalizedStatus) {
         case 'pending':
-        case 'unknown':
-            console.log("Setting status to pending (green)");
-            statusItems[0].classList.add('pending');
+            statusItems[0].textContent = '✓'; // Show 'X' for pending
+            statusItems[0].style.color = '#4CAF50'; // Green for first item
             break;
         case 'approved':
-            console.log("Setting status to approved");
-            statusItems[1].classList.add('approved');
+            statusItems[0].textContent = '✗'; // Set first item to '✓'
+            statusItems[1].textContent = '✓'; // Set second item to '✓'
+            statusItems[2].textContent = '✗'; // Keep last item as 'X' (not rejected)
+            // Set colors for approved status
+            statusItems[1].style.color = '#4CAF50'; // Green for second item
             break;
         case 'rejected':
-            console.log("Setting status to rejected");
-            statusItems[2].classList.add('rejected');
+            statusItems[0].textContent = '✗'; // Show 'X' for pending
+            statusItems[1].textContent = '✗'; // Show 'X' for approved
+            statusItems[2].textContent = '✓'; // Set last item to '✓' (rejected)
+            // Set colors for rejected status
+            statusItems[2].style.color = '#f44336'; // Red for rejected
             break;
         default:
-            console.log("Unrecognized status. Setting status to default (pending)");
-            statusItems[0].classList.add('pending');
+            console.log("Unknown status; defaulting to pending");
+            statusItems[0].textContent = '✗'; // Default to 'X' for pending
             break;
     }
 }
