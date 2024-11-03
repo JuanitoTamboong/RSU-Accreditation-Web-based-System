@@ -62,7 +62,6 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
     uploadedFiles = []; // Clear previously stored files
 
     files.forEach(file => {
-        // Check for duplicates
         if (!uploadedFiles.some(uploadedFile => uploadedFile.name === file.name)) {
             if (file.size > maxSize || file.type !== 'application/pdf') {
                 Swal.fire({
@@ -92,7 +91,6 @@ document.getElementById('preview-documents').addEventListener('click', () => {
     if (file && file.type === 'application/pdf') {
         const fileReader = new FileReader();
 
-        // Once the file is loaded, display it in an iframe
         fileReader.onload = function(event) {
             const pdfData = event.target.result;
             Swal.fire({
@@ -108,7 +106,6 @@ document.getElementById('preview-documents').addEventListener('click', () => {
             });
         };
 
-        // Read the file as a data URL
         fileReader.readAsDataURL(file);
     } else {
         Swal.fire({
@@ -127,7 +124,7 @@ function setSchoolYear() {
 }
 
 window.addEventListener('load', () => {
-    setSchoolYear(); // Set the school year on load
+    setSchoolYear();
 });
 
 // Date picker initialization
@@ -186,12 +183,11 @@ document.getElementById('application-form').addEventListener('submit', async (ev
 
     if (!validateFields()) {
         toggleLoading(false);
-        return; // Stop form submission if validation fails
+        return;
     }
 
     let docUrls = [];
 
-    // If there are files uploaded, upload them to Firebase Storage
     if (uploadedFiles.length > 0) {
         const uploadPromises = uploadedFiles.map((file) => {
             const fileRef = ref(storage, `documents/${user.uid}/${file.name}`);
@@ -204,7 +200,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
                         title: 'Upload Error',
                         text: `Failed to upload file: ${file.name}`,
                     });
-                    throw error; // Propagate error to stop form submission
+                    throw error;
                 });
         });
 
@@ -212,18 +208,25 @@ document.getElementById('application-form').addEventListener('submit', async (ev
             docUrls = await Promise.all(uploadPromises);
         } catch (error) {
             toggleLoading(false);
-            return; // Stop form submission if file upload fails
+            return;
         }
     }
 
-    // Get previously saved form data from localStorage
+    // Load previously saved data
     const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
-    const allDocUrls = [...(savedData.documents || []), ...docUrls];
+    const allDocUrls = savedData.documents || [];
 
-    // Store the form data and uploaded document URLs in localStorage
+    // Avoid duplication of document URLs
+    docUrls.forEach(url => {
+        if (!allDocUrls.includes(url)) {
+            allDocUrls.push(url); // Only add unique URLs
+        }
+    });
+
+    // Save the updated form data
     saveFormData(allDocUrls);
 
-    // Redirect to the next page
+    // Redirect after saving
     window.location.href = '../student-profile/list-officers.html';
     toggleLoading(false);
 });

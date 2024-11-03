@@ -62,7 +62,6 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
     uploadedFiles = []; // Clear previously stored files
 
     files.forEach(file => {
-        // Check for duplicates
         if (!uploadedFiles.some(uploadedFile => uploadedFile.name === file.name)) {
             if (file.size > maxSize || file.type !== 'application/pdf') {
                 Swal.fire({
@@ -92,7 +91,6 @@ document.getElementById('preview-documents').addEventListener('click', () => {
     if (file && file.type === 'application/pdf') {
         const fileReader = new FileReader();
 
-        // Once the file is loaded, display it in an iframe
         fileReader.onload = function(event) {
             const pdfData = event.target.result;
             Swal.fire({
@@ -108,7 +106,6 @@ document.getElementById('preview-documents').addEventListener('click', () => {
             });
         };
 
-        // Read the file as a data URL
         fileReader.readAsDataURL(file);
     } else {
         Swal.fire({
@@ -127,7 +124,7 @@ function setSchoolYear() {
 }
 
 window.addEventListener('load', () => {
-    setSchoolYear(); // Set the school year on load
+    setSchoolYear();
 });
 
 // Date picker initialization
@@ -186,12 +183,11 @@ document.getElementById('application-form').addEventListener('submit', async (ev
 
     if (!validateFields()) {
         toggleLoading(false);
-        return; // Stop form submission if validation fails
+        return;
     }
 
     let docUrls = [];
 
-    // If there are files uploaded, upload them to Firebase Storage
     if (uploadedFiles.length > 0) {
         const uploadPromises = uploadedFiles.map((file) => {
             const fileRef = ref(storage, `documents/${user.uid}/${file.name}`);
@@ -204,7 +200,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
                         title: 'Upload Error',
                         text: `Failed to upload file: ${file.name}`,
                     });
-                    throw error; // Propagate error to stop form submission
+                    throw error;
                 });
         });
 
@@ -212,21 +208,29 @@ document.getElementById('application-form').addEventListener('submit', async (ev
             docUrls = await Promise.all(uploadPromises);
         } catch (error) {
             toggleLoading(false);
-            return; // Stop form submission if file upload fails
+            return;
         }
     }
 
-    // Get previously saved form data from localStorage
+    // Load previously saved data
     const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
-    const allDocUrls = [...(savedData.documents || []), ...docUrls];
+    const allDocUrls = savedData.documents || [];
 
-    // Store the form data and uploaded document URLs in localStorage
+    // Avoid duplication of document URLs
+    docUrls.forEach(url => {
+        if (!allDocUrls.includes(url)) {
+            allDocUrls.push(url); // Only add unique URLs
+        }
+    });
+
+    // Save the updated form data
     saveFormData(allDocUrls);
 
-    // Redirect to the next page
-    window.location.href = '../student-profile/renewal-list-officers.html';
+    // Redirect after saving
+    window.location.href = '../student-profile/list-officers.html';
     toggleLoading(false);
 });
+
 // Add organization name dynamically
 document.getElementById('add-organization').addEventListener('click', () => {
     Swal.fire({
@@ -245,6 +249,42 @@ document.getElementById('add-organization').addEventListener('click', () => {
         }
     });
 });
+// Add position dynamically
+document.getElementById('add-position').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new position name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New position name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            representativePositionDropdown.appendChild(option);
+            representativePositionDropdown.value = result.value; // Set it as selected
+        }
+    });
+});
+// Add course dynamically
+document.getElementById('add-course').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new course name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New course name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const courseDropdown = document.getElementById('course-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            courseDropdown.appendChild(option);
+            courseDropdown.value = result.value; // Set it as selected
+        }
+    });
+});
 
 // Wait until the document is fully loaded
 document.addEventListener('DOMContentLoaded', loadOrganizationData);
@@ -253,13 +293,20 @@ document.addEventListener('DOMContentLoaded', loadOrganizationData);
 function loadOrganizationData() {
     const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
 
+    // Check if orgData exists
     if (!orgData) {
         console.error("Organization data not found in localStorage.");
         return;
     }
 
     // Extract applicationDetails from orgData
-    const appDetails = orgData.applicationDetails || {};
+    const appDetails = orgData.applicationDetails;
+
+    // Check if appDetails exists
+    if (!appDetails) {
+        console.error("Application details not found in orgData.");
+        return;
+    }
 
     // Set form fields with data or default to empty strings
     setFieldValue('representative-name', appDetails.representativeName);
@@ -270,24 +317,76 @@ function loadOrganizationData() {
     loadDropdownOption('representative-position-dropdown', appDetails.representativePosition);
     loadDropdownOption('course-dropdown', appDetails.studentCourse);
     loadDropdownOption('organization-name-dropdown', appDetails.organizationName);
+
+    // Get and log the loaded application status
+    const applicationStatus = orgData.applicationStatus || 'unknown'; // Default to 'unknown' if not found
+    console.log("Loaded application status:", applicationStatus);
+
+    // Display the application status
+    displayApplicationStatus(applicationStatus);
 }
 
 // Helper function to set the value of a field
 function setFieldValue(fieldId, value) {
-    document.getElementById(fieldId).value = value || '';
-}
-
-// Helper function to load dropdown options and add custom value if needed
-function loadDropdownOption(dropdownId, value) {
-    const dropdown = document.getElementById(dropdownId);
-    dropdown.value = value || '';
-
-    if (value && !dropdown.querySelector(`option[value="${value}"]`)) {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = value;
-        dropdown.appendChild(option);
-        dropdown.value = value;
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.value = value || ''; // Set to an empty string if value is undefined or null
+    } else {
+        console.error(`Field with id ${fieldId} not found.`);
     }
 }
 
+// Helper function to load dropdown options
+function loadDropdownOption(dropdownId, value) {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+        // Set the dropdown's value or default to an empty string
+        dropdown.value = value || '';
+
+        // Only add a new option if it does not already exist
+        if (value && !dropdown.querySelector(`option[value="${value}"]`)) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value; // Set the display text
+            dropdown.appendChild(option);
+        }
+    } else {
+        console.error(`Dropdown with id ${dropdownId} not found.`);
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    // Sample application for testing
+    const application = { applicationStatus: 'Rejected' }; // Change to test other statuses
+    displayApplicationStatus(application);
+});
+
+function displayApplicationStatus(application) {
+    const status = application.applicationStatus ? application.applicationStatus.toLowerCase().trim() : 'pending';
+    const statusItems = document.querySelectorAll('.status-item .status-circle');
+
+    statusItems.forEach(circle => {
+        circle.classList.remove('pending', 'approved', 'rejected');
+    });
+
+    console.log("Normalized Status:", status);
+
+    switch (status) {
+        case 'pending':
+        case 'unknown':
+            console.log("Setting status to pending (green)");
+            statusItems[0].classList.add('pending');
+            break;
+        case 'approved':
+            console.log("Setting status to approved");
+            statusItems[1].classList.add('approved');
+            break;
+        case 'rejected':
+            console.log("Setting status to rejected");
+            statusItems[2].classList.add('rejected');
+            break;
+        default:
+            console.log("Unrecognized status. Setting status to default (pending)");
+            statusItems[0].classList.add('pending');
+            break;
+    }
+}

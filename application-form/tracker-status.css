@@ -1,0 +1,54 @@
+.status-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 10px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.status-circle {
+    width: 20px; /* Increased size for better visibility */
+    height: 20px; /* Increased size for better visibility */
+    border-radius: 50%;
+    background-color: gray; /* Default color */
+    transition: background-color 0.3s ease; /* Smooth color transition */
+}
+
+.status-circle.rejected {
+    background-color: red; /* Color for rejected */
+}
+
+.status-circle.pending {
+    background-color: green; /* Color for pending */
+}
+
+.status-circle.approved {
+    background-color: blue; /* Color for approved */
+}
+
+.status-label {
+    margin-top: 5px;
+    font-size: 13px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.status-line {
+    width: 40px;
+    height: 2px;
+    background-color: gray; /* Default line color */
+    position: relative;
+    flex-grow: 1; /* Allows the line to grow between circles */
+    margin: 0 10px; /* Adds space around lines */
+}
+
+.status-line:last-child {
+    display: none; /* Hide the last line */
+}

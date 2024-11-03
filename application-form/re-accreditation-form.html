@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="tracker-status.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="renewal.js" defer></script>
@@ -18,14 +19,28 @@
         <img src="../assets/rsu-logo.png" alt="RSU Logo">
         <h2>Student Organization Re-Accreditation Form</h2>
     </div>
-    
     <div class="form-container">
+        <div class="status-tracker">
+            <div class="status-item">
+                <div class="status-circle"></div>
+                <div class="status-label">Pending</div>
+            </div>
+            <div class="status-line"></div>
+            <div class="status-item">
+                <div class="status-circle"></div>
+                <div class="status-label">Approved</div>
+            </div>
+            <div class="status-line"></div>
+            <div class="status-item">
+                <div class="status-circle"></div>
+                <div class="status-label">Rejected</div>
+            </div>
+        </div>           
         <form id="application-form">
             <div class="form-group">
                 <label for="representative-name">Name of Representative:</label>
                 <input type="text" id="representative-name" placeholder="Enter your name" required>
             </div>
-
             <div class="form-group">
                 <label for="representative-position">Position:</label>
                 <div class="dropdown-container">
@@ -39,12 +54,10 @@
                     <button type="button" id="add-position" class="add-btn">+</button>
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="school-year">School Year:</label>
                 <input type="text" id="school-year" placeholder="Enter your school year" required readonly>
             </div>
-
             <div class="form-group">
                 <label for="course">Course:</label>
                 <div class="dropdown-container">
@@ -63,7 +76,6 @@
                     <button type="button" id="add-course" class="add-btn">+</button>
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="organization-name">Organization Name:</label>
                 <div class="dropdown-container">
@@ -75,22 +87,18 @@
                         <option value="CASSO">CASSO</option>
                         <option value="CCMADI">CCMADI</option>
                     </select>
-                    
                     <button type="button" id="add-organization" class="add-btn">+</button>
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="email-address">Email Address:</label>
                 <p>You may provide an alternative email address if you have one. This email will be used by the admin to send your request.</p>
                 <input type="email" id="email-address" placeholder="Enter email address" required>
             </div>
-
             <div class="form-group">
                 <label for="date-filing">Date of Filing:</label>
                 <input type="date" id="date-filing" required>
             </div>
-
             <div class="form-group">
                 <label for="requirement-documents">Upload Requirement Documents:</label>
                 <p>(Only accepts PDF file with max size 50MB)</p>
@@ -100,7 +108,6 @@
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                
             </div>
             <div class="form-group submit-btn">
                 <button type="submit">Next</button>

@@ -96,7 +96,7 @@ async function uploadImage(file) {
 }
 
 // Add a New Profile with SweetAlert Integration
-async function addProfile() {
+async function addProfileWithConfirmation() {
     const addButton = document.querySelector('.add-btn');
     
     // Disable the button to prevent double clicks
@@ -187,7 +187,8 @@ async function updateProfile() {
         Swal.fire("Incomplete Input", "Please fill in all fields.", "warning");
         return;
     }
-
+// On Page Load
+window.addEventListener('load', loadProfilesFromStorage);
     // Validate Student ID Format
     const idFormat = /^\d{3}-\d{4}-\d{6}$/; // Adjust this pattern based on your ID format
     if (!idFormat.test(studentId)) {
@@ -442,4 +443,134 @@ async function submitAllProfiles() {
     } finally {
         hideLoading();
     }
+}
+// Wait until the document is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    loadOrganizationData();
+    document.getElementById('add-profile-btn').addEventListener('click', addProfile);
+    document.getElementById('clear-profiles').addEventListener('click', resetProfiles);
+    document.getElementById('submit-btn').addEventListener('click', submitProfiles);
+});
+
+// Function to load organization data from localStorage
+function loadOrganizationData() {
+    const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
+
+    if (!orgData) {
+        console.error("Organization data not found in localStorage.");
+        return;
+    }
+
+    // Load and display existing profiles
+    displayProfiles(orgData.profiles || []);
+}
+
+// Function to display profiles in the table
+function displayProfiles(profiles) {
+    const profilesListBody = document.getElementById('profiles-list-body');
+    profilesListBody.innerHTML = ''; // Clear existing profiles
+
+    if (profiles.length === 0) {
+        const noProfilesRow = `<tr><td colspan="5">No profiles available.</td></tr>`;
+        profilesListBody.innerHTML = noProfilesRow;
+        return;
+    }
+
+    profiles.forEach(profile => {
+        const profileRow = document.createElement('tr');
+        profileRow.innerHTML = `
+            <td><img src="${profile.imageUrl}" alt="Profile Image"></td>
+            <td>${profile.studentId}</td>
+            <td>${profile.name}</td>
+            <td>${profile.address}</td>
+            <td><button onclick="removeProfile('${profile.studentId}')">Delete</button></td>
+        `;
+        profilesListBody.appendChild(profileRow);
+    });
+}
+
+// Function to add a new profile
+function addProfile() {
+    const studentId = document.getElementById('student-id').value.trim();
+    const name = document.getElementById('name').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const imgInput = document.getElementById('img');
+    const imageUrl = imgInput.files.length > 0 ? URL.createObjectURL(imgInput.files[0]) : ''; // Create a URL for the uploaded image
+
+    if (!studentId || !name || !address) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    const newProfile = {
+        studentId: studentId,
+        name: name,
+        address: address,
+        imageUrl: imageUrl,
+    };
+
+    const orgData = JSON.parse(localStorage.getItem('selectedOrganization')) || { profiles: [] };
+    orgData.profiles.push(newProfile);
+    localStorage.setItem('selectedOrganization', JSON.stringify(orgData));
+
+    displayProfiles(orgData.profiles); // Refresh the displayed profiles
+    clearFormFields(); // Clear input fields
+}
+
+// Function to clear all profiles
+function resetProfiles() {
+    const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
+    if (orgData) {
+        orgData.profiles = [];
+        localStorage.setItem('selectedOrganization', JSON.stringify(orgData));
+        displayProfiles([]); // Update the displayed profiles
+    }
+}
+
+// Function to submit profiles and organization data
+function submitProfiles() {
+    const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
+    if (orgData && orgData.profiles.length > 0) {
+        const submissionData = {
+            applicationDetails: orgData.applicationDetails,
+            applicationStatus: orgData.applicationStatus,
+            profiles: orgData.profiles,
+            statusUpdateTimestamp: orgData.statusUpdateTimestamp,
+            submissionTime: orgData.submissionTime
+        };
+
+        // Implement your submission logic here (e.g., send to an API)
+        console.log("Submitting data:", submissionData);
+        Swal.fire({
+            title: 'Success!',
+            text: 'Profiles submitted successfully!',
+            icon: 'success',
+        });
+    } else {
+        Swal.fire({
+            title: 'No Profiles',
+            text: 'No profiles to submit.',
+            icon: 'warning',
+        });
+    }
+}
+
+// Function to remove a profile from the display and localStorage
+function removeProfile(studentId) {
+    const orgData = JSON.parse(localStorage.getItem('selectedOrganization'));
+    if (!orgData || !Array.isArray(orgData.profiles)) return;
+
+    orgData.profiles = orgData.profiles.filter(profile => profile.studentId !== studentId);
+    localStorage.setItem('selectedOrganization', JSON.stringify(orgData));
+    displayProfiles(orgData.profiles); // Refresh the displayed profiles
+}
+
+// Helper function to clear input fields
+function clearFormFields() {
+    document.getElementById('student-id').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('address').value = '';
+    document.getElementById('img').value = ''; // Reset file input
+    document.getElementById('image-preview').style.display = 'none'; // Hide image preview
+    document.getElementById('upload-text').style.display = 'block'; // Show upload text
 }
