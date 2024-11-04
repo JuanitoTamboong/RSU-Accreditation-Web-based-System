@@ -15,6 +15,7 @@
 .table-container {
   margin-top: 20px;
   max-width: 100%;
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
 }
 
 .table-body-container {
@@ -26,14 +27,39 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
-  text-align: left;
   background-color: var(--background-color);
 }
 
 .accredited-table th, .accredited-table td {
   padding: 12px;
   border-bottom: 1px solid var(--input-border-color);
-  white-space: nowrap;
+  white-space: nowrap; /* Prevent wrapping by default */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+}
+
+/* Set specific widths for table headers to ensure alignment */
+.accredited-table th {
+  width: 15%; /* Adjust as needed for each column */
+  text-align: left;
+}
+
+.accredited-table td {
+  width: 15%; /* Keep consistent with th for alignment */
+  text-align: left;
+}
+
+/* Allow the email address to wrap and avoid overflow */
+.accredited-table td:nth-child(3) { /* Email Address */
+  white-space: normal; /* Allow wrapping */
+  overflow-wrap: break-word; /* Break long words */
+  word-wrap: break-word; /* Legacy support */
+  max-width: 150px; /* Set a max width to control cell size */
+}
+
+.accredited-table td:nth-child(2), /* Representative Name */
+.accredited-table td:nth-child(1) { /* Organization Name */
+  overflow-wrap: break-word; /* Allows text to wrap if it's too long */
 }
 
 .accredited-table th {
