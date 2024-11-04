@@ -114,7 +114,6 @@ function renderChecklist(accreditationType, submittedDocuments) {
             "Proposed activities and project for one year",
             "Constitution and By-laws (include Anti-Hazing)",
             "Parent’s Consent (For Fraternity/Sorority)",
-            "Documents should be submitted in four copies"
         ];
     } else if (accreditationType === 'Renewal') {
         requiredDocuments = [
@@ -167,7 +166,6 @@ function showModal() {
     document.getElementById('to_name').textContent = applicantName;
     document.getElementById('fsender_email').textContent = senderEmail;
     document.getElementById('application_status').textContent = applicationStatus;
-    document.getElementById('custom_message').textContent = customMessage;
     
     // Clear previous email status messages (success/error)
     document.getElementById('emailStatus').textContent = ''; 
@@ -178,17 +176,23 @@ function showModal() {
     // Display the modal
     document.getElementById('emailModal').style.display = 'block';  
 }
-
 // Send email function
 async function sendEmail(applicantId) {
+    // Determine custom message based on application status
+    const customMessage = applicationStatus === 'Approved' 
+        ? ' Please submit 4 copies of your documents.'
+        : '';
+
+    // Set up email parameters
     const emailParams = {
         to_name: applicantName,
         sender_email: senderEmail,
         from_name: 'Osas Admin',
         status_color: applicationStatus === 'Approved' ? 'green' : 'red', // Green for Approved, Red for Rejected
         typeOfAccreditation: typeOfAccreditation, // Include the accreditation type here
-        application_status: applicationStatus || 'Approved',
-        additional_message: document.getElementById('additional-message').value || '' // Get additional message
+        application_status: applicationStatus,
+        custom_message: customMessage, // Add custom message based on approval or rejection
+        additional_message: document.getElementById('additional-message').value || '', // Get additional message
     };
 
     try {
@@ -206,9 +210,10 @@ async function sendEmail(applicantId) {
         // Update the status in Firestore
         const docRef = doc(db, 'student-org-applications', applicantId);
         await updateDoc(docRef, {
-            applicationStatus: emailParams.application_status,
+            applicationStatus: applicationStatus,
             updatedAt: formattedDateTime,
-            customMessage: emailParams.additional_message || ''
+            customMessage: customMessage, // Store the custom message for future reference
+            additionalMessage: emailParams.additional_message // Save additional message, if any
         });
 
         // Show success message
@@ -220,6 +225,7 @@ async function sendEmail(applicantId) {
         document.getElementById('emailStatus').style.color = 'red';
     }
 }
+
 // Close modal
 function closeModal() {
     document.getElementById('emailModal').style.display = 'none';
@@ -235,13 +241,11 @@ document.getElementById('closeEmailModal').addEventListener('click', closeModal)
 // Approve or reject buttons
 document.getElementById('approve-button').addEventListener('click', function() {
     applicationStatus = 'Approved';
-    customMessage = 'Congratulations! Your application has been approved.';
     showModal();
 });
 
 document.getElementById('reject-button').addEventListener('click', function() {
     applicationStatus = 'Rejected';
-    customMessage = 'We regret to inform you that your application has been rejected.';
     showModal();
 });
 

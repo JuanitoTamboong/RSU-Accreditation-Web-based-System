@@ -240,7 +240,6 @@ function newOrganizationItems() {
         "Proposed activities and project for one year",
         "Constitution and By-laws (include Anti-Hazing)",
         "Parent’s Consent (For Fraternity/Sorority)",
-        "Documents should be submitted in four copies"
     ];
 }
 function reAccreditationItems() {
@@ -251,7 +250,6 @@ function reAccreditationItems() {
         "List of officers and their respective positions",
         "Letter of invitation to chosen faculty adviser",
         "Faculty adviser’s letter of acceptance",
-        "Photocopy of Certificate of Recognition",
         "Photo of certificate of attendance",
         "Financial statement for the previous year",
         "Proposed activities and project for one year",
