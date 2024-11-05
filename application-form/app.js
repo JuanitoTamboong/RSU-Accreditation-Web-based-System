@@ -232,12 +232,18 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     toggleLoading(false);
 });
 
-// Check if organization name exists in Firestore under 'student-org-applications'
+// Check if organization name exists in Firestore under 'student-org-applications' and return representative name if exists
 async function checkIfOrgExists(orgName) {
     const orgRef = collection(db, 'student-org-applications');
     const q = query(orgRef, where('applicationDetails.organizationName', '==', orgName));
     const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
+
+    if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0]; // Get the first document
+        const representativeName = orgDoc.data().applicationDetails.representativeName; // Adjust path as necessary
+        return { exists: true, representativeName };
+    }
+    return { exists: false, representativeName: null };
 }
 
 // Add event listener for organization name dropdown selection
@@ -245,12 +251,12 @@ document.getElementById('organization-name-dropdown').addEventListener('change',
     const selectedOrgName = event.target.value;
 
     if (selectedOrgName) {
-        const orgExists = await checkIfOrgExists(selectedOrgName.toUpperCase());
-        if (orgExists) {
+        const { exists, representativeName } = await checkIfOrgExists(selectedOrgName.toUpperCase());
+        if (exists) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Organization Already Registered',
-                text: `The organization "${selectedOrgName}" is currently registered.`,
+                text: `The organization "${selectedOrgName}" is currently registered. Representative Name: ${representativeName}`,
             });
         }
     }
@@ -266,14 +272,16 @@ document.getElementById('add-organization').addEventListener('click', async () =
     });
 
     if (newOrgName) {
-        const orgExists = await checkIfOrgExists(newOrgName.toUpperCase());
-        if (orgExists) {
+        // Get the existence status and representative name of the new organization
+        const { exists, representativeName } = await checkIfOrgExists(newOrgName.toUpperCase());
+        if (exists) {
             Swal.fire({
-                icon: 'error',
-                title: 'Organization Exists',
-                text: 'This organization name is already registered.',
+                icon: 'warning',
+                title: 'Organization Already Registered',
+                text: `The organization "${newOrgName}" is currently registered. Representative Name: ${representativeName}`,
             });
         } else {
+            // Create a new option for the dropdown
             const organizationNameDropdown = document.getElementById('organization-name-dropdown');
             const option = document.createElement('option');
             option.value = newOrgName.toUpperCase();
