@@ -173,12 +173,17 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     const organizationName = document.getElementById('organization-name-dropdown').value;
 
     // Check if the organization name exists before starting the loading spinner
-    const { exists, representativePosition } = await checkIfOrgExists(organizationName.toUpperCase());
-    if (exists) {
+    const { exists, representativePosition, uid: registeredUid } = await checkIfOrgExists(organizationName.toUpperCase());
+    
+    // Get the current user's ID
+    const user = auth.currentUser;
+    const currentUserId = user ? user.uid : null;
+
+    if (exists && registeredUid !== currentUserId) { // Check if the registered user is not the current user
         Swal.fire({
             icon: 'warning',
             title: 'Organization Already Registered',
-            text: `The organization "${organizationName}" is currently registered by a ${representativePosition} can't procceed`,
+            text: `The organization "${organizationName}" is currently registered by a ${representativePosition}. Can't proceed.`,
         });
         return; // Exit early if the organization is already registered
     }
@@ -186,7 +191,6 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     // Show loading spinner
     toggleLoading(true);
 
-    const user = auth.currentUser;
     if (!user) {
         Swal.fire({
             icon: 'error',
@@ -247,6 +251,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     window.location.href = '../student-profile/list-officers.html';
     toggleLoading(false);
 });
+
 // Check if organization name exists in Firestore under 'student-org-applications' and return representative position if exists
 async function checkIfOrgExists(orgName) {
     const orgRef = collection(db, 'student-org-applications');
@@ -256,9 +261,10 @@ async function checkIfOrgExists(orgName) {
     if (!querySnapshot.empty) {
         const orgDoc = querySnapshot.docs[0]; // Get the first document
         const representativePosition = orgDoc.data().applicationDetails.representativePosition; // Adjust path as necessary
-        return { exists: true, representativePosition };
+        const uid = orgDoc.data().applicationDetails.uid; // Get the registered user's UID
+        return { exists: true, representativePosition, uid };
     }
-    return { exists: false, representativePosition: null };
+    return { exists: false, representativePosition: null, uid: null };
 }
 
 // Add event listener for organization name dropdown selection
@@ -266,12 +272,15 @@ document.getElementById('organization-name-dropdown').addEventListener('change',
     const selectedOrgName = event.target.value;
 
     if (selectedOrgName) {
-        const { exists, representativePosition } = await checkIfOrgExists(selectedOrgName.toUpperCase());
-        if (exists) {
+        const { exists, representativePosition, uid } = await checkIfOrgExists(selectedOrgName.toUpperCase());
+        const currentUser = auth.currentUser;
+
+        // Show warning only if the organization exists and the current user is not the representative
+        if (exists && uid !== currentUser.uid) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Organization Already Registered',
-                text: `The organization "${selectedOrgName}" is currently registered by a ${representativePosition}`,
+                text: `The organization "${selectedOrgName}" is currently registered by a ${representativePosition}.`,
             });
         }
     }
@@ -293,7 +302,7 @@ document.getElementById('add-organization').addEventListener('click', async () =
             Swal.fire({
                 icon: 'warning',
                 title: 'Organization Already Registered',
-                text: `The organization "${newOrgName}" is currently registered by a ${representativePosition}`,
+                text: `The organization "${newOrgName}" is currently registered by a ${representativePosition}.`,
             });
         } else {
             // Create a new option for the dropdown
@@ -306,24 +315,7 @@ document.getElementById('add-organization').addEventListener('click', async () =
         }
     }
 });
-// Add position dynamically
-document.getElementById('add-position').addEventListener('click', () => {
-    Swal.fire({
-        title: 'Enter the new position name:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'New position name'
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
-            const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
-            representativePositionDropdown.appendChild(option);
-            representativePositionDropdown.value = result.value; // Set it as selected
-        }
-    });
-});
+
 // Add course dynamically
 document.getElementById('add-course').addEventListener('click', () => {
     Swal.fire({
