@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"; 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const storage = getStorage(app);
+const db = getFirestore(app);
 
 // Authentication state listener
 onAuthStateChanged(auth, (user) => {
@@ -57,17 +59,16 @@ let uploadedFiles = []; // Store uploaded files locally
 
 document.getElementById('requirement-documents').addEventListener('change', (event) => {
     const files = Array.from(event.target.files);
-    const maxSize = 50 * 1024 * 1024; // 50MB
 
     uploadedFiles = []; // Clear previously stored files
 
     files.forEach(file => {
         if (!uploadedFiles.some(uploadedFile => uploadedFile.name === file.name)) {
-            if (file.size > maxSize || file.type !== 'application/pdf') {
+            if (file.type !== 'application/pdf') {
                 Swal.fire({
                     icon: 'error',
                     title: 'Upload Error',
-                    text: `${file.name} exceeds 50MB or is not a PDF.`,
+                    text: `${file.name} is not a PDF.`,
                 });
                 document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
             } else {
@@ -231,23 +232,56 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     toggleLoading(false);
 });
 
-// Add organization name dynamically
-document.getElementById('add-organization').addEventListener('click', () => {
-    Swal.fire({
+// Check if organization name exists in Firestore under 'student-org-applications'
+async function checkIfOrgExists(orgName) {
+    const orgRef = collection(db, 'student-org-applications');
+    const q = query(orgRef, where('applicationDetails.organizationName', '==', orgName));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+}
+
+// Add event listener for organization name dropdown selection
+document.getElementById('organization-name-dropdown').addEventListener('change', async (event) => {
+    const selectedOrgName = event.target.value;
+
+    if (selectedOrgName) {
+        const orgExists = await checkIfOrgExists(selectedOrgName.toUpperCase());
+        if (orgExists) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Organization Already Registered',
+                text: `The organization "${selectedOrgName}" is currently registered.`,
+            });
+        }
+    }
+});
+
+// Add organization name dynamically if not already existing
+document.getElementById('add-organization').addEventListener('click', async () => {
+    const { value: newOrgName } = await Swal.fire({
         title: 'Enter the new organization name:',
         input: 'text',
         showCancelButton: true,
         inputPlaceholder: 'New organization name'
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
+    });
+
+    if (newOrgName) {
+        const orgExists = await checkIfOrgExists(newOrgName.toUpperCase());
+        if (orgExists) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Organization Exists',
+                text: 'This organization name is already registered.',
+            });
+        } else {
             const organizationNameDropdown = document.getElementById('organization-name-dropdown');
             const option = document.createElement('option');
-            option.value = result.value.toUpperCase(); // Convert to uppercase
-            option.textContent = result.value.toUpperCase(); // Convert to uppercase
+            option.value = newOrgName.toUpperCase();
+            option.textContent = newOrgName.toUpperCase();
             organizationNameDropdown.appendChild(option);
-            organizationNameDropdown.value = option.value; // Set it as selected
+            organizationNameDropdown.value = option.value;
         }
-    });
+    }
 });
 // Add position dynamically
 document.getElementById('add-position').addEventListener('click', () => {
