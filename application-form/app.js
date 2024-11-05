@@ -168,6 +168,22 @@ function validateFields() {
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async (event) => {
     event.preventDefault();
+    
+    // Get the organization name
+    const organizationName = document.getElementById('organization-name-dropdown').value;
+
+    // Check if the organization name exists before starting the loading spinner
+    const { exists, representativePosition } = await checkIfOrgExists(organizationName.toUpperCase());
+    if (exists) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Organization Already Registered',
+            text: `The organization "${organizationName}" is currently registered by a ${representativePosition} can't procceed`,
+        });
+        return; // Exit early if the organization is already registered
+    }
+
+    // Show loading spinner
     toggleLoading(true);
 
     const user = auth.currentUser;
@@ -231,8 +247,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
     window.location.href = '../student-profile/list-officers.html';
     toggleLoading(false);
 });
-
-// Check if organization name exists in Firestore under 'student-org-applications' and return representative name if exists
+// Check if organization name exists in Firestore under 'student-org-applications' and return representative position if exists
 async function checkIfOrgExists(orgName) {
     const orgRef = collection(db, 'student-org-applications');
     const q = query(orgRef, where('applicationDetails.organizationName', '==', orgName));
@@ -240,10 +255,10 @@ async function checkIfOrgExists(orgName) {
 
     if (!querySnapshot.empty) {
         const orgDoc = querySnapshot.docs[0]; // Get the first document
-        const representativeName = orgDoc.data().applicationDetails.representativeName; // Adjust path as necessary
-        return { exists: true, representativeName };
+        const representativePosition = orgDoc.data().applicationDetails.representativePosition; // Adjust path as necessary
+        return { exists: true, representativePosition };
     }
-    return { exists: false, representativeName: null };
+    return { exists: false, representativePosition: null };
 }
 
 // Add event listener for organization name dropdown selection
@@ -251,12 +266,12 @@ document.getElementById('organization-name-dropdown').addEventListener('change',
     const selectedOrgName = event.target.value;
 
     if (selectedOrgName) {
-        const { exists, representativeName } = await checkIfOrgExists(selectedOrgName.toUpperCase());
+        const { exists, representativePosition } = await checkIfOrgExists(selectedOrgName.toUpperCase());
         if (exists) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Organization Already Registered',
-                text: `The organization "${selectedOrgName}" is currently registered. Representative Name: ${representativeName}`,
+                text: `The organization "${selectedOrgName}" is currently registered by a ${representativePosition}`,
             });
         }
     }
@@ -272,13 +287,13 @@ document.getElementById('add-organization').addEventListener('click', async () =
     });
 
     if (newOrgName) {
-        // Get the existence status and representative name of the new organization
-        const { exists, representativeName } = await checkIfOrgExists(newOrgName.toUpperCase());
+        // Get the existence status and representative position of the new organization
+        const { exists, representativePosition } = await checkIfOrgExists(newOrgName.toUpperCase());
         if (exists) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Organization Already Registered',
-                text: `The organization "${newOrgName}" is currently registered. Representative Name: ${representativeName}`,
+                text: `The organization "${newOrgName}" is currently registered by a ${representativePosition}`,
             });
         } else {
             // Create a new option for the dropdown
