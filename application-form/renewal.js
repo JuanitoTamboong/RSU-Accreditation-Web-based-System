@@ -315,25 +315,6 @@ document.getElementById('add-organization').addEventListener('click', async () =
         }
     }
 });
-
-// Add course dynamically
-document.getElementById('add-course').addEventListener('click', () => {
-    Swal.fire({
-        title: 'Enter the new course name:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'New course name'
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const courseDropdown = document.getElementById('course-dropdown');
-            const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
-            courseDropdown.appendChild(option);
-            courseDropdown.value = result.value; // Set it as selected
-        }
-    });
-});
 // Add position dynamically
 document.getElementById('add-position').addEventListener('click', () => {
     Swal.fire({
@@ -394,7 +375,7 @@ function loadOrganizationData() {
     }
 
     // Check for applicationStatus in orgData
-    const applicationStatus = orgData.applicationStatus; // Adjusted to get applicationStatus directly from appDetails
+    const applicationStatus = orgData.applicationStatus; 
     console.log("Application Status Retrieved:", applicationStatus); // Debug log for application status
 
     // Set form fields with data or default to empty strings
@@ -425,9 +406,6 @@ function setFieldValue(fieldId, value) {
 function loadDropdownOption(dropdownId, value) {
     const dropdown = document.getElementById(dropdownId);
     if (dropdown) {
-        // Set the dropdown's value or default to an empty string
-        dropdown.value = value || '';
-
         // Only add a new option if it does not already exist
         if (value && !dropdown.querySelector(`option[value="${value}"]`)) {
             const option = document.createElement('option');
@@ -435,6 +413,8 @@ function loadDropdownOption(dropdownId, value) {
             option.textContent = value; // Set the display text
             dropdown.appendChild(option);
         }
+        // Set the dropdown's value or default to an empty string
+        dropdown.value = value || '';
     } else {
         console.error(`Dropdown with id ${dropdownId} not found.`);
     }
@@ -455,12 +435,12 @@ function displayApplicationStatus(status) {
     // Apply the appropriate checkmark or 'X' based on the normalized status
     switch (normalizedStatus) {
         case 'pending':
-            statusItems[0].textContent = '✓'; // Show 'X' for pending
+            statusItems[0].textContent = '✓'; // Show '✓' for pending
             statusItems[0].style.color = '#4CAF50'; // Green for first item
             break;
         case 'approved':
-            statusItems[0].textContent = '✗'; // Set first item to '✓'
-            statusItems[1].textContent = '✓'; // Set second item to '✓'
+            statusItems[0].textContent = '✗'; // Show 'X' for pending
+            statusItems[1].textContent = '✓'; // Show '✓' for approved
             statusItems[2].textContent = '✗'; // Keep last item as 'X' (not rejected)
             // Set colors for approved status
             statusItems[1].style.color = '#4CAF50'; // Green for second item

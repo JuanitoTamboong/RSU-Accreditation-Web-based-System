@@ -315,7 +315,24 @@ document.getElementById('add-organization').addEventListener('click', async () =
         }
     }
 });
-
+// Add position dynamically
+document.getElementById('add-position').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Enter the new position name:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'New position name'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
+            const option = document.createElement('option');
+            option.value = result.value;
+            option.textContent = result.value;
+            representativePositionDropdown.appendChild(option);
+            representativePositionDropdown.value = result.value; // Set it as selected
+        }
+    });
+});
 // Add course dynamically
 document.getElementById('add-course').addEventListener('click', () => {
     Swal.fire({
