@@ -40,7 +40,7 @@ function saveFormData(docUrls) {
 
     const formData = {
         uid: user.uid,
-        typeOfAccreditation: "New Organization",
+        typeOfAccreditation: "Renewal",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
