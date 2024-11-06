@@ -131,11 +131,11 @@ width: 3px;
   border-radius: 20px;
 }
 
-.approved-reject {
+.approved-pending {
   padding-top: 20px;
 }
 
-.approved-reject button {
+.approved-pending button {
   padding: 10px;
   border-radius: 20px;
   width: 100px;
@@ -148,7 +148,7 @@ width: 3px;
 #approve-button {
   background-color: var(--applicants);
 }
-#reject-button{
+#pending-button{
 background-color: var(--declined-button);
 }
 #applicant-details,

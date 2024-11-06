@@ -19,10 +19,10 @@ const db = getFirestore(app);
 
 // Function to render a table row
 function renderRow(doc) {
-    const { emailAddress = 'N/A',representativeName = 'N/A', organizationName = 'N/A', typeOfAccreditation = 'N/A', dateFiling = 'N/A' } = doc.data().applicationDetails || {};
+    const { emailAddress = 'N/A', representativeName = 'N/A', organizationName = 'N/A', typeOfAccreditation = 'N/A', dateFiling = 'N/A' } = doc.data().applicationDetails || {};
     
     // Check application status
-    const applicationStatus = doc.data().applicationStatus || 'Pending'; // Default to 'Pending' if no status is found
+    const applicationStatus = doc.data().applicationStatus || 'in-progress'; // Default to 'In Progress' if no status is found
 
     return `
         <tr data-id="${doc.id}">
@@ -40,14 +40,14 @@ function renderRow(doc) {
 
 // Function to handle real-time data updates
 function fetchApplications() {
-    const tableBody = document.getElementById('pending-table-body');
+    const tableBody = document.getElementById('in-progress-table-body');
 
     // Set up a real-time listener
     onSnapshot(collection(db, 'student-org-applications'), (snapshot) => {
         tableBody.innerHTML = ''; // Clear table body
 
         if (snapshot.empty) {
-            tableBody.innerHTML = '<tr><td colspan="7">No pending requests found.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="7">No in-progress requests found.</td></tr>';
             return;
         }
 
@@ -68,7 +68,7 @@ function fetchApplications() {
 
 // Function to handle document deletion
 function attachDeleteHandlers() {
-    const tableBody = document.getElementById('pending-table-body');
+    const tableBody = document.getElementById('in-progress-table-body');
 
     tableBody.addEventListener('click', async (event) => {
         const deleteBtn = event.target.closest('.delete-btn');

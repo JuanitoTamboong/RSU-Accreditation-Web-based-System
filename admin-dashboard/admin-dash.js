@@ -42,8 +42,8 @@ function fetchApplicants() {
 
             const statusCounts = {
                 approved: 0,
-                rejected: 0,
-                pending: 0 // Optional, if you want to include pending status
+                pending: 0, // Updated: 'pending' now represents the old 'rejected'
+                inProgress: 0 // Updated: 'inProgress' replaces the old 'pending'
             };
 
             displayNotifications(querySnapshot, statusCounts); // Display notifications
@@ -93,14 +93,14 @@ function displayNotifications(querySnapshot, statusCounts) {
         const representativeName = appData.applicationDetails?.representativeName || "N/A";
         const emailAddress = appData.applicationDetails?.emailAddress || "N/A";
         const dateFiling = appData.applicationDetails?.dateFiling || new Date().toISOString();
-        const applicationStatus = appData.applicationStatus || "Pending";
+        const applicationStatus = appData.applicationStatus || "in-progress";
 
         if (applicationStatus.toLowerCase() === "approved") {
             statusCounts.approved++;
-        } else if (applicationStatus.toLowerCase() === "rejected") {
-            statusCounts.rejected++;
+        } else if (applicationStatus.toLowerCase() === "in-progress") { 
+            statusCounts.inProgress++; // Updated: Count as 'in progress'
         } else {
-            statusCounts.pending++;
+            statusCounts.pending++; // Updated: Count as 'pending'
         }
 
         const submissionTime = appData.submissionTime || '';
@@ -159,17 +159,17 @@ function displayNotifications(querySnapshot, statusCounts) {
 // Update status counts displayed on the dashboard
 function updateStatusCounts(statusCounts) {
     const approvedCountElement = document.querySelector('#approved-count');
-    const rejectedCountElement = document.querySelector('#rejected-count');
-    const pendingCountElement = document.querySelector('#pending-count');
+    const pendingCountElement = document.querySelector('#pending-count'); // Updated: Old pending count now shows the new 'pending' status
+    const inProgressCountElement = document.querySelector('#in-progress-count'); // Updated: New in progress count
 
     if (approvedCountElement) {
         approvedCountElement.textContent = statusCounts.approved;
     }
-    if (rejectedCountElement) {
-        rejectedCountElement.textContent = statusCounts.rejected;
-    }
     if (pendingCountElement) {
-        pendingCountElement.textContent = statusCounts.pending;
+        pendingCountElement.textContent = statusCounts.pending; // Updated: Set new 'pending' status
+    }
+    if (inProgressCountElement) {
+        inProgressCountElement.textContent = statusCounts.inProgress; // Updated: Set in progress count
     }
 }
 

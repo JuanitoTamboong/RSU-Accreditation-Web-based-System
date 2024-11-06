@@ -101,6 +101,8 @@ async function fetchApplicantDetails() {
     }
 }
 
+let uncheckedDocuments = [];
+// Function to render checklist based on accreditation type and submitted documents
 function renderChecklist(accreditationType, submittedDocuments) {
     let requiredDocuments;
     if (accreditationType === 'New Organization') {
@@ -134,30 +136,36 @@ function renderChecklist(accreditationType, submittedDocuments) {
         requiredDocuments = [];
     }
 
+    uncheckedDocuments = requiredDocuments.filter(doc => !submittedDocuments.includes(doc));
+
     const checkListHTML = requiredDocuments.map(doc => {
         const isPresent = submittedDocuments.includes(doc);
+
         return `
             <label>
-                <input type="checkbox" ${isPresent ? 'checked' : ''} onchange="updateDocumentStatus(this, '${doc}')"> 
+                <input type="checkbox" ${isPresent ? 'checked' : ''} data-document="${doc}"> 
                 ${doc}
             </label>`;
     }).join('');
 
-    // Wrap the checklist in a container
     document.getElementById('check-list').innerHTML = `
         <h2>Checklist</h2>
         <div class="checklist-container">${checkListHTML}</div>
     `;
+
+    document.querySelectorAll('.checklist-container input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', (event) => {
+            updateUncheckedItems(event.target.dataset.document, event.target.checked);
+        });
+    });
 }
 
-// Function to update the document status based on checkbox state
-function updateDocumentStatus(checkbox, documentName) {
-    if (checkbox.checked) {
-        console.log(`${documentName} is checked.`);
-        // Additional logic to handle when a document is checked can be added here
+// Function to update unchecked items as checkboxes are toggled
+function updateUncheckedItems(doc, isChecked) {
+    if (isChecked) {
+        uncheckedDocuments = uncheckedDocuments.filter(item => item !== doc);
     } else {
-        console.log(`${documentName} is unchecked.`);
-        // Additional logic to handle when a document is unchecked can be added here
+        uncheckedDocuments.push(doc);
     }
 }
 
@@ -166,57 +174,52 @@ function showModal() {
     document.getElementById('to_name').textContent = applicantName;
     document.getElementById('fsender_email').textContent = senderEmail;
     document.getElementById('application_status').textContent = applicationStatus;
-    
-    // Clear previous email status messages (success/error)
-    document.getElementById('emailStatus').textContent = ''; 
-    
-    // Clear the additional message textarea each time the modal is opened
-    document.getElementById('additional-message').value = ''; 
-    
-    // Display the modal
-    document.getElementById('emailModal').style.display = 'block';  
+    document.getElementById('emailStatus').textContent = ''; // Reset email status message
+    document.getElementById('additional-message').value = ''; // Reset additional message textarea
+
+    // Format missing documents as a bulleted list for better readability
+    if (applicationStatus === 'Pending' && uncheckedDocuments.length > 0) {
+        const missingDocsList = uncheckedDocuments.map(doc => `• ${doc}`).join('\n');
+        document.getElementById('additional-message').value = `Missing documents:\n${missingDocsList}`;
+    }
+
+    document.getElementById('emailModal').style.display = 'block';
 }
+
 // Send email function
 async function sendEmail(applicantId) {
-    // Determine custom message based on application status
-    const customMessage = applicationStatus === 'Approved' 
+    // Custom message based on the application status
+    const customMessage = applicationStatus === 'Approved'
         ? ' Please submit 4 copies of your documents.'
         : '';
 
-    // Set up email parameters
     const emailParams = {
         to_name: applicantName,
         sender_email: senderEmail,
         from_name: 'Osas Admin',
-        status_color: applicationStatus === 'Approved' ? 'green' : 'red', // Green for Approved, Red for Rejected
-        typeOfAccreditation: typeOfAccreditation, // Include the accreditation type here
+        status_color: applicationStatus === 'Approved' ? 'green' : 'red',
+        typeOfAccreditation: typeOfAccreditation,
         application_status: applicationStatus,
-        custom_message: customMessage, // Add custom message based on approval or rejection
-        additional_message: document.getElementById('additional-message').value || '', // Get additional message
+        custom_message: customMessage,
+        additional_message: document.getElementById('additional-message').value.trim(),
     };
 
     try {
         const response = await emailjs.send('service_vsx36ej', 'template_7y6pol8', emailParams);
         console.log('Email sent successfully:', response);
 
-        // Get the current date and time for the approval/rejection
         const currentDateTime = new Date();
-        // Format date as MM/DD/YYYY - HH:MM AM/PM
-        const formattedDateTime = currentDateTime.toLocaleString('en-US', { 
+        const formattedDateApproved = currentDateTime.toLocaleString('en-US', { 
             month: '2-digit', day: '2-digit', year: 'numeric', 
             hour: '2-digit', minute: '2-digit', hour12: true 
         });
 
-        // Update the status in Firestore
         const docRef = doc(db, 'student-org-applications', applicantId);
         await updateDoc(docRef, {
             applicationStatus: applicationStatus,
-            updatedAt: formattedDateTime,
-            customMessage: customMessage, // Store the custom message for future reference
-            additionalMessage: emailParams.additional_message // Save additional message, if any
+            formattedDateApproved: formattedDateApproved,
         });
 
-        // Show success message
         document.getElementById('emailStatus').textContent = 'Email sent successfully!';
         document.getElementById('emailStatus').style.color = 'green';
     } catch (error) {
@@ -225,7 +228,6 @@ async function sendEmail(applicantId) {
         document.getElementById('emailStatus').style.color = 'red';
     }
 }
-
 // Close modal
 function closeModal() {
     document.getElementById('emailModal').style.display = 'none';
@@ -233,7 +235,7 @@ function closeModal() {
 
 // Event listeners
 document.getElementById('send-email-button').addEventListener('click', function() {
-    const applicantId = getQueryParameter('id'); // Get applicant ID
+    const applicantId = getQueryParameter('id');
     sendEmail(applicantId);
 });
 document.getElementById('closeEmailModal').addEventListener('click', closeModal);
@@ -244,8 +246,8 @@ document.getElementById('approve-button').addEventListener('click', function() {
     showModal();
 });
 
-document.getElementById('reject-button').addEventListener('click', function() {
-    applicationStatus = 'Rejected';
+document.getElementById('pending-button').addEventListener('click', function() {
+    applicationStatus = 'Pending';
     showModal();
 });
 

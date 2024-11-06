@@ -12,123 +12,142 @@ const firebaseConfig = {
     appId: "1:1073695504078:web:eca07da6a1563c46e0829f"
 };
 
- // Initialize Firebase
-        const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-        const db = getFirestore(app);
+// Initialize Firebase
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const db = getFirestore(app);
 
-        // Function to format date strings
-        function formatDateString(dateString) {
-            const date = new Date(dateString);
-            if (!isNaN(date)) {
-                return date.toLocaleDateString(); // You can adjust the format here if needed
-            }
-            return dateString; // Return the original string if it's already well-formatted
-        }
+// Function to format date strings
+function formatDateString(dateString, includeTime = false) {
+    const date = new Date(dateString);
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    };
+    
+    let formattedDate = date.toLocaleDateString('en-US', options);
 
-        // Function to render a table row for accredited applicants
-        function renderRow(doc) {
-            const data = doc.data();
-            const applicantId = doc.id;
+    if (includeTime) {
+        const timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true // Set to true to include AM/PM
+        };
+        const time = date.toLocaleTimeString('en-US', timeOptions);
+        formattedDate += `, ${time}`; // Append the formatted time to the date
+    }
+    
+    return formattedDate;
+}
 
-            // Destructure necessary fields with default values
-            const {
-                applicationStatus = 'N/A',
-                statusUpdateTimestamp = 'N/A',
-                applicationDetails = {}
-            } = data;
+// Function to render a table row for accredited applicants
+function renderRow(doc) {
+    const data = doc.data();
+    const applicantId = doc.id;
 
-            const {
-                organizationName = 'N/A',
-                representativeName = 'N/A',
-                emailAddress = 'N/A',
-                typeOfAccreditation = 'N/A',
-                dateFiling = 'N/A'
-            } = applicationDetails;
+    // Destructure necessary fields with default values
+    const {
+        applicationStatus = 'N/A',
+        formattedDateApproved = 'N/A',
+        applicationDetails = {}
+    } = data;
 
-            // Format the filing date and approval timestamp
-            const formattedDateFiling = formatDateString(dateFiling);
-            const formattedDateApproved = formatDateString(statusUpdateTimestamp);
+    const {
+        organizationName = 'N/A',
+        representativeName = 'N/A',
+        emailAddress = 'N/A',
+        typeOfAccreditation = 'N/A',
+        dateFiling = 'N/A',
+        documents = [],
+        representativePosition = 'N/A',
+        schoolYear = 'N/A',
+        studentCourse = 'N/A',
+    } = applicationDetails;
 
-            return `
-                <tr data-id="${applicantId}">
-                    <td>${organizationName}</td>
-                    <td>${representativeName}</td>
-                    <td>${emailAddress}</td>
-                    <td>${typeOfAccreditation}</td>
-                    <td>${formattedDateFiling}</td>
-                    <td>${formattedDateApproved}</td>
-                    <td>${applicationStatus}</td>
-                    <td>
-                        <button class="delete-btn" data-id="${applicantId}">Delete</button>
-                    </td>
-                </tr>
-            `;
-        }
+    // Format the filing date and approval timestamp
+    const formattedDateFiling = formatDateString(dateFiling); // No time included
+    const formattedApprovedDate = formatDateString(formattedDateApproved, true); // Include time for approval
 
-        // Reference to the Firestore collection
-        const applicantsRef = collection(db, 'student-org-applications');
+    return `
+        <tr data-id="${applicantId}">
+            <td>${organizationName}</td>
+            <td>${representativeName}</td>
+            <td>${emailAddress}</td>
+            <td>${typeOfAccreditation}</td>
+            <td>${formattedDateFiling}</td>
+            <td>${formattedApprovedDate}</td>
+            <td>${applicationStatus}</td>
+            <td>
+                <button class="delete-btn" data-id="${applicantId}">Delete</button>
+            </td>
+        </tr>
+    `;
+}
 
-        // Query for approved applications
-        const approvedQuery = query(applicantsRef, where("applicationStatus", "==", "Approved"));
+// Reference to the Firestore collection
+const applicantsRef = collection(db, 'student-org-applications');
 
-        // Fetch and display data in the table
-        onSnapshot(approvedQuery, (snapshot) => {
-            const applicantsTableBody = document.getElementById('applicants-table-body');
-            applicantsTableBody.innerHTML = ''; // Clear the table before populating
+// Query for approved applications
+const approvedQuery = query(applicantsRef, where("applicationStatus", "==", "Approved"));
 
-            if (!snapshot.empty) {
-                snapshot.forEach((doc) => {
-                    const row = renderRow(doc); // Create the row HTML
-                    applicantsTableBody.insertAdjacentHTML('beforeend', row); // Append the row to the table body
-                });
+// Fetch and display data in the table
+onSnapshot(approvedQuery, (snapshot) => {
+    const applicantsTableBody = document.getElementById('applicants-table-body');
+    applicantsTableBody.innerHTML = ''; // Clear the table before populating
 
-                // Attach event listeners to delete buttons
-                attachDeleteEventListeners();
-            } else {
-                applicantsTableBody.innerHTML = `<tr><td colspan="8">No accredited applicants found.</td></tr>`;
-            }
+    if (!snapshot.empty) {
+        snapshot.forEach((doc) => {
+            const row = renderRow(doc); // Create the row HTML
+            applicantsTableBody.insertAdjacentHTML('beforeend', row); // Append the row to the table body
         });
 
-        // Function to delete an applicant from Firestore
-        async function deleteApplicant(applicantId) {
-            const applicantRef = doc(db, 'student-org-applications', applicantId);
-            try {
-                await deleteDoc(applicantRef);
-                console.log(`Applicant with ID ${applicantId} deleted successfully.`);
-            } catch (error) {
-                console.error("Error deleting applicant: ", error);
-            }
-        }
-
         // Attach event listeners to delete buttons
-        function attachDeleteEventListeners() {
-            const deleteButtons = document.querySelectorAll('.delete-btn');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const applicantId = button.getAttribute('data-id');
+        attachDeleteEventListeners();
+    } else {
+        applicantsTableBody.innerHTML = `<tr><td colspan="8">No accredited applicants found.</td></tr>`;
+    }
+});
 
-                    // Show SweetAlert confirmation dialog
+// Function to delete an applicant from Firestore
+async function deleteApplicant(applicantId) {
+    const applicantRef = doc(db, 'student-org-applications', applicantId);
+    try {
+        await deleteDoc(applicantRef);
+        console.log(`Applicant with ID ${applicantId} deleted successfully.`);
+    } catch (error) {
+        console.error("Error deleting applicant: ", error);
+    }
+}
+
+// Attach event listeners to delete buttons
+function attachDeleteEventListeners() {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const applicantId = button.getAttribute('data-id');
+
+            // Show SweetAlert confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will permanently delete the applicant's record.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: 'swal-delete'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteApplicant(applicantId); // Proceed with deletion
                     Swal.fire({
-                        title: 'Are you sure?',
-                        text: "This will permanently delete the applicant's record.",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, delete it!',
-                        cancelButtonText: 'Cancel',
-                        customClass: 'swal-delete'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            deleteApplicant(applicantId); // Proceed with deletion
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: 'The applicant has been deleted.',
-                                icon: 'success',
-                                customClass: 'swal-success'
-                            });
-                        }
+                        title: 'Deleted!',
+                        text: 'The applicant has been deleted.',
+                        icon: 'success',
+                        customClass: 'swal-success'
                     });
-                });
+                }
             });
-        }
+        });
+    });
+}

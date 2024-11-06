@@ -269,7 +269,7 @@ small {
   color: var(--text-color-primary);
 }
 
-#pending {
+#in-progress {
   background: rgba(137, 36, 60, 1.0);
   background: linear-gradient(135deg, rgba(137, 36, 60, 1.0), rgba(91, 63, 158, 1.0));
   color: var(--text-color-primary);
@@ -281,7 +281,7 @@ small {
   color: var(--text-color-primary);
 }
 
-#rejected {
+#pending {
   background: rgba(148, 1, 3, 1.0);
   background: linear-gradient(135deg, rgba(148, 1, 3, 1.0), rgba(83, 101, 36, 1.0));
   color: var(--text-color-primary);

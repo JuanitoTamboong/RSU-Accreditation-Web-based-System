@@ -88,16 +88,16 @@
   }
   
   /*pending theme*/
-  .dark-theme .pending-requests{
+  .dark-theme .in-progress-requests{
     background-color: var(--accent-color);
 
   }
-  .dark-theme .pending-requests th, .dark-theme .pending-requests td {
+  .dark-theme .in-progress-requests th, .dark-theme .in-progress-requests td {
     color:var(--text-color-primary) ;
 
   
 }
-.dark-theme .pending-requests th {
+.dark-theme .in-progress-requests th {
     background-color: var(--button-hover-color);
     color: var(--text-color-primary);
  }

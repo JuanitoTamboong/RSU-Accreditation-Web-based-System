@@ -18,12 +18,12 @@
     overflow-x: auto;
 }
 
-.pending-table {
+.in-progress-table {
     max-height: 500px; /* Limits height for scrollable area */
     overflow-y: auto;
 }
 
-.pending-requests {
+.in-progress-requests {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
@@ -31,7 +31,7 @@
     min-width: 900px;
 }
 
-.pending-requests th, .pending-requests td {
+.in-progress-requests th, .in-progress-requests td {
     padding: 12px;
     border-bottom: 1px solid var(--input-border-color);
     white-space: nowrap; /* Prevent wrapping by default */
@@ -40,30 +40,30 @@
 }
 
 /* Specify widths for table headers to ensure alignment */
-.pending-requests th {
+.in-progress-requests th {
     width: 15%; /* Adjust as needed for each column */
     text-align: left;
 }
 
-.pending-requests td {
+.in-progress-requests td {
     width: 15%; /* Keep consistent with th for alignment */
     text-align: left;
 }
 
 /* Allow the email address to wrap and avoid overflow */
-.pending-requests td:nth-child(1) { /* Email Address */
+.in-progress-requests td:nth-child(1) { /* Email Address */
     white-space: normal; /* Allow wrapping */
     overflow-wrap: break-word; /* Break long words */
     word-wrap: break-word; /* Legacy support */
     max-width: 150px; /* Set a max width to control cell size */
 }
 
-.pending-requests td:nth-child(2), /* Representative Name */
-.pending-requests td:nth-child(3) { /* Organization Name */
+.in-progress-requests td:nth-child(2), /* Representative Name */
+.in-progress-requests td:nth-child(3) { /* Organization Name */
     overflow-wrap: break-word; /* Allows text to wrap if it's too long */
 }
 
-.pending-requests th {
+.in-progress-requests th {
     position: sticky;
     top: 0;
     background-color: var(--background-color);
@@ -71,7 +71,7 @@
     z-index: 1;
 }
 
-.pending-requests tr:hover {
+.in-progress-requests tr:hover {
     background-color: #51759019;
 }
 
@@ -99,5 +99,5 @@
     outline: none;
     cursor: pointer;
     border-radius: 20px;
-    font-size: 9px;
+    font-size: 9px;  
 }
