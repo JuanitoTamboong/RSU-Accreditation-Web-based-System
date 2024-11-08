@@ -421,7 +421,7 @@ function loadDropdownOption(dropdownId, value) {
 }
 
 function displayApplicationStatus(status) {
-    const normalizedStatus = status ? status.trim().toLowerCase() : 'pending';
+    const normalizedStatus = status ? status.trim().toLowerCase() : 'in-progress';
     console.log("Loaded application status:", normalizedStatus);
 
     const statusItems = document.querySelectorAll('.status-item .status-check');
@@ -434,27 +434,27 @@ function displayApplicationStatus(status) {
 
     // Apply the appropriate checkmark or 'X' based on the normalized status
     switch (normalizedStatus) {
-        case 'pending':
+        case 'in-progress':
             statusItems[0].textContent = '✓'; // Show '✓' for pending
             statusItems[0].style.color = '#4CAF50'; // Green for first item
             break;
         case 'approved':
-            statusItems[0].textContent = '✗'; // Show 'X' for pending
+            statusItems[0].textContent = '✗'; // Show 'X' for in-progress
             statusItems[1].textContent = '✓'; // Show '✓' for approved
-            statusItems[2].textContent = '✗'; // Keep last item as 'X' (not rejected)
+            statusItems[2].textContent = '✗'; // Keep last item as 'X' (not pending)
             // Set colors for approved status
             statusItems[1].style.color = '#4CAF50'; // Green for second item
             break;
-        case 'rejected':
-            statusItems[0].textContent = '✗'; // Show 'X' for pending
+        case 'pending':
+            statusItems[0].textContent = '✗'; // Show 'X' for in-progress
             statusItems[1].textContent = '✗'; // Show 'X' for approved
-            statusItems[2].textContent = '✓'; // Set last item to '✓' (rejected)
+            statusItems[2].textContent = '✓'; // Set last item to '✓' (pending)
             // Set colors for rejected status
             statusItems[2].style.color = '#f44336'; // Red for rejected
             break;
         default:
-            console.log("Unknown status; defaulting to pending");
-            statusItems[0].textContent = '✗'; // Default to 'X' for pending
+            console.log("Unknown status; defaulting to in-progress");
+            statusItems[0].textContent = '✗'; // Default to 'X' for  in progress
             break;
     }
 }

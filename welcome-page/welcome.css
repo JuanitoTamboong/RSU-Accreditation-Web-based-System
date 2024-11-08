@@ -37,16 +37,17 @@
 
 /* Header styles in guide container */
 .header {
-    position: relative; /* Ensure the header is positioned relative for the overlay */
-    text-align: center;
-    background-image: url('../assets/rsu-landmark.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 50px; /* Adjust padding for smaller header */
-    width: 100%;
-    max-width: 900px; /* Set maximum width */
-    margin: 0 auto; /* Center the header */
+  position: relative;
+  padding:30px;
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 4px 10px rgba(var(--box-shadow), 0.1);
+  background-image: url('../assets/rsu-landmark.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: white;
 }
 
 /* Overlay styles */
@@ -73,7 +74,7 @@
     max-width: 900px;
     gap: 20px;
     background-color: var(--font-color);
-    border-radius: 0px 0px 10px 10px;
+   /* border-radius: 0px 0px 10px 10px;*/
     padding: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
   }
@@ -82,6 +83,7 @@
 /* Logo and Title Styles */
 .guide-logo {
   height: 70px;
+  margin-right: 10px;
 }
 
 .guide-title {
@@ -103,7 +105,7 @@
   color: var(--font-color);
 }
 .guide img{
-    height: 120px;
+    height: 100px;
     width: 100%;
     object-fit: contain;
     filter: drop-shadow(1px 1px #000);
@@ -300,15 +302,27 @@ button:hover {
 }
 /* Responsive styles */
 @media (max-width: 768px) {
+  .header{
+    padding: 15px;
+  }
     .header h2{
-        font-size: 18px;
+      font-size: 15px; /* 1.5rem = 24px */
+      font-weight:bold;
+      margin-top: 10px;
+    }
+    .guide-logo{
+      height: 50px;
+      width: 50px;
+     object-fit: contain;
     }
     .guide-container {
       width: 100%;
       margin: 0;
       padding:5px;
     }
-  
+   .guide h2{
+    font-size: 15px;
+   }
     .guide-list {
       grid-template-columns: 1fr;
       gap: 5px; 
