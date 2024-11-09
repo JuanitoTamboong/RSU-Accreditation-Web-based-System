@@ -89,6 +89,8 @@
 .guide-title {
   color: var(--signIn-Color);
   margin-top: 10px;
+  text-transform: uppercase;
+  
 }
 
 /* Guide section */
