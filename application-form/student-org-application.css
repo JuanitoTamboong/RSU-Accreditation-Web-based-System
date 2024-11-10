@@ -156,8 +156,8 @@ form {
   background-color: var(--hover-color);
 }
 
-/* Flatpickr (Calendar Input) Styling */
-.flatpickr-input {
+ /* Flatpickr (Calendar Input) Styling */
+ .flatpickr-input {
   background-color: #f9f9f9;
   border: 1px solid #ccc;
   border-radius: 5px;

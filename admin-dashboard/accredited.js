@@ -56,12 +56,8 @@ function renderRow(doc) {
         organizationName = 'N/A',
         representativeName = 'N/A',
         emailAddress = 'N/A',
-        typeOfAccreditation = 'N/A',
+        typeOfService = 'N/A',
         dateFiling = 'N/A',
-        documents = [],
-        representativePosition = 'N/A',
-        schoolYear = 'N/A',
-        studentCourse = 'N/A',
     } = applicationDetails;
 
     // Format the filing date and approval timestamp
@@ -73,7 +69,7 @@ function renderRow(doc) {
             <td>${organizationName}</td>
             <td>${representativeName}</td>
             <td>${emailAddress}</td>
-            <td>${typeOfAccreditation}</td>
+            <td>${typeOfService}</td>
             <td>${formattedDateFiling}</td>
             <td>${formattedApprovedDate}</td>
             <td>${applicationStatus}</td>

@@ -265,11 +265,11 @@ function createTotalReAccreditedChart(totalApplications, filteredApplications) {
     const monthlyReAccreditedData = Array(12).fill(0); 
     filteredApplications.forEach(applicationDetails => {
         const status = applicationDetails.applicationStatus ? applicationDetails.applicationStatus.toLowerCase().trim() : '';
-        const accreditationType = applicationDetails.applicationDetails?.typeOfAccreditation ? 
-                                  applicationDetails.applicationDetails.typeOfAccreditation.toLowerCase().trim() : '';
+        const serviceType = applicationDetails.applicationDetails?.typeOfService ? 
+                                  applicationDetails.applicationDetails.typeOfService.toLowerCase().trim() : '';
 
         // Check for both approved status and renewal accreditation type
-        if (status === "approved" && accreditationType === "renewal") {
+        if (status === "approved" && serviceType === "renewal") {
             const dateFiling = applicationDetails.applicationDetails?.dateFiling;
             const date = dateFiling ? new Date(dateFiling) : null;
 

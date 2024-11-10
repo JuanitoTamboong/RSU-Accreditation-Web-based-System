@@ -28,7 +28,7 @@ let senderEmail;
 let applicationStatus; 
 let customMessage; 
 let additionalMessage; // New variable for additional message
-let typeOfAccreditation; // New global variable for accreditation type
+let typeOfService; // New global variable for accreditation type
 
 // Fetch and render applicant details
 async function fetchApplicantDetails() {
@@ -53,7 +53,7 @@ async function fetchApplicantDetails() {
         console.log("Fetched application details:", applicationDetails);
 
         // Store typeOfAccreditation globally
-        typeOfAccreditation = applicationDetails.typeOfAccreditation || 'N/A'; 
+        typeOfService = applicationDetails.typeOfService || 'N/A'; 
 
         // Render applicant details
         document.getElementById('applicant-details').innerHTML = `
@@ -63,7 +63,7 @@ async function fetchApplicantDetails() {
             <p><strong>Course:</strong> ${applicationDetails.studentCourse || 'N/A'}</p>
             <p><strong>Organization Name:</strong> ${applicationDetails.organizationName || 'N/A'}</p>
             <p><strong>Email Address:</strong> ${applicationDetails.emailAddress || 'N/A'}</p>
-            <p><strong>Type of Accreditation:</strong> ${typeOfAccreditation}</p>
+            <p><strong>Type of Service:</strong> ${typeOfService}</p>
             <p><strong>Date of Filing:</strong> ${applicationDetails.dateFiling || 'N/A'}</p>
         `;
 
@@ -80,8 +80,8 @@ async function fetchApplicantDetails() {
         `).join('');
         document.getElementById('request-documents').innerHTML = documentsHTML || '<p>No documents available.</p>';
 
-        // Render checklist based on type of accreditation
-        renderChecklist(typeOfAccreditation, documents);
+        // Render checklist based on type of Service
+        renderChecklist(typeOfService, documents);
 
         // Render officer profiles if available
         const profiles = data.profiles || [];
@@ -104,9 +104,9 @@ async function fetchApplicantDetails() {
 
 let uncheckedDocuments = [];
 // Function to render checklist based on accreditation type and submitted documents
-function renderChecklist(accreditationType, submittedDocuments) {
+function renderChecklist(serviceType, submittedDocuments) {
     let requiredDocuments;
-    if (accreditationType === 'New Organization') {
+    if (serviceType === 'Accreditation') {
         requiredDocuments = [
             "Accomplish the application",
             "Letter of application stating the purpose of accreditation",
@@ -118,7 +118,7 @@ function renderChecklist(accreditationType, submittedDocuments) {
             "Constitution and By-laws (include Anti-Hazing)",
             "Parent’s Consent (For Fraternity/Sorority)",
         ];
-    } else if (accreditationType === 'Renewal') {
+    } else if (serviceType === 'Re-Accreditation') {
         requiredDocuments = [
             "Accomplish the application form (Re-Accreditation)",
             "Letter of application stating the purpose of accreditation",
@@ -199,7 +199,7 @@ async function sendEmail(applicantId) {
         sender_email: senderEmail,
         from_name: 'Osas Admin',
         status_color: applicationStatus === 'Approved' ? 'green' : 'red',
-        typeOfAccreditation: typeOfAccreditation,
+        typeOfService: typeOfService,
         application_status: applicationStatus,
         custom_message: customMessage,
         additional_message: document.getElementById('additional-message').value.trim(),

@@ -40,7 +40,7 @@ function saveFormData(docUrls) {
 
     const formData = {
         uid: user.uid,
-        typeOfAccreditation: "Renewal",
+        typeOfService: "Re-Accreditation",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
@@ -86,7 +86,7 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
 });
 
 // Preview button logic
-document.getElementById('preview-documents').addEventListener('click', () => {
+/*document.getElementById('preview-documents').addEventListener('click', () => {
     const file = uploadedFiles[0]; // Get the first valid file from memory
 
     if (file && file.type === 'application/pdf') {
@@ -115,7 +115,7 @@ document.getElementById('preview-documents').addEventListener('click', () => {
             text: 'Please select a valid PDF document to preview.',
         });
     }
-});
+});*/
 
 // Set the current year and next year for the school-year input
 function setSchoolYear() {
