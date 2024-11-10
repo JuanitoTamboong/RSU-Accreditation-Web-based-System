@@ -233,6 +233,66 @@ label.upload-label span {
   box-sizing: border-box;
   max-width: 100%; /* Prevent overflow */
 }
+/* Position Container Styling */
+.position-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between the dropdown and button */
+}
+
+/* Styling for the dropdown */
+select#position {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 200px;
+  transition: all 0.3s ease-in-out;
+}
+
+select#position:focus {
+  border-color:var(--box-shadow); /* Highlight border on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Add Position Button Styling */
+.add-position-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 5px;
+ background-color:rgba(33, 73, 83, 0.948);
+  color:var(--font-color);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-position-btn i {
+  margin-right: 5px;
+}
+
+.add-position-btn:hover {
+ background-color: #597d9b;
+}
+
+/* Focus effect for the button */
+.add-position-btn:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Optional: Adjusting button size for better UI */
+.add-position-btn {
+  font-size: 16px;
+  padding: 12px 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 
 /* Add/Update Button Styles */
 .add-update {
@@ -455,7 +515,10 @@ label{
   .add-update {
     flex-direction: column;
   }
-
+  .add-position-btn{
+    font-size: 11px;
+    padding: 6px;
+  }
   .add-update button {
     margin: 0;
     

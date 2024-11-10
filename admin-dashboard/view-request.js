@@ -91,6 +91,7 @@ async function fetchApplicantDetails() {
                 <p><strong>Name:</strong> ${profile.name || 'N/A'}</p>
                 <p><strong>Student ID:</strong> ${profile.studentId || 'N/A'}</p>
                 <p><strong>Address:</strong> ${profile.address || 'N/A'}</p>
+                <p><strong>Position:</strong> ${profile.position || 'N/A'}</p>
             </div>
         `).join('');
         document.getElementById('officers-details').innerHTML = officersHTML || '<p>No profiles available.</p>';

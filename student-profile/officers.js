@@ -54,7 +54,7 @@ document.getElementById('search-input').addEventListener('input', searchProfiles
 document.getElementById('student-id').addEventListener('input', formatStudentId);
 document.getElementById('clear-profiles').addEventListener('click', clearProfiles);
 document.querySelector('.update-btn').addEventListener('click', updateProfile);
-
+document.getElementById('add-position-btn').addEventListener('click', addPosition);
 // Format Student ID Input
 function formatStudentId(event) {
     let input = event.target.value.replace(/\D/g, '');
@@ -106,14 +106,14 @@ async function addProfile() {
     const name = document.getElementById('name').value.trim();
     const address = document.getElementById('address').value.trim();
     const file = document.getElementById('img').files[0];
-
+    const position = document.getElementById('position').value;
     // Validate Inputs
-    if (!studentId || !name || !address || !file) {
-        Swal.fire("Incomplete Input", "Please fill in all fields, including the image upload.", "warning");
+     // Validate Inputs
+     if (!studentId || !name || !address || !file || !position) {
+        Swal.fire("Incomplete Input", "Please fill in all fields, including the image upload and position.", "warning");
         addButton.disabled = false; // Re-enable the button
         return;
     }
-
     // Validate Student ID Format
     const idFormat = /^\d{3}-\d{4}-\d{6}$/; // Adjust this pattern based on your ID format
     if (!idFormat.test(studentId)) {
@@ -158,11 +158,11 @@ async function addProfile() {
         return;
     }
 
-    // Create New Profile Object
-    const newProfile = { studentId, name, address, imageUrl };
-    tempProfiles.push(newProfile);
-    localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
-    updateTable(tempProfiles);
+      // Create New Profile Object
+      const newProfile = { studentId, name, address, imageUrl, position };
+      tempProfiles.push(newProfile);
+      localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
+      updateTable(tempProfiles);
 
     // Close Loading Alert and Show Success Message
     Swal.close();
@@ -174,16 +174,15 @@ async function addProfile() {
     // Re-enable the button after successful submission
     addButton.disabled = false;
 }
-
-// Update a Profile with SweetAlert Integration
 async function updateProfile() {
     const studentId = document.getElementById('student-id').value.trim();
     const name = document.getElementById('name').value.trim();
     const address = document.getElementById('address').value.trim();
     const imageUrl = document.getElementById('image-preview').src;
+    const position = document.getElementById('position').value.trim();
 
     // Validate Inputs
-    if (!studentId || !name || !address) {
+    if (!studentId || !name || !address || !position) {
         Swal.fire("Incomplete Input", "Please fill in all fields.", "warning");
         return;
     }
@@ -196,7 +195,7 @@ async function updateProfile() {
     }
 
     // Find the Profile to Update
-    const index = tempProfiles.findIndex(profile => profile.studentId === studentId);
+    const index = tempProfiles.findIndex(profile => profile.studentId.trim() === studentId);
 
     if (index === -1) {
         Swal.fire("Profile Not Found", "No profile found with the provided Student ID.", "error");
@@ -213,13 +212,12 @@ async function updateProfile() {
         }
     });
 
-    // Optionally, handle image re-upload if a new image is selected
-    // For simplicity, we'll assume the image is already uploaded and the URL is available
-
     // Update Profile Details
+    tempProfiles[index].studentId = studentId;
     tempProfiles[index].name = name;
     tempProfiles[index].address = address;
     tempProfiles[index].imageUrl = imageUrl;
+    tempProfiles[index].position = position;
 
     // Update LocalStorage and Refresh Table
     localStorage.setItem('tempProfiles', JSON.stringify(tempProfiles));
@@ -233,7 +231,6 @@ async function updateProfile() {
 
     clearStudentProfileForm();
 }
-
 // Clear All Profiles with Confirmation
 function clearProfiles() {
     Swal.fire({
@@ -252,6 +249,116 @@ function clearProfiles() {
         }
     });
 }
+// Add or Change Position to the Selected Profile (Including Adding New Position)
+function addPosition() {
+    const positionDropdown = document.getElementById('position');
+    const selectedPosition = positionDropdown.value;
+
+    // If no position is selected, show SweetAlert to either select a position or add a new one
+    if (!selectedPosition) {
+        Swal.fire({
+            title: 'No Position Selected',
+            text: 'Please select a position or add a new one.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Add New Position',
+            cancelButtonText: 'Select Existing Position'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Prompt the user to enter a new position
+                Swal.fire({
+                    title: 'Add New Position',
+                    input: 'text',
+                    inputPlaceholder: 'Enter the new position name',
+                    showCancelButton: true,
+                    confirmButtonText: 'Add Position',
+                    cancelButtonText: 'Cancel',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to enter a position name!';
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const newPosition = result.value.trim();
+
+                        if (newPosition) {
+                            // Add the new position to the dropdown
+                            const newOption = document.createElement('option');
+                            newOption.value = newPosition;
+                            newOption.textContent = newPosition;
+
+                            // Append the new position to the dropdown
+                            positionDropdown.appendChild(newOption);
+
+                            // Set the new position as the selected value in the dropdown
+                            positionDropdown.value = newPosition;
+
+                            // Show confirmation message for the new position
+                            Swal.fire('New Position Added', `The position "${newPosition}" has been added to the list.`, 'info');
+                        }
+                    }
+                });
+            } else {
+                // If they want to select an existing position, show a message to select it
+                Swal.fire('No Position Selected', 'Please select a position before adding.', 'warning');
+            }
+        });
+        return;
+    }
+
+    // If a position is already selected, allow the user to change it by adding a new position manually
+    Swal.fire({
+        title: 'Change Position',
+        text: `You have selected the position "${selectedPosition}". Do you want to change it?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Change Position',
+        cancelButtonText: 'Keep Current Position'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Prompt the user to enter a new position manually
+            Swal.fire({
+                title: 'Enter New Position',
+                input: 'text',
+                inputPlaceholder: 'Enter the new position name',
+                showCancelButton: true,
+                confirmButtonText: 'Change Position',
+                cancelButtonText: 'Cancel',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Please enter a valid position name!';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const newPosition = result.value.trim();
+
+                    // If the user enters a new position, update the dropdown and display confirmation
+                    if (newPosition) {
+                        // Update the dropdown with the new position
+                        // First, clear the selected position in the dropdown (if needed)
+                        const newOption = document.createElement('option');
+                        newOption.value = newPosition;
+                        newOption.textContent = newPosition;
+
+                        // Add the new position to the dropdown
+                        positionDropdown.appendChild(newOption);
+
+                        // Select the newly added position in the dropdown
+                        positionDropdown.value = newPosition;
+
+                        // Show confirmation message for the new position
+                        Swal.fire('Position Changed', `The position has been changed to "${newPosition}".`, 'success');
+                    }
+                }
+            });
+        } else {
+            // If the user wants to keep the selected position, show confirmation
+            Swal.fire('Position Kept', `You have kept the position "${selectedPosition}".`, 'info');
+        }
+    });
+}
 // Update the profiles table
 function updateTable(profiles) {
     const profilesListBody = document.getElementById('profiles-list-body');
@@ -264,7 +371,8 @@ function updateTable(profiles) {
             <td>${profile.studentId}</td>
             <td>${profile.name}</td>
             <td>${profile.address}</td>
-            <td><button class="delete-btn" data-index="${index}"><i class='bx bx-trash'></i> Delete</button></td>
+            <td>${profile.position}</td>
+            <td><button class="delete-btn" data-index="${index}"><i class='bx bx-trash'></i> Delete</button></td
         `;
         profilesListBody.appendChild(row);
     });
@@ -359,6 +467,7 @@ function clearStudentProfileForm() {
     document.getElementById('img').value = '';
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('upload-text').style.display = 'block';
+    document.getElementById('position').value ='';
 }
 
 // Function to Get Current Time in 'HH:MM AM/PM' Format
