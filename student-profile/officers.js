@@ -477,10 +477,17 @@ function getCurrentTime() {
     return now.toLocaleString('en-US', options);
 }
 
+let submitting = false; // Flag to track if submission is in progress
+
 // Submit All Profiles to Firestore
 async function submitAllProfiles() {
+    // Prevent duplicate submissions
+    if (submitting) return;
+    submitting = true;
+
     if (tempProfiles.length === 0) {
         Swal.fire("No Profiles", "There are no profiles to submit.", "info");
+        submitting = false; // Reset the flag
         return;
     }
 
@@ -491,6 +498,7 @@ async function submitAllProfiles() {
         if (!user) {
             Swal.fire("Authentication Error", "User is not authenticated.", "error");
             hideLoading();
+            submitting = false; // Reset the flag
             return;
         }
 
@@ -509,6 +517,7 @@ async function submitAllProfiles() {
             if (!querySnapshot.empty) {
                 Swal.fire("Duplicate ID", `A profile with Student ID ${studentId} already exists in Firestore. Submission aborted.`, "error");
                 hideLoading();
+                submitting = false; // Reset the flag
                 return;
             }
         }
@@ -516,8 +525,8 @@ async function submitAllProfiles() {
         // Combine application data and profiles
         const combinedData = {
             applicationDetails: applicationData,  // Data from the application form
-            profiles: tempProfiles,                // Temp profiles stored locally
-            submissionTime: currentTime            // Add the current time to the combined data
+            profiles: tempProfiles,               // Temp profiles stored locally
+            submissionTime: currentTime           // Add the current time to the combined data
         };
 
         // Reference to Firestore collection
@@ -550,5 +559,6 @@ async function submitAllProfiles() {
         Swal.fire("Submission Error", "Error submitting profiles and application data. Please try again.", "error");
     } finally {
         hideLoading();
+        submitting = false; // Reset the flag
     }
 }
