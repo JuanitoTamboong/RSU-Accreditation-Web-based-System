@@ -45,7 +45,7 @@ body {
 }
 
 .add-verified-student button, .import-student-list button {
-    padding: 5px 15px;
+    padding: 6px 15px;
     background-color: #060a1f;
     color: white;
     border: none;
