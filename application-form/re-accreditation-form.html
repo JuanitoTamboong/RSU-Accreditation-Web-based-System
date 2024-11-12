@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="renewal.js" defer></script>
+    <script type="module" src="verify-student-org.js" defer></script>
 </head>
 <body>
     <div class="top-header">
@@ -38,6 +39,10 @@
             </div>
         </div>        
         <form id="application-form">
+            <div class="form-group">
+                <label for="representative-id">Representative  Student ID Number:</label>
+                <input type="text" id="representative-id" placeholder="Enter your  Student ID number" required maxlength="15" oninput=" formatStudentId(event)">
+            </div>
             <div class="form-group">
                 <label for="representative-name">Name of Representative:</label>
                 <input type="text" id="representative-name" placeholder="Enter your name" required>

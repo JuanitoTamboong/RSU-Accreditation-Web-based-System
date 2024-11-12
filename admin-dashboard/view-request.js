@@ -119,7 +119,7 @@ function renderChecklist(serviceType, submittedDocuments) {
             "Constitution and By-laws (include Anti-Hazing)",
             "Parent’s Consent (For Fraternity/Sorority)",
         ];
-    } else if (serviceType === 'Re-Accreditation') {
+    } else if (serviceType === 'Renewal') {
         requiredDocuments = [
             "Accomplish the application form (Re-Accreditation)",
             "Letter of application stating the purpose of accreditation",

@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { verifyStudentId, isValidStudentIdFormat } from './verify-student-org.js'; // Import verification functions
 
 // Firebase configuration
 const firebaseConfig = {
@@ -41,6 +42,7 @@ function saveFormData(docUrls) {
     const formData = {
         uid: user.uid,
         typeOfService: "Renewal",
+        representativeId: document.getElementById('representative-id').value, // Added student ID
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
@@ -87,39 +89,6 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
     });
 });
 
-// Preview button logic
-/*document.getElementById('preview-documents').addEventListener('click', () => {
-    const file = uploadedFiles[0]; // Get the first valid file from memory
-
-    if (file && file.type === 'application/pdf') {
-        const fileReader = new FileReader();
-
-        fileReader.onload = function(event) {
-            const pdfData = event.target.result;
-            Swal.fire({
-                title: 'Selected PDF Document',
-                html: `<iframe src="${pdfData}" style="width:100%; min-height:100vh;" frameborder="0"></iframe>`,
-                icon: 'info',
-                showCloseButton: true,
-                focusConfirm: false,
-                confirmButtonText: 'Close',
-                customClass: {
-                    popup: "swal-pdf-viewer"
-                }
-            });
-        };
-
-        fileReader.readAsDataURL(file);
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'No Valid File',
-            text: 'Please select a valid PDF document to preview.',
-        });
-    }
-});*/
-
-// Set the current year and next year for the school-year input
 function setSchoolYear() {
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -170,6 +139,25 @@ function validateFields() {
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async (event) => {
     event.preventDefault();
+    const studentId = document.getElementById('representative-id').value;
+    if (!isValidStudentIdFormat(studentId)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid ID Format',
+            text: 'Please enter the ID in the format xxx-xxxx-xxxxxx.',
+        });
+        return;
+    }
+
+    const isVerified = await verifyStudentId(studentId);
+    if (!isVerified) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Unverified Student ID',
+            text: 'This Representative Student ID Number is not verified. Please verify your ID with the administration.',
+        });
+        return;
+    }
     
     // Get the organization name
     const organizationName = document.getElementById('organization-name-dropdown').value;
@@ -370,6 +358,7 @@ function loadOrganizationData() {
     console.log("Application Status Retrieved:", applicationStatus); // Debug log for application status
 
     // Set form fields with data or default to empty strings
+    setFieldValue('representative-id',appDetails.representativeId);
     setFieldValue('representative-name', appDetails.representativeName);
     setFieldValue('school-year', appDetails.schoolYear);
     setFieldValue('email-address', appDetails.emailAddress);
