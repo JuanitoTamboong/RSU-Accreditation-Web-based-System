@@ -40,7 +40,7 @@ function saveFormData(docUrls) {
 
     const formData = {
         uid: user.uid,
-        typeOfService: "Re-Accreditation",
+        typeOfService: "Renewal",
         representativeName: document.getElementById('representative-name').value,
         representativePosition: document.getElementById('representative-position-dropdown').value,
         schoolYear: document.getElementById('school-year').value,
@@ -70,10 +70,12 @@ document.getElementById('requirement-documents').addEventListener('change', (eve
                     title: 'Upload Error',
                     text: `${file.name} is not a PDF.`,
                 });
-                document.getElementById('preview-documents').disabled = true; // Disable preview button if invalid file
+                // Disable the "Next" button if invalid file is uploaded
+                document.querySelector("button[type='submit']").disabled = true;
             } else {
                 uploadedFiles.push(file); // Store valid files in memory
-                document.getElementById('preview-documents').disabled = false; // Enable preview button
+                // Enable the "Next" button when a valid file is uploaded
+                document.querySelector("button[type='submit']").disabled = false;
             }
         } else {
             Swal.fire({
@@ -233,19 +235,8 @@ document.getElementById('application-form').addEventListener('submit', async (ev
         }
     }
 
-    // Load previously saved data
-    const savedData = JSON.parse(localStorage.getItem(`applicationFormData_${user.uid}`)) || {};
-    const allDocUrls = savedData.documents || [];
-
-    // Avoid duplication of document URLs
-    docUrls.forEach(url => {
-        if (!allDocUrls.includes(url)) {
-            allDocUrls.push(url); // Only add unique URLs
-        }
-    });
-
-    // Save the updated form data
-    saveFormData(allDocUrls);
+    // Save the form data with only the newly uploaded documents
+    saveFormData(docUrls);
 
     // Redirect after saving
     window.location.href = '../student-profile/list-officers.html';

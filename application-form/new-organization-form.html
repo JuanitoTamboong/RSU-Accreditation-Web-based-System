@@ -6,10 +6,12 @@
     <link rel="stylesheet" href="student-org-application.css">
     <link rel="icon" href="../assets/rsu-logo.png">
     <title>SOA Application Form</title>
-    <script type="module" src="app.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!--script-->
+    <script type="module" src="app.js" defer></script>
+    <script type="module" src="verify-student-org.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -22,10 +24,13 @@
     <div class="form-container">
         <form id="application-form">
             <div class="form-group">
+                <label for="representative-id">Representative  Student ID Number:</label>
+                <input type="text" id="representative-id" placeholder="Enter your  Student ID number" required maxlength="15" oninput=" formatStudentId(event)">
+            </div>
+            <div class="form-group">
                 <label for="representative-name">Name of Representative:</label>
                 <input type="text" id="representative-name" placeholder="Enter your name" required>
             </div>
-
             <div class="form-group">
                 <label for="representative-position">Position:</label>
                 <div class="dropdown-container">
@@ -95,9 +100,6 @@
                 <p>(Only accepts PDF file)</p>
                 <div class="file-container">
                     <input type="file" id="requirement-documents" accept=".pdf" required>
-                   <!--<button type="button" id="preview-documents" class="preview-btn" disabled>View Documents
-                        <i class="fas fa-eye"></i>
-                    </button>-->
                 </div>
             </div>
             <div class="form-group submit-btn">

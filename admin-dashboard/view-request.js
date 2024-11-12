@@ -57,6 +57,7 @@ async function fetchApplicantDetails() {
 
         // Render applicant details
         document.getElementById('applicant-details').innerHTML = `
+            <p><strong>Student ID:</strong> ${applicationDetails.representativeId || 'N/A'}</p>
             <p><strong>Representative Name:</strong> ${applicationDetails.representativeName || 'N/A'}</p>
             <p><strong>Position:</strong> ${applicationDetails.representativePosition || 'N/A'}</p>
             <p><strong>School Year:</strong> ${applicationDetails.schoolYear || 'N/A'}</p>
