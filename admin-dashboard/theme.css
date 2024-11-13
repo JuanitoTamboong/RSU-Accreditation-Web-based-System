@@ -87,7 +87,7 @@
    color: var(--text-color-secondary);
   }
   
-  /*pending theme*/
+  /*in progress theme*/
   .dark-theme .in-progress-requests{
     background-color: var(--accent-color);
 
@@ -111,4 +111,12 @@
   background-color: var(--accent-color);
   color: var(--text-color-primary);
  }
- 
+ /*verified students*/
+ .dark-theme .verified-container{
+  background-color: var(--button-background);
+  color: var(--text-color-primary);
+ }
+ .dark-theme .list-of-verified td{
+  background-color: var(--primary-color);
+  color: var(--text-color-primary);
+ }
