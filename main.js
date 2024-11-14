@@ -277,43 +277,64 @@ if (signInForm) {
     showLoading();
 
     // Sign in user
-signInWithEmailAndPassword(auth, email, password)
-.then((userCredential) => {
-  const user = userCredential.user;
-  hideLoading();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
 
-  Swal.fire({
-    title: "Privacy Agreement",
-    html: 'Do you agree to the <a href="https://rsu.edu.ph/wp-content/uploads/2024/03/Privacy-Notice-For-website.pdf" target="_blank">Privacy Policy</a> before proceeding?',
-    imageUrl: "../assets/privacy_agreement.png",
-    imageWidth: 130,
-    imageHeight: 100,
-    imageAlt: "Privacy Agreement Image",
-    showCancelButton: true,
-    confirmButtonText: "Yes, I agree",
-    cancelButtonText: "No, I disagree",
-    customClass: {
-      popup: "swal-wide",
-      image: "swal-image",
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // User agreed to the privacy policy
-      window.location.href = "../welcome-page/welcome.html";
-    } else {
-      // User disagreed with the privacy policy
-      Swal.fire({
-        icon: "warning",
-        title: "Agreement Needed",
-        text: "You need to agree to the Privacy Policy to proceed.",
-        confirmButtonText: "Ok",
-        customClass: {
-          popup: "swal-wide",
-        },
-      });
-    }
-  });
-})
+        // Check if email is verified
+        if (!user.emailVerified) {
+          hideLoading();
+          Swal.fire({
+            icon: "warning",
+            title: "Email not verified",
+            text: "Please verify your email before logging in.",
+            confirmButtonText: "Resend Verification Email",
+            customClass: "swal-wide",
+          }).then(() => {
+            // Optionally, resend the verification email
+            sendEmailVerification(user).then(() => {
+              Swal.fire({
+                icon: "success",
+                title: "Verification email sent",
+                text: "Please check your inbox for the verification link.",
+                customClass: "swal-wide",
+              });
+            });
+          });
+        } else {
+          hideLoading();
+          // Proceed with the rest of the login flow
+          Swal.fire({
+            title: "Privacy Agreement",
+            html: 'Do you agree to the <a href="https://rsu.edu.ph/wp-content/uploads/2024/03/Privacy-Notice-For-website.pdf" target="_blank">Privacy Policy</a> before proceeding?',
+            imageUrl: "../assets/privacy_agreement.png",
+            imageWidth: 130,
+            imageHeight: 100,
+            imageAlt: "Privacy Agreement Image",
+            showCancelButton: true,
+            confirmButtonText: "Yes, I agree",
+            cancelButtonText: "No, I disagree",
+            customClass: {
+              popup: "swal-wide",
+              image: "swal-image",
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "../welcome-page/welcome.html";
+            } else {
+              Swal.fire({
+                icon: "warning",
+                title: "Agreement Needed",
+                text: "You need to agree to the Privacy Policy to proceed.",
+                confirmButtonText: "Ok",
+                customClass: {
+                  popup: "swal-wide",
+                },
+              });
+            }
+          });
+        }
+      })
       .catch((error) => {
         hideLoading();
         const errorCode = error.code;
@@ -344,4 +365,3 @@ signInWithEmailAndPassword(auth, email, password)
       });
   });
 }
-
