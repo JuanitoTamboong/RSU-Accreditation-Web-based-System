@@ -108,18 +108,12 @@ function reAccreditationFormHTML() {
                 <input type="text" id="organization-name" class="swal2-input" placeholder="Enter organization name" required 
                        style="width: 100%; padding: 8px; box-sizing: border-box; text-transform: uppercase;">
             </div>
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px;">Date of Filing:</label>
-                <input type="text" id="filing-date" class="swal2-input" readonly 
-                       style="background-color: #f0f0f0; width: 100%; padding: 8px; box-sizing: border-box;">
-            </div>
         </div>`;
 }
 
 // Search for organization data in Firestore
 async function searchOrganizationData(uid) {
     const organizationName = document.getElementById('organization-name').value.trim().toUpperCase(); // Convert to uppercase for case-insensitive search
-    const filingDateInput = document.getElementById('filing-date');
 
     if (!organizationName) {
         Swal.showValidationMessage('Please fill out the organization name');
@@ -140,12 +134,11 @@ async function searchOrganizationData(uid) {
 
         if (!querySnapshot.empty) {
             const orgData = querySnapshot.docs[0].data();
-            filingDateInput.value = orgData.applicationDetails.dateFiling; // Set filing date
             localStorage.setItem('orgData', JSON.stringify(orgData)); // Store all organization data
             localStorage.setItem('filingDate', orgData.applicationDetails.dateFiling);
             console.log('Organization Data:', orgData);
             
-            // Show a success alert with a confirmation button
+            // Show a success alert with the date of filing
             await Swal.fire({
                 icon: 'success',
                 title: 'Organization Found!',
@@ -166,6 +159,7 @@ async function searchOrganizationData(uid) {
         return false;
     }
 }
+
 
 // Display guide items based on selected accreditation type
 function displayGuideItems(items) {

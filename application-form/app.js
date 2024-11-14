@@ -138,27 +138,31 @@ function validateFields() {
 
 // Handle form submission
 document.getElementById('application-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const studentId = document.getElementById('representative-id').value;
-    if (!isValidStudentIdFormat(studentId)) {
+    event.preventDefault(); // Prevent form submission until validation is complete
+    
+    const studentID = document.getElementById('representative-id').value;
+    
+    // Validate the student ID format first
+    if (!isValidStudentIdFormat(studentID)) {
         Swal.fire({
             icon: 'error',
-            title: 'Invalid ID Format',
-            text: 'Please enter the ID in the format xxx-xxxx-xxxxxx.',
+            title: 'Invalid Student ID',
+            text: 'Please enter a valid student ID in the format xxx-xxxx-xxxxxx.',
         });
-        return;
+        return; // Exit the function if the ID format is invalid
     }
 
-    const isVerified = await verifyStudentId(studentId);
-    if (!isVerified) {
+    // Check the verification status of the student ID
+    const verificationStatus = await verifyStudentId(studentID);
+    if (verificationStatus !== "verified") {
         Swal.fire({
             icon: 'error',
-            title: 'Unverified Student ID',
-            text: 'This Representative Student ID Number is not verified. Please verify your ID with the administration.',
+            title: 'ID Not Verified',
+            text: 'Your student ID is not yet verified by the admin',
         });
-        return;
+        return; // Exit the function if the student ID is not verified
     }
-    
+
     // Get the organization name
     const organizationName = document.getElementById('organization-name-dropdown').value;
 
@@ -294,24 +298,7 @@ document.getElementById('add-organization').addEventListener('click', async () =
         }
     }
 });
-// Add position dynamically
-document.getElementById('add-position').addEventListener('click', () => {
-    Swal.fire({
-        title: 'Enter the new position name:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'New position name'
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const representativePositionDropdown = document.getElementById('representative-position-dropdown');
-            const option = document.createElement('option');
-            option.value = result.value;
-            option.textContent = result.value;
-            representativePositionDropdown.appendChild(option);
-            representativePositionDropdown.value = result.value; // Set it as selected
-        }
-    });
-});
+
 // Add course dynamically
 document.getElementById('add-course').addEventListener('click', () => {
     Swal.fire({

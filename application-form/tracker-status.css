@@ -30,7 +30,7 @@
 
 .status-label {
     margin-top: 5px;
-    font-size: 10px; 
+    font-size: 13px; 
     text-align: center;
     font-weight: 600;
     color: #666; /* Lighter text color for labels */
@@ -38,5 +38,7 @@
 }
 
 @media (max-width: 600px) {
-
+.status-label{
+    font-size: 10px;
+}
 }

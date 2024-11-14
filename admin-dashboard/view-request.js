@@ -109,7 +109,7 @@ function renderChecklist(serviceType, submittedDocuments) {
     let requiredDocuments;
     if (serviceType === 'Accreditation') {
         requiredDocuments = [
-            "Accomplish the application",
+            "Accomplished the application",
             "Letter of application stating the purpose of accreditation",
             "Recommendation from the SSC President",
             "List of officers and their respective positions",
@@ -121,7 +121,7 @@ function renderChecklist(serviceType, submittedDocuments) {
         ];
     } else if (serviceType === 'Renewal') {
         requiredDocuments = [
-            "Accomplish the application form (Re-Accreditation)",
+            "Accomplished the application form (Re-Accreditation)",
             "Letter of application stating the purpose of accreditation",
             "Recommendation from the SSC President",
             "List of officers and their respective positions",

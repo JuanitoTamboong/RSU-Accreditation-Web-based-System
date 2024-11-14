@@ -1,19 +1,21 @@
 // Firebase Imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, query, where, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 
 // Firebase Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCZbPRkZ7acdO0mx9_sfotDjueh4YioYwM",
-    authDomain: "admin-9ee84.firebaseapp.com",
-    projectId: "admin-9ee84",
-    storageBucket: "admin-9ee84.firebasestorage.app",
-    messagingSenderId: "65720582473",
-    appId: "1:65720582473:web:48f63f7d4d100d65039a98"
+    apiKey: "AIzaSyDXQCFoaCSWsCV2JI7wrOGZPKEpQuNzENA",
+    authDomain: "student-org-5d42a.firebaseapp.com",
+    projectId: "student-org-5d42a",
+    storageBucket: "student-org-5d42a.appspot.com",
+    messagingSenderId: "1073695504078",
+    appId: "1:1073695504078:web:eca07da6a1563c46e0829f"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Utility Functions
 const showAlert = (icon, title, message) => {
@@ -35,32 +37,52 @@ function formatStudentId(event) {
 }
 
 // Firestore Operations
-const isStudentIDExist = async (studentID) => {
-    const q = query(collection(db, "verified-students"), where("studentID", "==", studentID));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-};
-
-const addStudentToFirestore = async (studentID, studentName) => {
-    await addDoc(collection(db, "verified-students"), { studentName, studentID, status: "Verified" });
+const addStudentToFirestore = async (studentID, storagePath) => {
+    await addDoc(collection(db, "unverified-requests"), { 
+        studentID, 
+        storagePath, 
+        status: "pending",
+        uploadedAt: new Date()
+    });
 };
 
 const deleteStudentFromFirestore = async (studentID) => {
-    const studentRef = query(collection(db, "verified-students"), where("studentID", "==", studentID));
+    const studentRef = query(collection(db, "unverified-requests"), where("studentID", "==", studentID));
     const querySnapshot = await getDocs(studentRef);
     for (const doc of querySnapshot.docs) {
         await deleteDoc(doc.ref);
     }
 };
 
+const verifyStudentInFirestore = async (studentID) => {
+    const studentRef = query(collection(db, "unverified-requests"), where("studentID", "==", studentID));
+    const querySnapshot = await getDocs(studentRef);
+
+    if (!querySnapshot.empty) {
+        const studentDoc = querySnapshot.docs[0];
+        await updateDoc(studentDoc.ref, { status: "verified" });  // Update the student's status to 'verified'
+    } else {
+        showAlert("error", "Error", "Student not found.");
+    }
+};
+
 // DOM Manipulation
-const addStudentToTable = (studentID, studentName, status) => {
+const addStudentToTable = (studentID, storagePath, status) => {
     const tableBody = document.getElementById("student-table-body");
+    const storageBaseUrl = "https://firebasestorage.googleapis.com/v0/b/student-org-5d42a.appspot.com/o/"; // Base URL for Firebase Storage
+    const imageUrl = encodeURIComponent(storagePath); // Make sure the storage path is correctly encoded
+    const fullImageUrl = `${storageBaseUrl}${imageUrl}?alt=media`; // Construct the full URL
+
     const newRow = document.createElement("tr");
     newRow.innerHTML = `
-        <td>${studentName}</td>
+        <td><img src="${fullImageUrl}" alt="Student Image" width="60" height="60"></td>
         <td>${studentID}</td>
         <td>${status}</td>
+        <td>
+            <button class="view-btn" onclick="viewStudent('${studentID}', '${fullImageUrl}')">
+                <i class="fas fa-eye"></i> View
+            </button>
+        </td>
         <td>
             <button class="delete-btn" onclick="deleteStudent('${studentID}')">
                 <i class="fas fa-trash"></i> Delete
@@ -70,101 +92,31 @@ const addStudentToTable = (studentID, studentName, status) => {
     tableBody.appendChild(newRow);
 };
 
-// Main Functions
-const addStudent = async () => {
-    const studentName = document.getElementById("student-name").value.trim();
-    const studentID = document.getElementById("student-id").value.trim();
-
-    if (!studentName || !studentID || !isValidStudentID(studentID)) {
-        return showAlert("error", "Error", "Please enter a valid student name and ID in the format xxx-xxxx-xxxxxx.");
-    }
-
-    if (await isStudentIDExist(studentID)) {
-        return showAlert("error", "Error", "This student ID already exists.");
-    }
-
-    try {
-        await addStudentToFirestore(studentID, studentName);
-        addStudentToTable(studentID, studentName, "Verified");
-        showAlert("success", "Success", "Student added successfully!");
-        document.getElementById("student-name").value = "";
-        document.getElementById("student-id").value = "";
-    } catch (error) {
-        console.error("Error adding student:", error);
-        showAlert("error", "Error", "Could not add student. Please try again.");
-    }
-};
-
-// Import student list function with duplicate import check
-let isImporting = false;  // Track if the import process is already happening
-
-const importStudentList = () => {
-    // Prevent multiple imports at once
-    if (isImporting) {
-        return showAlert("warning", "Warning", "The CSV file is already being imported.");
-    }
-
-    const fileInput = document.getElementById("file-input");
-    if (!fileInput.files.length) return showAlert("error", "Error", "Please select a CSV file to import.");
-
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-        // Set importing flag to true to prevent duplicate imports
-        isImporting = true;
-
-        const rows = e.target.result.split('\n').map(row => row.trim()); // Trim all rows to avoid unnecessary spaces
-        let invalidIDs = [], missingData = [], successfulImports = [], duplicateIDs = [];
-
-        // Iterate over each row in the CSV
-        for (const row of rows) {
-            // Skip empty rows
-            if (!row) continue;
-
-            const [studentName, studentID] = row.split(',').map(field => field?.trim()); // Trim each field
-
-            // Validate data in the CSV row
-            if (!studentName || !studentID) {
-                missingData.push(`Missing data in row: ${row}`);
-                continue;
-            }
-
-            // Check if student ID has a valid format
-            if (!isValidStudentID(studentID)) {
-                invalidIDs.push(`Invalid format: ${studentID} for ${studentName}`);
-                continue;
-            }
-
-            // Check if the student already exists (avoiding duplicates)
-            if (await isStudentIDExist(studentID)) {
-                duplicateIDs.push(`Duplicate: ${studentName} (${studentID})`);
-                continue;
-            }
-
-            // Add student to Firestore and update the table
+// View student details in SweetAlert modal
+const viewStudent = (studentID, imageUrl) => {
+    Swal.fire({
+        title: `Student ID: ${studentID}`,
+        imageUrl: imageUrl,
+        imageAlt: 'Student Image',
+        showCancelButton: true,
+        confirmButtonText: 'Verify Student',
+        cancelButtonText: 'Close',
+        preConfirm: async () => {
             try {
-                await addStudentToFirestore(studentID, studentName);
-                addStudentToTable(studentID, studentName, "Verified");
-                successfulImports.push(`Added: ${studentName} (${studentID})`);
+                // Verify the student only when the user confirms the verification
+                await verifyStudentInFirestore(studentID);
+                
+                // After verification, update the table status and hide the "View" button
+                updateStudentStatusInTable(studentID, "verified");
+
+                // Show success alert after verification
+                showAlert("success", "Success", "Student verified successfully!");
             } catch (error) {
-                console.error("Error importing student:", error);
-                showAlert("error", "Error", "Some students could not be added. Check console for details.");
-                return;
+                // Handle errors during the verification process
+                showAlert("error", "Error", "Verification failed. Please try again.");
             }
         }
-
-        // Show alerts for different results
-        if (invalidIDs.length || missingData.length || duplicateIDs.length) {
-            showAlert('error', 'Import Errors', invalidIDs.concat(missingData).concat(duplicateIDs).join('<br>'));
-        }
-        if (successfulImports.length) {
-            showAlert('success', 'Import Success', successfulImports.join('<br>'));
-        }
-
-        // Clear the file input and reset the import flag after the import process
-        fileInput.value = "";  // Clear file input after import
-        isImporting = false;   // Reset the flag to allow further imports
-    };
-    reader.readAsText(fileInput.files[0]);
+    });
 };
 
 // Delete student function
@@ -184,17 +136,76 @@ const deleteStudent = async (studentID) => {
     }
 };
 
-// Load existing students when the page loads
-window.onload = async () => {
-    const querySnapshot = await getDocs(collection(db, "verified-students"));
-    querySnapshot.forEach(doc => {
-        const { studentID, studentName, status } = doc.data();
-        addStudentToTable(studentID, studentName, status);
+// Update student status in the table (without removing)
+const updateStudentStatusInTable = (studentID, newStatus) => {
+    const rows = document.querySelectorAll("#student-table-body tr");
+    rows.forEach(row => {
+        if (row.cells[1].textContent === studentID) {
+            row.cells[2].textContent = newStatus;  // Update status column
+            
+            // Conditionally hide the "View" button only if the status is "verified"
+            const viewButton = row.querySelector(".view-btn");
+            if (newStatus === "verified") {
+            } else {
+                viewButton.style.display = "inline-block"; // Ensure the "View" button is visible if not verified
+            }
+        }
     });
+};
+
+// Upload student file and get the URL
+const uploadStudentFile = async (studentID, file) => {
+    const fileRef = ref(storage, `unverified-ids/${studentID}.jpg`);  // Path in Firebase Storage
+    await uploadBytes(fileRef, file);  // Upload the file to Firebase
+    const fileUrl = await getDownloadURL(fileRef);  // Get the file's public URL
+    return fileUrl;
+};
+
+// Add student to Firestore and table
+const addStudent = async () => {
+    const studentID = document.getElementById("student-id").value.trim();
+    const fileInput = document.getElementById("file-upload");
+    const file = fileInput.files[0];
+
+    if (!studentID || !file || !isValidStudentID(studentID)) {
+        return showAlert("error", "Error", "Please enter a valid student ID and upload a file.");
+    }
+
+    try {
+        const fileUrl = await uploadStudentFile(studentID, file);
+        await addStudentToFirestore(studentID, fileUrl);
+        addStudentToTable(studentID, fileUrl, "pending");
+        showAlert("success", "Success", "Student added successfully!");
+        document.getElementById("student-id").value = "";
+        document.getElementById("file-upload").value = "";
+    } catch (error) {
+        console.error("Error adding student:", error);
+        showAlert("error", "Error", "Could not add student. Please try again.");
+    }
+};
+
+// Real-time listener for changes in Firestore (unverified-requests)
+const listenForStudentUpdates = () => {
+    const studentRef = collection(db, "unverified-requests");
+
+    onSnapshot(studentRef, (querySnapshot) => {
+        const tableBody = document.getElementById("student-table-body");
+        tableBody.innerHTML = '';  // Clear the existing table body
+
+        querySnapshot.forEach((doc) => {
+            const { studentID, storagePath, status } = doc.data();
+            addStudentToTable(studentID, storagePath, status);  // Add each document to the table
+        });
+    });
+};
+
+// Start listening for real-time updates
+window.onload = () => {
+    listenForStudentUpdates();  // Set up real-time listener for updates
 };
 
 // Expose functions to global scope
 window.addStudent = addStudent;
-window.importStudentList = importStudentList;
 window.formatStudentId = formatStudentId;
 window.deleteStudent = deleteStudent;
+window.viewStudent = viewStudent;

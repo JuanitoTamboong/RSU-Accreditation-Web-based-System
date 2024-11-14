@@ -195,7 +195,10 @@ form {
   height: 80px;
   animation: spin 1s linear infinite;
 }
-
+#verification-status{
+  margin-top: 5px;
+  font-size: 15px;
+}
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -349,5 +352,7 @@ iframe {
     width: 100%; /* Full width of the modal */
     height: 100vh; /* Full height of the viewport */
 }
-
+#verification-status{
+  font-size: 11px;
+}
 }

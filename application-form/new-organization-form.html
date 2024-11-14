@@ -24,9 +24,10 @@
     <div class="form-container">
         <form id="application-form">
             <div class="form-group">
-                <label for="representative-id">Representative  Student ID Number:</label>
-                <input type="text" id="representative-id" placeholder="Enter your  Student ID number" required maxlength="15" oninput=" formatStudentId(event)">
-            </div>
+                <label for="representative-id">Representative Student ID Number:</label>
+                <input type="text" id="representative-id" placeholder="Enter your Student ID number" required maxlength="15" oninput="formatStudentId(event)">
+                <div id="verification-status"></div>   
+            </div>   
             <div class="form-group">
                 <label for="representative-name">Name of Representative:</label>
                 <input type="text" id="representative-name" placeholder="Enter your name" required>
@@ -41,7 +42,6 @@
                         <option value="Secretary">Secretary</option>
                         <option value="Treasurer">Treasurer</option>
                     </select>
-                    <button type="button" id="add-position" class="add-btn">+</button>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
                         <option value="BS Public Administration">BS Public Administration</option>
                         <option value="BS Biology">BS Biology</option>
                     </select>
-                    <button type="button" id="add-course" class="add-btn">+</button>
+                    <button type="button" id="add-course" class="add-btn">+ Add Course</button>
                 </div>
             </div>
             <div class="form-group">
@@ -80,7 +80,7 @@
                         <option value="CCMADI">CCMADI</option>
                     </select>
                     
-                    <button type="button" id="add-organization" class="add-btn">+</button>
+                    <button type="button" id="add-organization" class="add-btn">+ Add Organization</button>
                 </div>
             </div>
 
