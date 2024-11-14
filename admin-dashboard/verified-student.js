@@ -92,7 +92,6 @@ const addStudentToTable = (studentID, storagePath, status) => {
     tableBody.appendChild(newRow);
 };
 
-// View student details in SweetAlert modal
 const viewStudent = (studentID, imageUrl) => {
     Swal.fire({
         title: `Student ID: ${studentID}`,
@@ -101,6 +100,8 @@ const viewStudent = (studentID, imageUrl) => {
         showCancelButton: true,
         confirmButtonText: 'Verify Student',
         cancelButtonText: 'Close',
+        imageWidth: 350,  // Set fixed width for the image
+        imageHeight: 350,  // Set fixed height for the image
         preConfirm: async () => {
             try {
                 // Verify the student only when the user confirms the verification
@@ -118,7 +119,6 @@ const viewStudent = (studentID, imageUrl) => {
         }
     });
 };
-
 // Delete student function
 const deleteStudent = async (studentID) => {
     try {
