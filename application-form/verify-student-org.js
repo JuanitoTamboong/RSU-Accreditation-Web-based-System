@@ -157,23 +157,44 @@ async function uploadIDImage(file, studentID) {
     Swal.fire('Submitted', 'Your ID photo has been uploaded. Please wait for admin verification.', 'success');
 }
 
-// Capture ID with Camera
+// Capture ID with Camera and flip between front and back cameras
 function captureImageWithCamera(studentID) {
     Swal.fire({
         title: 'Capture ID with Camera',
-        html: '<video id="video" width="100%" autoplay></video><canvas id="canvas" style="display: none;"></canvas>',
+        html: `
+            <video id="video" width="100%" autoplay></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <button id="flip-button" style="position: absolute; top: 10px; right: 10px; padding: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 5px;">Flip Camera</button>
+        `,
         showCancelButton: true,
         confirmButtonText: 'Capture',
         cancelButtonText: 'Cancel',
         willOpen: async () => {
             const video = document.getElementById('video');
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const flipButton = document.getElementById('flip-button');
+            let currentStream;
+            let currentDeviceId = 'environment';  // default to back camera
+
+            async function startCamera(deviceId) {
+                if (currentStream) {
+                    const tracks = currentStream.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: deviceId }
+                });
+                currentStream = stream;
                 video.srcObject = stream;
-            } catch (error) {
-                console.error("Camera access error:", error);
-                Swal.fire('Error', 'Unable to access camera. Please check permissions.', 'error');
             }
+
+            // Start the camera with the default (back camera)
+            await startCamera(currentDeviceId);
+
+            // Toggle the camera between front and back
+            flipButton.addEventListener('click', async () => {
+                currentDeviceId = (currentDeviceId === 'environment') ? 'user' : 'environment';
+                await startCamera(currentDeviceId);
+            });
         },
         preConfirm: () => {
             return new Promise((resolve) => {
