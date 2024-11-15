@@ -130,7 +130,7 @@ const deleteStudent = async (studentID) => {
             if (row.cells[1].textContent === studentID) row.remove();
         });
 
-        showAlert("success", "Success", "Student deleted successfully!");
+        showAlert("success", "Success", "Student ID deleted successfully!");
     } catch (error) {
         console.error("Error deleting student:", error);
         showAlert("error", "Error", "Could not delete student. Please try again.");

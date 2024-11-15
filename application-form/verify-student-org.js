@@ -131,12 +131,22 @@ async function requestIDUpload(studentID) {
             input: 'file',
             inputAttributes: { accept: 'image/*' },
             showCancelButton: true,
-            confirmButtonText: 'Upload',
+            confirmButtonText: 'Upload File',
             cancelButtonText: 'Use Camera',
         }).then(async (result) => {
-            if (result.isConfirmed && result.value) {
+            // If the user clicks "Upload File" but doesn't select a file, result.value will be undefined
+            if (result.isConfirmed) {
                 const file = result.value;
-                await uploadIDImage(file, studentID);
+                if (file) { // Ensure a file is selected
+                    await uploadIDImage(file, studentID);
+                } else {
+                    // Show the warning if no file is selected
+                    Swal.fire({
+                        title: 'No File Selected',
+                        text: 'You must select a file to continue with the verification.',
+                        icon: 'warning',
+                    });
+                }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 captureImageWithCamera(studentID);
             }

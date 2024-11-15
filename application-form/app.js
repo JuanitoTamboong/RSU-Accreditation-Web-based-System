@@ -158,7 +158,7 @@ document.getElementById('application-form').addEventListener('submit', async (ev
         Swal.fire({
             icon: 'error',
             title: 'ID Not Verified',
-            text: 'Your student ID is not yet verified by the admin',
+            text: 'Your student ID has not been verified by the admin. You need to verify it before proceeding.',
         });
         return; // Exit the function if the student ID is not verified
     }
