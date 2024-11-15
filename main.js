@@ -83,26 +83,34 @@ function validateSignUpForm(email, password, confirmPassword) {
   let isValid = true;
   const errors = [];
 
+  // Check if fields are empty
   if (!email || !password || !confirmPassword) {
     errors.push("All fields are required.");
     isValid = false;
   }
 
+  // Validate email format
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailPattern.test(email)) {
+    errors.push("Please enter a valid email address.");
+    isValid = false;
+  }
+
+  // Check if passwords match
   if (password !== confirmPassword) {
     errors.push("Passwords do not match.");
     isValid = false;
   }
-
   // Password complexity validation
-  const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+  // Must be at least 6 characters long, contain uppercase, lowercase, number, and special character
+  const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ !"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])[A-Za-z\d !"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]{6,}$/;
   if (!passwordRequirements.test(password)) {
     errors.push("Password must be at least 6 characters long, contain uppercase and lowercase letters, a number, and a special character.");
     isValid = false;
   }
-
+  // Return the result with errors
   return { isValid, errors };
 }
-
 // Event listener for the "Register" link
 const registerLink = document.getElementById("register-link");
 if (registerLink) {
@@ -290,16 +298,27 @@ if (signInForm) {
             text: "Please verify your email before logging in.",
             confirmButtonText: "Resend Verification Email",
             customClass: "swal-wide",
-          }).then(() => {
-            // Optionally, resend the verification email
-            sendEmailVerification(user).then(() => {
-              Swal.fire({
-                icon: "success",
-                title: "Verification email sent",
-                text: "Please check your inbox for the verification link.",
-                customClass: "swal-wide",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Optionally, resend the verification email
+              sendEmailVerification(user).then(() => {
+                // This will only trigger if the button is clicked to resend
+                Swal.fire({
+                  icon: "success",
+                  title: "Verification email sent",
+                  text: "Please check your inbox for the verification link.",
+                  customClass: "swal-wide",
+                });
+              }).catch((error) => {
+                // Handle error in case the resend fails
+                Swal.fire({
+                  icon: "error",
+                  title: "Error Resending Verification",
+                  text: "Failed to send verification email. Please try again.",
+                  customClass: "swal-wide",
+                });
               });
-            });
+            }
           });
         } else {
           hideLoading();

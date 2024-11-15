@@ -155,6 +155,8 @@ async function uploadIDImage(file, studentID) {
     });
     Swal.fire('Submitted', 'Your ID photo has been uploaded. Please wait for admin verification.', 'success');
 }
+
+// Capture image with camera
 function captureImageWithCamera(studentID) {
     let currentStream;
     let currentDeviceId = 'environment';  // Default to back camera

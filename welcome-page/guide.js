@@ -48,7 +48,7 @@ async function handleGuideSelection(event) {
     const selectedValue = event.target.value;
 
     if (!selectedValue) {
-        showInfoAlert('Select Accreditation Type', 'Please select an accreditation type to see the requirements.');
+        showInfoAlert('Select Service Type', 'Please select a type of service to view the requirements..');
         return;
     }
 
