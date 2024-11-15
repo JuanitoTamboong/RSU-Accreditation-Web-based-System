@@ -175,13 +175,18 @@ function captureImageWithCamera(studentID) {
             let currentDeviceId = 'environment';  // default to back camera
 
             async function startCamera(deviceId) {
+                // Stop the current stream tracks
                 if (currentStream) {
                     const tracks = currentStream.getTracks();
                     tracks.forEach(track => track.stop());
                 }
+                
+                // Request the new stream
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: deviceId }
                 });
+                
+                // Set the stream to the video element
                 currentStream = stream;
                 video.srcObject = stream;
             }
@@ -191,7 +196,10 @@ function captureImageWithCamera(studentID) {
 
             // Toggle the camera between front and back
             flipButton.addEventListener('click', async () => {
+                // Toggle between 'environment' (back) and 'user' (front)
                 currentDeviceId = (currentDeviceId === 'environment') ? 'user' : 'environment';
+                
+                // Restart the camera with the new facing mode
                 await startCamera(currentDeviceId);
             });
         },
@@ -239,8 +247,6 @@ function captureImageWithCamera(studentID) {
         }
     });
 }
-
-
 // Validate student ID format (xxx-xxxx-xxxxxx)
 function isValidStudentIdFormat(studentID) {
     const idPattern = /^\d{3}-\d{4}-\d{6}$/;
