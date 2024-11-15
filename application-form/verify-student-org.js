@@ -115,8 +115,7 @@ function listenForUnverifiedRequests(studentID) {
     // Return the unsubscribe function if you want to stop listening
     return unsubscribe;
 }
-
-// Request ID upload if the student ID is unverified or not found
+// id verication required
 async function requestIDUpload(studentID) {
     const studentRef = collection(dbVerification, 'unverified-requests');
     const q = query(studentRef, where("studentID", "==", studentID));
@@ -124,35 +123,44 @@ async function requestIDUpload(studentID) {
 
     if (querySnapshot.empty) {
         // Trigger Swal if no request exists in 'unverified-requests'
-        Swal.fire({
-            title: 'ID Verification Required',
-            text: 'Please upload a photo of your student ID for verification.',
-            icon: 'info',
-            input: 'file',
-            inputAttributes: { accept: 'image/*' },
-            showCancelButton: true,
-            confirmButtonText: 'Upload File',
-            cancelButtonText: 'Use Camera',
-        }).then(async (result) => {
-            // If the user clicks "Upload File" but doesn't select a file, result.value will be undefined
-            if (result.isConfirmed) {
-                const file = result.value;
-                if (file) { // Ensure a file is selected
-                    await uploadIDImage(file, studentID);
-                } else {
-                    // Show the warning if no file is selected
-                    Swal.fire({
-                        title: 'No File Selected',
-                        text: 'You must select a file to continue with the verification.',
-                        icon: 'warning',
-                    });
+        const promptUpload = async () => {
+            Swal.fire({
+                title: 'ID Verification Required',
+                text: 'Please upload a photo of your student ID for verification.',
+                icon: 'info',
+                input: 'file',
+                inputAttributes: { accept: 'image/*' },
+                showCancelButton: true,
+                confirmButtonText: 'Upload File',
+                cancelButtonText: 'Use Camera',
+                allowOutsideClick: false, // Prevent popup closure by clicking outside
+                allowEscapeKey: false,   // Prevent popup closure with Escape key
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const file = result.value;
+                    if (file) {
+                        await uploadIDImage(file, studentID);
+                    } else {
+                        // Show a warning if no file is selected
+                        Swal.fire({
+                            title: 'No File Selected',
+                            text: 'You must select a file to continue with the verification.',
+                            icon: 'warning',
+                        }).then(() => {
+                            promptUpload(); // Re-trigger the upload prompt
+                        });
+                    }
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    captureImageWithCamera(studentID);
                 }
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                captureImageWithCamera(studentID);
-            }
-        });
+            });
+        };
+
+        // Initial upload prompt
+        promptUpload();
     }
 }
+
 // Upload ID photo to Firebase Storage
 async function uploadIDImage(file, studentID) {
     const storageRef = ref(storage, `unverified-ids/${studentID}.jpg`);
@@ -280,9 +288,20 @@ function captureImageWithCamera(studentID) {
                 };
             };
             reader.readAsDataURL(file); // Load the image into the img element
+        } else if (result.isDismissed) {
+            // If the user cancels, show a reminder to re-enter the student ID
+            Swal.fire({
+                title: 'Reminder',
+                text: 'Please re-enter the Student ID to re open the verification process.',
+                icon: 'info'
+            }).then(() => {
+                // Here you can reset the student ID input field or prompt the user again
+                document.getElementById('representative-id').value = ''; // Assuming an ID input field exists
+            });
         }
     });
 }
+
 // Validate student ID format (xxx-xxxx-xxxxxx)
 function isValidStudentIdFormat(studentID) {
     const idPattern = /^\d{3}-\d{4}-\d{6}$/;
