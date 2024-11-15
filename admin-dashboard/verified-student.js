@@ -100,8 +100,9 @@ const viewStudent = (studentID, imageUrl) => {
         showCancelButton: true,
         confirmButtonText: 'Verify Student',
         cancelButtonText: 'Close',
-        imageWidth: 350,  // Set fixed width for the image
-        imageHeight: 350,  // Set fixed height for the image
+        imageWidth: 400,  // Set fixed width for the image
+        imageHeight: 400, // Set fixed height for the image
+        customClass: 'swal-verified',
         preConfirm: async () => {
             try {
                 // Verify the student only when the user confirms the verification

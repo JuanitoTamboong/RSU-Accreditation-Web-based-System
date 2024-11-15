@@ -143,7 +143,6 @@ async function requestIDUpload(studentID) {
         });
     }
 }
-
 // Upload ID photo to Firebase Storage
 async function uploadIDImage(file, studentID) {
     const storageRef = ref(storage, `unverified-ids/${studentID}.jpg`);
@@ -157,11 +156,11 @@ async function uploadIDImage(file, studentID) {
     Swal.fire('Submitted', 'Your ID photo has been uploaded. Please wait for admin verification.', 'success');
 }
 
-// Capture ID with Camera and flip between front and back cameras
+// Capture ID with Camera
 function captureImageWithCamera(studentID) {
     Swal.fire({
         title: 'Capture ID with Camera',
-        html: `
+        html: `  
             <video id="video" width="100%" autoplay></video>
             <canvas id="canvas" style="display: none;"></canvas>
             <button id="flip-button" style="position: absolute; top: 10px; right: 10px; padding: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 5px;">Flip Camera</button>
@@ -204,21 +203,43 @@ function captureImageWithCamera(studentID) {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Convert canvas to Blob for further processing
                 canvas.toBlob((blob) => { resolve(blob); }, 'image/jpeg');
             });
         }
     }).then((result) => {
         if (result.isConfirmed) {
             const file = result.value;
-            uploadIDImage(file, studentID);
-        } else {
-            const video = document.getElementById('video');
-            const stream = video.srcObject;
-            const tracks = stream.getTracks();
-            tracks.forEach((track) => track.stop());
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                img.src = e.target.result;
+                img.onload = function () {
+                    // Show the captured image in Swal to the user before proceeding
+                    Swal.fire({
+                        title: 'Captured Image',
+                        html: `<img src="${e.target.result}" style="width: 100%; height: auto;">`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Upload',
+                        cancelButtonText: 'Retake'
+                    }).then((uploadResult) => {
+                        if (uploadResult.isConfirmed) {
+                            // Proceed with uploading the image if it's confirmed
+                            uploadIDImage(file, studentID);
+                        } else {
+                            // Retake image by reopening the camera capture
+                            captureImageWithCamera(studentID); // Restart the process
+                        }
+                    });
+                };
+            };
+            reader.readAsDataURL(file); // Load the image into the img element
         }
     });
 }
+
 
 // Validate student ID format (xxx-xxxx-xxxxxx)
 function isValidStudentIdFormat(studentID) {

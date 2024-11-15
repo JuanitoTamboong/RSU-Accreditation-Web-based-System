@@ -95,7 +95,7 @@ table thead th {
 
 .list-of-verified {
     overflow-y: auto;
-    height: 300px;
+    height: 600px;
 }
 
 table tbody tr:hover {
