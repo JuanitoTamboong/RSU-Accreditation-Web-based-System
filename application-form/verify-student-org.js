@@ -175,20 +175,29 @@ function captureImageWithCamera(studentID) {
             let currentDeviceId = 'environment';  // default to back camera
 
             async function startCamera(deviceId) {
-                // Stop the current stream tracks
+                // Stop any previous stream if it exists
                 if (currentStream) {
                     const tracks = currentStream.getTracks();
-                    tracks.forEach(track => track.stop());
+                    tracks.forEach(track => track.stop());  // stop all tracks in the previous stream
                 }
-                
-                // Request the new stream
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: deviceId }
-                });
-                
-                // Set the stream to the video element
-                currentStream = stream;
-                video.srcObject = stream;
+
+                try {
+                    // Request new stream with the current camera
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: deviceId }
+                    });
+
+                    // Set the new stream to the video element
+                    currentStream = stream;
+                    video.srcObject = stream;
+                } catch (error) {
+                    // If error occurs (like permission denied), show an alert
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Unable to access the camera. Please make sure camera permissions are granted.',
+                        icon: 'error'
+                    });
+                }
             }
 
             // Start the camera with the default (back camera)
