@@ -157,7 +157,19 @@ async function uploadIDImage(file, studentID) {
 }
 
 // Capture ID with Camera
+// Capture ID with Camera
 function captureImageWithCamera(studentID) {
+    let currentStream;
+
+    // Function to stop the current video stream
+    function stopStream() {
+        if (currentStream) {
+            const tracks = currentStream.getTracks();
+            tracks.forEach(track => track.stop()); // Stop any previous stream
+            currentStream = null;
+        }
+    }
+
     Swal.fire({
         title: 'Capture ID with Camera',
         html: `  
@@ -171,15 +183,11 @@ function captureImageWithCamera(studentID) {
         willOpen: async () => {
             const video = document.getElementById('video');
             const flipButton = document.getElementById('flip-button');
-            let currentStream;
-            let currentDeviceId = 'environment';  // default to back camera
+            let currentDeviceId = 'environment';  // Default to back camera
 
             // Function to start the camera with the provided deviceId
             async function startCamera(deviceId) {
-                if (currentStream) {
-                    const tracks = currentStream.getTracks();
-                    tracks.forEach(track => track.stop()); // Stop any previous stream
-                }
+                stopStream();  // Stop any previous stream before starting a new one
 
                 try {
                     // Request new stream with the current facing mode (front/back)
@@ -216,6 +224,10 @@ function captureImageWithCamera(studentID) {
                 currentDeviceId = (currentDeviceId === 'environment') ? 'user' : 'environment';
                 await startCamera(currentDeviceId);
             });
+        },
+        willClose: () => {
+            // Stop camera when the popup closes (either through cancel or any other closure)
+            stopStream();
         },
         preConfirm: () => {
             return new Promise((resolve) => {
@@ -261,7 +273,6 @@ function captureImageWithCamera(studentID) {
         }
     });
 }
-
 // Validate student ID format (xxx-xxxx-xxxxxx)
 function isValidStudentIdFormat(studentID) {
     const idPattern = /^\d{3}-\d{4}-\d{6}$/;
