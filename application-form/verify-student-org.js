@@ -155,11 +155,9 @@ async function uploadIDImage(file, studentID) {
     });
     Swal.fire('Submitted', 'Your ID photo has been uploaded. Please wait for admin verification.', 'success');
 }
-
-// Capture ID with Camera
-// Capture ID with Camera
 function captureImageWithCamera(studentID) {
     let currentStream;
+    let currentDeviceId = 'environment';  // Default to back camera
 
     // Function to stop the current video stream
     function stopStream() {
@@ -167,6 +165,29 @@ function captureImageWithCamera(studentID) {
             const tracks = currentStream.getTracks();
             tracks.forEach(track => track.stop()); // Stop any previous stream
             currentStream = null;
+        }
+    }
+
+    // Function to start the camera with the provided deviceId
+    async function startCamera(deviceId) {
+        stopStream();  // Stop any previous stream before starting a new one
+
+        try {
+            // Request new stream with the current facing mode (front/back)
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: deviceId }
+            });
+
+            currentStream = stream;
+            const video = document.getElementById('video');
+            video.srcObject = stream;
+        } catch (error) {
+            // If error occurs, show an alert
+            Swal.fire({
+                title: 'Error',
+                text: 'Unable to access the camera. Please make sure camera permissions are granted.',
+                icon: 'error'
+            });
         }
     }
 
@@ -181,31 +202,8 @@ function captureImageWithCamera(studentID) {
         confirmButtonText: 'Capture',
         cancelButtonText: 'Cancel',
         willOpen: async () => {
-            const video = document.getElementById('video');
             const flipButton = document.getElementById('flip-button');
-            let currentDeviceId = 'environment';  // Default to back camera
-
-            // Function to start the camera with the provided deviceId
-            async function startCamera(deviceId) {
-                stopStream();  // Stop any previous stream before starting a new one
-
-                try {
-                    // Request new stream with the current facing mode (front/back)
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: deviceId }
-                    });
-
-                    currentStream = stream;
-                    video.srcObject = stream;
-                } catch (error) {
-                    // If error occurs, show an alert
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Unable to access the camera. Please make sure camera permissions are granted.',
-                        icon: 'error'
-                    });
-                }
-            }
+            const video = document.getElementById('video');
 
             // Start with the back camera by default
             await startCamera(currentDeviceId);
