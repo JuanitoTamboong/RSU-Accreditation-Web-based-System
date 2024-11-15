@@ -174,24 +174,23 @@ function captureImageWithCamera(studentID) {
             let currentStream;
             let currentDeviceId = 'environment';  // default to back camera
 
+            // Function to start the camera with the provided deviceId
             async function startCamera(deviceId) {
-                // Stop any previous stream if it exists
                 if (currentStream) {
                     const tracks = currentStream.getTracks();
-                    tracks.forEach(track => track.stop());  // stop all tracks in the previous stream
+                    tracks.forEach(track => track.stop()); // Stop any previous stream
                 }
 
                 try {
-                    // Request new stream with the current camera
+                    // Request new stream with the current facing mode (front/back)
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: deviceId }
                     });
 
-                    // Set the new stream to the video element
                     currentStream = stream;
                     video.srcObject = stream;
                 } catch (error) {
-                    // If error occurs (like permission denied), show an alert
+                    // If error occurs, show an alert
                     Swal.fire({
                         title: 'Error',
                         text: 'Unable to access the camera. Please make sure camera permissions are granted.',
@@ -200,15 +199,21 @@ function captureImageWithCamera(studentID) {
                 }
             }
 
-            // Start the camera with the default (back camera)
+            // Start with the back camera by default
             await startCamera(currentDeviceId);
+
+            // Check available media devices to confirm front camera exists
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const hasFrontCamera = devices.some(device => device.kind === 'videoinput' && device.facing === 'user');
+
+            if (!hasFrontCamera) {
+                flipButton.disabled = true; // Disable the flip button if no front camera
+            }
 
             // Toggle the camera between front and back
             flipButton.addEventListener('click', async () => {
                 // Toggle between 'environment' (back) and 'user' (front)
                 currentDeviceId = (currentDeviceId === 'environment') ? 'user' : 'environment';
-                
-                // Restart the camera with the new facing mode
                 await startCamera(currentDeviceId);
             });
         },
@@ -256,6 +261,7 @@ function captureImageWithCamera(studentID) {
         }
     });
 }
+
 // Validate student ID format (xxx-xxxx-xxxxxx)
 function isValidStudentIdFormat(studentID) {
     const idPattern = /^\d{3}-\d{4}-\d{6}$/;
