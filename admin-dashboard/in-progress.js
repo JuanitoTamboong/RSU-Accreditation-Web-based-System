@@ -1,6 +1,8 @@
-// Import Firebase modules
+// Import Firebase modules 
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
 import { getFirestore, collection, onSnapshot, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+import { getStorage, ref, deleteObject } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js';
+import { getDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js'; // Make sure to import getDoc
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,13 +18,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Function to render a table row
 function renderRow(doc) {
     const { emailAddress = 'N/A', representativeName = 'N/A', organizationName = 'N/A', typeOfService = 'N/A', dateFiling = 'N/A' } = doc.data().applicationDetails || {};
-    
-    // Check application status
-    const applicationStatus = doc.data().applicationStatus || 'in-progress'; // Default to 'In Progress' if no status is found
+
+    const applicationStatus = doc.data().applicationStatus || 'in-progress';
 
     return `
         <tr data-id="${doc.id}">
@@ -31,20 +33,39 @@ function renderRow(doc) {
             <td>${organizationName}</td>
             <td>${typeOfService}</td>
             <td>${dateFiling}</td>
-            <td>${applicationStatus}</td> <!-- Display application status -->
+            <td>${applicationStatus}</td>
             <td><a href="../admin-dashboard/view-request.html?id=${doc.id}" class="view-link" data-id="${doc.id}">View</a></td>
             <td><button class="delete-btn" data-id="${doc.id}">Delete</button></td>
         </tr>
     `;
 }
 
+// Function to delete files from Firebase Storage
+async function deleteFiles(fileUrls) {
+    const promises = fileUrls.map(async (url) => {
+        try {
+            // Decode the file path from the URL
+            const filePath = decodeURIComponent(new URL(url).pathname.split('/o/')[1]);
+
+            // Create a reference to the file in Firebase Storage
+            const fileRef = ref(storage, filePath);
+
+            // Delete the file
+            await deleteObject(fileRef);
+            console.log(`Deleted file: ${url}`);
+        } catch (error) {
+            console.error(`Failed to delete file: ${url}`, error);
+        }
+    });
+    return Promise.all(promises);
+}
+
 // Function to handle real-time data updates
 function fetchApplications() {
     const tableBody = document.getElementById('in-progress-table-body');
 
-    // Set up a real-time listener
     onSnapshot(collection(db, 'student-org-applications'), (snapshot) => {
-        tableBody.innerHTML = ''; // Clear table body
+        tableBody.innerHTML = '';
 
         if (snapshot.empty) {
             tableBody.innerHTML = '<tr><td colspan="7">No in-progress requests found.</td></tr>';
@@ -52,21 +73,16 @@ function fetchApplications() {
         }
 
         snapshot.forEach((doc) => {
-            tableBody.innerHTML += renderRow(doc); // Add each row
+            tableBody.innerHTML += renderRow(doc);
         });
 
-        attachDeleteHandlers(); // Attach delete handlers after rows are rendered
+        attachDeleteHandlers();
     }, (error) => {
         console.error("Error fetching real-time updates:", error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Failed to fetch applications. Please try again later.'
-        });
     });
 }
 
-// Function to handle document deletion
+// Function to handle document and associated files deletion
 function attachDeleteHandlers() {
     const tableBody = document.getElementById('in-progress-table-body');
 
@@ -77,14 +93,7 @@ function attachDeleteHandlers() {
         const requestId = deleteBtn.getAttribute('data-id');
         console.log("Deleting request ID:", requestId);
 
-        if (!requestId) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Failed to retrieve request ID.'
-            });
-            return;
-        }
+        if (!requestId) return;
 
         const { isConfirmed } = await Swal.fire({
             title: 'Are you sure?',
@@ -94,30 +103,42 @@ function attachDeleteHandlers() {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
-            customClass: 'swal-delete'
+            customClass: 'swal-pop-up',
         });
 
         if (!isConfirmed) return;
 
         try {
-            await deleteDoc(doc(db, 'student-org-applications', requestId));
-            Swal.fire({
-                title: 'Deleted!',
-                text: 'The request has been deleted.',
-                icon: 'success',
-                customClass: 'swal-success'
-            });
-        } catch (error) {
-            console.error("Error deleting request:", error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Failed to delete the request. Please try again.',
-                customClass: 'swal-delete'
-            });
-        }
-    });
-}
+            const docRef = doc(db, 'student-org-applications', requestId);
+            const docSnapshot = await getDoc(docRef);  // Use getDoc to fetch the document snapshot
 
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                const documentUrls = data?.applicationDetails?.documents || [];
+                const imageUrls = data?.profiles?.map(profile => profile.imageUrl) || [];
+
+                // Delete associated files
+                await deleteFiles([...documentUrls, ...imageUrls]);
+
+                // Delete Firestore document
+                await deleteDoc(docRef);
+
+              // Custom success alert
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The request and associated files have been deleted.',
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                customClass: 'swal-delete',
+            });
+        } else {
+            throw new Error("Document not found");
+        }
+    } catch (error) {
+        console.error("Error deleting request:", error);
+        Swal.fire('Error!', 'Failed to delete the request. Please try again.', 'error');
+    }
+});
+}
 // Initialize when the DOM is loaded
 window.addEventListener('DOMContentLoaded', fetchApplications);

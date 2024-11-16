@@ -1,6 +1,7 @@
 // Import Firebase modules
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
-import { getFirestore, collection, query, where, onSnapshot, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+import { getFirestore, collection, query, where, onSnapshot, deleteDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+import { getStorage, ref, deleteObject } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -15,6 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Function to format date strings
 function formatDateString(dateString, includeTime = false) {
@@ -104,46 +106,82 @@ onSnapshot(approvedQuery, (snapshot) => {
     }
 });
 
-// Function to delete an applicant from Firestore
-async function deleteApplicant(applicantId) {
-    const applicantRef = doc(db, 'student-org-applications', applicantId);
-    try {
-        await deleteDoc(applicantRef);
-        console.log(`Applicant with ID ${applicantId} deleted successfully.`);
-    } catch (error) {
-        console.error("Error deleting applicant: ", error);
-    }
+// Function to delete files from Firebase Storage
+async function deleteFiles(fileUrls) {
+    const promises = fileUrls.map(async (url) => {
+        try {
+            // Decode the file path from the URL
+            const filePath = decodeURIComponent(new URL(url).pathname.split('/o/')[1]);
+
+            // Create a reference to the file in Firebase Storage
+            const fileRef = ref(storage, filePath);
+
+            // Delete the file
+            await deleteObject(fileRef);
+            console.log(`Deleted file: ${url}`);
+        } catch (error) {
+            console.error(`Failed to delete file: ${url}`, error);
+        }
+    });
+    return Promise.all(promises);
 }
 
-// Attach event listeners to delete buttons
+// Function to handle document and associated files deletion
 function attachDeleteEventListeners() {
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const applicantId = button.getAttribute('data-id');
+    const tableBody = document.getElementById('applicants-table-body');
 
-            // Show SweetAlert confirmation dialog
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "This will permanently delete the applicant's record.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                customClass: 'swal-delete'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteApplicant(applicantId); // Proceed with deletion
-                    Swal.fire({
-                        title: 'Deleted!',
-                        text: 'The applicant has been deleted.',
-                        icon: 'success',
-                        customClass: 'swal-success'
-                    });
-                }
-            });
+    tableBody.addEventListener('click', async (event) => {
+        const deleteBtn = event.target.closest('.delete-btn');
+        if (!deleteBtn) return;
+
+        const requestId = deleteBtn.getAttribute('data-id');
+        console.log("Deleting request ID:", requestId);
+
+        if (!requestId) return;
+
+        // Show confirmation dialog
+        const { isConfirmed } = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            customClass: 'swal-pop-up',
         });
+
+        if (!isConfirmed) return;
+
+        try {
+            const docRef = doc(db, 'student-org-applications', requestId);
+            const docSnapshot = await getDoc(docRef);  // Use getDoc to fetch the document snapshot
+
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                const documentUrls = data?.applicationDetails?.documents || [];
+                const imageUrls = data?.profiles?.map(profile => profile.imageUrl) || [];
+
+                // Delete associated files
+                await deleteFiles([...documentUrls, ...imageUrls]);
+
+                // Delete Firestore document
+                await deleteDoc(docRef);
+
+                // Custom success alert
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'The request and associated files have been deleted.',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    customClass: 'swal-delete',
+                });
+            } else {
+                throw new Error("Document not found");
+            }
+        } catch (error) {
+            console.error("Error deleting request:", error);
+            Swal.fire('Error!', 'Failed to delete the request. Please try again.', 'error');
+        }
     });
 }

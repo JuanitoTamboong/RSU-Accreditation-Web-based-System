@@ -296,7 +296,7 @@ function captureImageWithCamera(studentID) {
                 icon: 'info'
             }).then(() => {
                 // Here you can reset the student ID input field or prompt the user again
-                document.getElementById('representative-id').value = ''; // Assuming an ID input field exists
+                document.getElementById('representative-id').value = '';
             });
         }
     });

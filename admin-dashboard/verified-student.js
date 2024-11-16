@@ -1,7 +1,7 @@
 // Firebase Imports
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, query, where, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -66,6 +66,16 @@ const verifyStudentInFirestore = async (studentID) => {
     }
 };
 
+// Storage Operations
+const deleteStudentFileFromStorage = async (storagePath) => {
+    const storageRef = ref(storage, storagePath); // Reference to the image file in Firebase Storage
+    try {
+        await deleteObject(storageRef);  // Delete the file from Firebase Storage
+    } catch (error) {
+        console.error("Error deleting file from storage:", error);
+    }
+};
+
 // DOM Manipulation
 const addStudentToTable = (studentID, storagePath, status) => {
     const tableBody = document.getElementById("student-table-body");
@@ -120,11 +130,21 @@ const viewStudent = (studentID, imageUrl) => {
         }
     });
 };
+
 // Delete student function
 const deleteStudent = async (studentID) => {
     try {
-        await deleteStudentFromFirestore(studentID);
+        // Fetch the student data to get the storage path (image location)
+        const studentRef = query(collection(db, "unverified-requests"), where("studentID", "==", studentID));
+        const querySnapshot = await getDocs(studentRef);
+        if (!querySnapshot.empty) {
+            const studentDoc = querySnapshot.docs[0];
+            const storagePath = studentDoc.data().storagePath;  // Get the image storage path
+            await deleteStudentFileFromStorage(storagePath);  // Delete the file from Firebase Storage
+            await deleteStudentFromFirestore(studentID);  // Delete the student document from Firestore
+        }
 
+        // Remove the student row from the table
         const rows = document.querySelectorAll("#student-table-body tr");
         rows.forEach(row => {
             if (row.cells[1].textContent === studentID) row.remove();
@@ -147,6 +167,7 @@ const updateStudentStatusInTable = (studentID, newStatus) => {
             // Conditionally hide the "View" button only if the status is "verified"
             const viewButton = row.querySelector(".view-btn");
             if (newStatus === "verified") {
+                viewButton.style.display = "none";  // Hide the button if the student is verified
             } else {
                 viewButton.style.display = "inline-block"; // Ensure the "View" button is visible if not verified
             }
@@ -173,32 +194,29 @@ const addStudent = async () => {
     }
 
     try {
-        const fileUrl = await uploadStudentFile(studentID, file);
-        await addStudentToFirestore(studentID, fileUrl);
-        addStudentToTable(studentID, fileUrl, "pending");
+        const storagePath = await uploadStudentFile(studentID, file);
+        await addStudentToFirestore(studentID, storagePath);  // Save student to Firestore
+        addStudentToTable(studentID, storagePath, "pending");  // Add student to table view
+
         showAlert("success", "Success", "Student added successfully!");
-        document.getElementById("student-id").value = "";
-        document.getElementById("file-upload").value = "";
     } catch (error) {
         console.error("Error adding student:", error);
-        showAlert("error", "Error", "Could not add student. Please try again.");
+        showAlert("error", "Error", "There was an error adding the student. Please try again.");
     }
 };
 
-// Real-time listener for changes in Firestore (unverified-requests)
+// Listen for real-time updates to the Firestore collection
 const listenForStudentUpdates = () => {
-    const studentRef = collection(db, "unverified-requests");
-
-    onSnapshot(studentRef, (querySnapshot) => {
-        const tableBody = document.getElementById("student-table-body");
-        tableBody.innerHTML = '';  // Clear the existing table body
-
-        querySnapshot.forEach((doc) => {
-            const { studentID, storagePath, status } = doc.data();
-            addStudentToTable(studentID, storagePath, status);  // Add each document to the table
+    const q = collection(db, "unverified-requests");
+    onSnapshot(q, (querySnapshot) => {
+        document.getElementById("student-table-body").innerHTML = "";  // Clear the table body first
+        querySnapshot.forEach(doc => {
+            const studentData = doc.data();
+            addStudentToTable(studentData.studentID, studentData.storagePath, studentData.status);
         });
     });
 };
+
 
 // Start listening for real-time updates
 window.onload = () => {
