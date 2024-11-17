@@ -1,8 +1,7 @@
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -23,7 +22,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const provider = new GoogleAuthProvider();
 
 // Utility Functions
 const togglePasswordVisibility = (inputElement, toggleElement) => {
@@ -32,10 +30,18 @@ const togglePasswordVisibility = (inputElement, toggleElement) => {
     return;
   }
 
+  // Toggle password type
   const isPassword = inputElement.type === "password";
   inputElement.type = isPassword ? "text" : "password";
-  toggleElement.classList.toggle("bx-show", !isPassword);
-  toggleElement.classList.toggle("bx-hide", isPassword);
+
+  // Toggle icon classes
+  if (isPassword) {
+    toggleElement.classList.add("bx-show");
+    toggleElement.classList.remove("bx-hide");
+  } else {
+    toggleElement.classList.add("bx-hide");
+    toggleElement.classList.remove("bx-show");
+  }
 };
 
 const showLoading = () => {
@@ -77,45 +83,45 @@ document.addEventListener("DOMContentLoaded", () => {
       toggleElement.addEventListener("click", () => togglePasswordVisibility(inputElement, toggleElement));
     }
   });
-// Password criteria validation
-const passwordInput = document.getElementById("signup-password");
-const criteriaList = document.getElementById("password-criteria");
 
-if (passwordInput) {
-  passwordInput.addEventListener("focus", () => {
-    // Show password criteria with animation
-    criteriaList?.classList.remove("hidden");
-    criteriaList?.classList.add("visible");
-  });
+  // Password criteria validation
+  const passwordInput = document.getElementById("signup-password");
+  const criteriaList = document.getElementById("password-criteria");
 
-  passwordInput.addEventListener("blur", () => {
-    if (!passwordInput.value) {
-      // Hide password criteria with animation
-      criteriaList?.classList.remove("visible");
-      criteriaList?.classList.add("hidden");
-    }
-  });
+  if (passwordInput) {
+    passwordInput.addEventListener("focus", () => {
+      // Show password criteria with animation
+      criteriaList?.classList.remove("hidden");
+      criteriaList?.classList.add("visible");
+    });
 
-  passwordInput.addEventListener("input", () => {
-    const validations = {
-      length: passwordInput.value.length >= 6,
-      uppercase: /[A-Z]/.test(passwordInput.value),
-      lowercase: /[a-z]/.test(passwordInput.value),
-      number: /[0-9]/.test(passwordInput.value),
-      special: /[ !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(passwordInput.value),
-    };
-
-    Object.entries(validations).forEach(([key, isValid]) => {
-      const criteriaItem = document.getElementById(`criteria-${key}`);
-      if (criteriaItem) {
-        criteriaItem.classList.toggle("valid", isValid);
-        criteriaItem.classList.toggle("invalid", !isValid);
+    passwordInput.addEventListener("blur", () => {
+      if (!passwordInput.value) {
+        // Hide password criteria with animation
+        criteriaList?.classList.remove("visible");
+        criteriaList?.classList.add("hidden");
       }
     });
-  });
-}
 
+    passwordInput.addEventListener("input", () => {
+      const validations = {
+        length: passwordInput.value.length >= 6,
+        uppercase: /[A-Z]/.test(passwordInput.value),
+        lowercase: /[a-z]/.test(passwordInput.value),
+        number: /[0-9]/.test(passwordInput.value),
+        special: /[ !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(passwordInput.value),
+      };
 
+      Object.entries(validations).forEach(([key, isValid]) => {
+        const criteriaItem = document.getElementById(`criteria-${key}`);
+        if (criteriaItem) {
+          criteriaItem.classList.toggle("valid", isValid);
+          criteriaItem.classList.toggle("invalid", !isValid);
+        }
+      });
+    });
+  }
+});
   // Register link confirmation
   const registerLink = document.getElementById("register-link");
   if (registerLink) {
@@ -144,8 +150,6 @@ if (passwordInput) {
       });
     });
   }
-});
-
 // Sign-Up Functionality
 const signUpForm = document.getElementById("signup-form");
 if (signUpForm) {
