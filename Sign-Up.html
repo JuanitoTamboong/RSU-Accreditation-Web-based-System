@@ -38,13 +38,27 @@
               <input type="text" name="email" id="email" placeholder="Enter your email" required>
             </div>
            <!-- Sign-Up Form (add this section to your existing sign-up HTML) -->
-          <div class="signIn">
-        <label for="password">Password</label>
-        <div class="password-container">
-       <input type="password" name="password" id="signup-password" placeholder="Enter your password" required>
-        <i class='bx bx-hide' id="toggleSignupPassword"></i>
-       </div>
-      </div>
+           <div class="signIn">
+            <label for="password">Password</label>
+            <div class="password-container">
+              <input
+                type="password"
+                name="password"
+                id="signup-password"
+                placeholder="Enter your password"
+                required
+              />
+              <i class="bx bx-hide" id="toggleSignupPassword"></i>
+            </div>
+            <!-- Password Criteria -->
+            <ul id="password-criteria" class="criteria-list hidden">
+              <li id="criteria-length" class="criteria-item">At least 6 characters</li>
+              <li id="criteria-uppercase" class="criteria-item">At least One uppercase letter</li>
+              <li id="criteria-lowercase" class="criteria-item">At least One lowercase letter</li>
+              <li id="criteria-number" class="criteria-item"> At least One number</li>
+              <li id="criteria-special" class="criteria-item">At least One special character</li>
+            </ul>
+          </div>          
       <div class="signIn">
       <label for="confirm-password">Confirm Password</label>
       <div class="password-container">
@@ -52,7 +66,6 @@
       <i class='bx bx-hide' id="toggleConfirmPassword"></i>
        </div>
        </div>
-
             <div class="signIn">
               <input type="submit" value="Submit">
             </div>

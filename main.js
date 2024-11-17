@@ -17,7 +17,7 @@ const firebaseConfig = {
   projectId: "student-org-5d42a",
   storageBucket: "student-org-5d42a.appspot.com",
   messagingSenderId: "1073695504078",
-  appId: "1:1073695504078:web:d2cd33e1b0fc6c82e0829f"
+  appId: "1:1073695504078:web:d2cd33e1b0fc6c82e0829f",
 };
 
 // Initialize Firebase
@@ -25,124 +25,126 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
-// Function to toggle password visibility
-function togglePasswordVisibility(inputElement, toggleElement) {
-  if (inputElement && toggleElement) {
-    const type = inputElement.getAttribute("type") === "password" ? "text" : "password";
-    inputElement.setAttribute("type", type);
-    toggleElement.classList.toggle('bx-show', type === "text");
-    toggleElement.classList.toggle('bx-hide', type === "password");
-  } else {
+// Utility Functions
+const togglePasswordVisibility = (inputElement, toggleElement) => {
+  if (!inputElement || !toggleElement) {
     console.error("Input or toggle element not found.");
-  }
-}
-
-// Wait for the DOM to be fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-  // Login password toggle
-  const passwordInput = document.getElementById("password");
-  const togglePassword = document.getElementById("togglePassword");
-
-  if (togglePassword) {
-    togglePassword.addEventListener("click", function () {
-      togglePasswordVisibility(passwordInput, togglePassword);
-    });
+    return;
   }
 
-  // Sign-up password fields and their toggle buttons
-  const signupPasswordInput = document.getElementById("signup-password");
-  const toggleSignupPassword = document.getElementById("toggleSignupPassword");
-  const confirmPasswordInput = document.getElementById("confirm-password");
-  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+  const isPassword = inputElement.type === "password";
+  inputElement.type = isPassword ? "text" : "password";
+  toggleElement.classList.toggle("bx-show", !isPassword);
+  toggleElement.classList.toggle("bx-hide", isPassword);
+};
 
-  if (toggleSignupPassword) {
-    toggleSignupPassword.addEventListener("click", function () {
-      togglePasswordVisibility(signupPasswordInput, toggleSignupPassword);
-    });
-  }
-
-  if (toggleConfirmPassword) {
-    toggleConfirmPassword.addEventListener("click", function () {
-      togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
-    });
-  }
-});
-
-// Function to show loading spinner
-function showLoading() {
+const showLoading = () => {
   document.getElementById("loading").style.display = "flex";
-}
+};
 
-// Function to hide loading spinner
-function hideLoading() {
+const hideLoading = () => {
   document.getElementById("loading").style.display = "none";
-}
+};
 
-// Function to validate form fields for sign-up
-function validateSignUpForm(email, password, confirmPassword) {
-  let isValid = true;
+const validateSignUpForm = (email, password, confirmPassword) => {
   const errors = [];
-
-  // Check if fields are empty
-  if (!email || !password || !confirmPassword) {
-    errors.push("All fields are required.");
-    isValid = false;
-  }
-
-  // Validate email format
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  if (!emailPattern.test(email)) {
-    errors.push("Please enter a valid email address.");
-    isValid = false;
-  }
+  const passwordRequirements =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ !"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]).{6,}$/;
 
-  // Check if passwords match
-  if (password !== confirmPassword) {
-    errors.push("Passwords do not match.");
-    isValid = false;
-  }
-  // Password complexity validation
-  // Must be at least 6 characters long, contain uppercase, lowercase, number, and special character
-  const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ !"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])[A-Za-z\d !"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]{6,}$/;
-  if (!passwordRequirements.test(password)) {
-    errors.push("Password must be at least 6 characters long, contain uppercase and lowercase letters, a number, and a special character.");
-    isValid = false;
-  }
-  // Return the result with errors
-  return { isValid, errors };
-}
-// Event listener for the "Register" link
-const registerLink = document.getElementById("register-link");
-if (registerLink) {
-  registerLink.addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent the default link behavior
+  if (!email || !password || !confirmPassword) errors.push("All fields are required.");
+  if (!emailPattern.test(email)) errors.push("Please enter a valid email address.");
+  if (password !== confirmPassword) errors.push("Passwords do not match.");
+  if (!passwordRequirements.test(password))
+    errors.push("Password must meet complexity requirements.");
 
-    // Show a confirmation dialog
-    Swal.fire({
-      title: "Are you a representative of a student organization?",
-      text: "You must be a representative to proceed with registration.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, I am",
-      cancelButtonText: "No, cancel",
-      customClass: "swal-wide",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // If confirmed, redirect to Sign-Up.html
-        window.location.href = "Sign-Up.html";
-      } else {
-        // If not confirmed, show an alert and stay on the login page
-        Swal.fire({
-          icon: "info",
-          title: "Registration is only for student organization representatives.",
-          timer: 2000,
-          showConfirmButton: false,
-          customClass: "swal-wide",
-        });
+  return { isValid: errors.length === 0, errors };
+};
+
+// Event Listeners
+document.addEventListener("DOMContentLoaded", () => {
+  const passwordInputs = [
+    { input: "password", toggle: "togglePassword" },
+    { input: "signup-password", toggle: "toggleSignupPassword" },
+    { input: "confirm-password", toggle: "toggleConfirmPassword" },
+  ];
+
+  // Add toggle functionality for all password fields
+  passwordInputs.forEach(({ input, toggle }) => {
+    const inputElement = document.getElementById(input);
+    const toggleElement = document.getElementById(toggle);
+    if (inputElement && toggleElement) {
+      toggleElement.addEventListener("click", () => togglePasswordVisibility(inputElement, toggleElement));
+    }
+  });
+// Password criteria validation
+const passwordInput = document.getElementById("signup-password");
+const criteriaList = document.getElementById("password-criteria");
+
+if (passwordInput) {
+  passwordInput.addEventListener("focus", () => {
+    // Show password criteria with animation
+    criteriaList?.classList.remove("hidden");
+    criteriaList?.classList.add("visible");
+  });
+
+  passwordInput.addEventListener("blur", () => {
+    if (!passwordInput.value) {
+      // Hide password criteria with animation
+      criteriaList?.classList.remove("visible");
+      criteriaList?.classList.add("hidden");
+    }
+  });
+
+  passwordInput.addEventListener("input", () => {
+    const validations = {
+      length: passwordInput.value.length >= 6,
+      uppercase: /[A-Z]/.test(passwordInput.value),
+      lowercase: /[a-z]/.test(passwordInput.value),
+      number: /[0-9]/.test(passwordInput.value),
+      special: /[ !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(passwordInput.value),
+    };
+
+    Object.entries(validations).forEach(([key, isValid]) => {
+      const criteriaItem = document.getElementById(`criteria-${key}`);
+      if (criteriaItem) {
+        criteriaItem.classList.toggle("valid", isValid);
+        criteriaItem.classList.toggle("invalid", !isValid);
       }
     });
   });
 }
+
+
+  // Register link confirmation
+  const registerLink = document.getElementById("register-link");
+  if (registerLink) {
+    registerLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      Swal.fire({
+        title: "Are you a representative of a student organization?",
+        text: "You must be a representative to proceed with registration.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, I am",
+        cancelButtonText: "No, cancel",
+        customClass: "swal-wide",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "Sign-Up.html";
+        } else {
+          Swal.fire({
+            icon: "info",
+            title: "Registration is only for student organization representatives.",
+            timer: 2000,
+            showConfirmButton: false,
+            customClass: "swal-wide",
+          });
+        }
+      });
+    });
+  }
+});
 
 // Sign-Up Functionality
 const signUpForm = document.getElementById("signup-form");

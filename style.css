@@ -284,6 +284,56 @@ input[type="password"]:focus {
   width: 100%;
 
 }
+/* Password criteria list */
+#password-criteria {
+  margin: 10px 0 0;
+  list-style: none;
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.5s ease, max-height 0.5s ease;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+}
+
+#password-criteria.visible {
+  opacity: 1;
+  max-height: 200px; /* Adjust this value if needed */
+}
+
+#password-criteria li {
+  font-size: 12px;
+  margin: 5px 0;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+/* Criteria icons */
+.criteria-item.valid::before {
+  content: '✔'; /* Checkmark for valid */
+  color: #0050a7;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.criteria-item.invalid::before {
+  content: '✘'; /* Crossmark for invalid */
+  color: #a70b00;
+  margin-right: 10px;
+}
+
+.criteria-item.valid {
+  color: #0050a7;
+}
+
+.criteria-item.invalid {
+  color: #a70b00;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
