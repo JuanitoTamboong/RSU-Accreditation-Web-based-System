@@ -293,7 +293,7 @@ if (signInForm) {
       Swal.fire({
         icon: "error",
         title: "reCAPTCHA verification failed",
-        text: "Please complete the reCAPTCHA to proceed.",
+        text: "Please verify that you are not a robot.",
         customClass: "swal-wide",
       });
       return; // Exit if reCAPTCHA is not completed

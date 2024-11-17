@@ -23,12 +23,28 @@ document.getElementById('submit').addEventListener('click', (e) => {
   const email = document.getElementById('admin').value;
   const password = document.getElementById('admin-pass').value;
 
+  // Get reCAPTCHA response
+  const recaptchaResponse = grecaptcha.getResponse();
+
   // Validate input
   if (!email || !password) {
     Swal.fire({
       icon: 'warning',
       title: 'Error',
       text: 'Please fill in both email and password.',
+      customClass: {
+        popup: 'swal-modal' // Applies the custom background and font class
+      }
+    });
+    return;
+  }
+
+  // Check if reCAPTCHA is verified
+  if (!recaptchaResponse) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'reCAPTCHA verification failed',
+      text: 'Please verify that you are not a robot.',
       customClass: {
         popup: 'swal-modal' // Applies the custom background and font class
       }
@@ -78,6 +94,7 @@ document.getElementById('submit').addEventListener('click', (e) => {
       });
     });
 });
+
 // Toggle password visibility
 const togglePassword = document.getElementById('toggle-password');
 const passwordInput = document.getElementById('admin-pass');
@@ -96,7 +113,6 @@ togglePassword.addEventListener('click', () => {
         togglePassword.classList.add('fa-unlock');
     }
 });
-
 
 // Function to handle password reset with Swal input for email
 document.getElementById('forgot-password-link').addEventListener('click', (e) => {
