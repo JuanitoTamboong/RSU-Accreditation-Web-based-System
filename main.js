@@ -286,11 +286,23 @@ if (signInForm) {
 
     const email = signInForm.elements["email"].value;
     const password = signInForm.elements["password"].value;
+    const recaptchaResponse = grecaptcha.getResponse();  // Get the reCAPTCHA response
+
+    // Check if reCAPTCHA is verified
+    if (recaptchaResponse.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "reCAPTCHA verification failed",
+        text: "Please complete the reCAPTCHA to proceed.",
+        customClass: "swal-wide",
+      });
+      return; // Exit if reCAPTCHA is not completed
+    }
 
     // Show loading spinner
     showLoading();
 
-    // Sign in user
+    // Sign in user with Firebase Authentication
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -308,7 +320,7 @@ if (signInForm) {
             if (result.isConfirmed) {
               // Optionally, resend the verification email
               sendEmailVerification(user).then(() => {
-                // This will only trigger if the button is clicked to resend
+                // Success message after resending
                 Swal.fire({
                   icon: "success",
                   title: "Verification email sent",

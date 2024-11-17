@@ -12,6 +12,7 @@
   <title>SOA Accreditation  Login</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
   <script type="module" src="main.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
   <div class="container">
@@ -46,7 +47,11 @@
                 <input type="password" name="password" id="password" placeholder="Enter your password" required>
                 <i class='bx bx-hide' id="togglePassword"></i>
               </div>
-            </div>            
+            </div>  
+            <div class="signIn">
+              <!-- Google reCAPTCHA -->
+              <div class="g-recaptcha" data-sitekey="6Ldp5oAqAAAAAB5ieBo2FQMCsz6bYqbhzSAwtkgB"></div>
+            </div>          
             <div class="signIn">
               <input type="submit" value="Sign In">
             </div>
