@@ -219,7 +219,7 @@ async function sendEmail(applicantId) {
 
         // Update button to show success
         sendEmailButton.innerHTML = 'Email Sent!';
-        sendEmailButton.style.color = 'green';
+        sendEmailButton.style.color = 'white';
     } catch (error) {
         console.error('Error sending email:', error);
 
