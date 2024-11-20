@@ -15,12 +15,12 @@
 .table-container {
   margin-top: 20px;
   max-width: 100%;
-  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  overflow-x: auto;
 }
 
 .table-body-container {
-  max-height: 500px; /* Adjust height as needed */
-  overflow-y: auto; /* Enables vertical scrolling */
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .accredited-table {
@@ -28,38 +28,32 @@
   border-collapse: collapse;
   font-size: 13px;
   background-color: var(--background-color);
+  table-layout: fixed;
 }
 
 .accredited-table th, .accredited-table td {
   padding: 12px;
-  border-bottom: 1px solid var(--input-border-color);
-  white-space: nowrap; /* Prevent wrapping by default */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
-}
-
-/* Set specific widths for table headers to ensure alignment */
-.accredited-table th {
-  width: 15%; /* Adjust as needed for each column */
+  border: 1px solid var(--input-border-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: left;
 }
 
-.accredited-table td {
-  width: 15%; /* Keep consistent with th for alignment */
-  text-align: left;
+.accredited-table th, .accredited-table td {
+  width: 15%;
 }
 
-/* Allow the email address to wrap and avoid overflow */
-.accredited-table td:nth-child(3) { /* Email Address */
-  white-space: normal; /* Allow wrapping */
-  overflow-wrap: break-word; /* Break long words */
-  word-wrap: break-word; /* Legacy support */
-  max-width: 150px; /* Set a max width to control cell size */
+.accredited-table td:nth-child(3) {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  max-width: 150px;
 }
 
-.accredited-table td:nth-child(2), /* Representative Name */
-.accredited-table td:nth-child(1) { /* Organization Name */
-  overflow-wrap: break-word; /* Allows text to wrap if it's too long */
+.accredited-table td:nth-child(2), 
+.accredited-table td:nth-child(1) {
+  overflow-wrap: break-word;
 }
 
 .accredited-table th {
@@ -68,6 +62,8 @@
   background-color: var(--background-color);
   color: rgb(0, 128, 87);
   z-index: 1;
+  border-top: 1px solid var(--input-border-color);
+  border-bottom: 1px solid var(--input-border-color);
 }
 
 .accredited-table tr:hover {

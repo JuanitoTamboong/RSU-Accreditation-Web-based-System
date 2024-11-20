@@ -19,7 +19,7 @@
 }
 
 .in-progress-table {
-    max-height: 500px; /* Limits height for scrollable area */
+    max-height: 500px;
     overflow-y: auto;
 }
 
@@ -29,46 +29,43 @@
     font-size: 13px;
     background-color: var(--background-color);
     min-width: 900px;
+    table-layout: fixed;
 }
 
 .in-progress-requests th, .in-progress-requests td {
     padding: 12px;
-    border-bottom: 1px solid var(--input-border-color);
-    white-space: nowrap; /* Prevent wrapping by default */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+    border: 1px solid var(--input-border-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Specify widths for table headers to ensure alignment */
 .in-progress-requests th {
-    width: 15%; /* Adjust as needed for each column */
+    width: 15%;
     text-align: left;
+    background-color: var(--background-color);
+    color: rgb(0, 128, 87);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-top: 1px solid var(--input-border-color);
+    border-bottom: 1px solid var(--input-border-color);
 }
 
 .in-progress-requests td {
-    width: 15%; /* Keep consistent with th for alignment */
+    width: 15%;
     text-align: left;
 }
 
-/* Allow the email address to wrap and avoid overflow */
-.in-progress-requests td:nth-child(1) { /* Email Address */
-    white-space: normal; /* Allow wrapping */
-    overflow-wrap: break-word; /* Break long words */
-    word-wrap: break-word; /* Legacy support */
-    max-width: 150px; /* Set a max width to control cell size */
+.in-progress-requests td:nth-child(1) {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-width: 150px;
 }
 
-.in-progress-requests td:nth-child(2), /* Representative Name */
-.in-progress-requests td:nth-child(3) { /* Organization Name */
-    overflow-wrap: break-word; /* Allows text to wrap if it's too long */
-}
-
-.in-progress-requests th {
-    position: sticky;
-    top: 0;
-    background-color: var(--background-color);
-    color: rgb(0, 128, 87);
-    z-index: 1;
+.in-progress-requests td:nth-child(2), .in-progress-requests td:nth-child(3) {
+    overflow-wrap: break-word;
 }
 
 .in-progress-requests tr:hover {
@@ -99,5 +96,5 @@
     outline: none;
     cursor: pointer;
     border-radius: 20px;
-    font-size: 9px;  
+    font-size: 9px;
 }

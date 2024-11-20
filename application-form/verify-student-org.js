@@ -44,7 +44,7 @@ const debounceVerifyStudentId = debounce(async (studentID) => {
         displayStatus('Unverified student ID, please wait for the admin to verify', 'orange');
         requestIDUpload(studentID); // Trigger upload for unverified students
     } else if (status === "no-record") {
-        displayStatus('Student ID not found. Please submit or verify your ID.', 'red');
+        displayStatus('Student ID not found. Please verify your ID.', 'red');
         requestIDUpload(studentID);  // Only trigger for students not found
     }
     listenForUnverifiedRequests(studentID);  // Start listening for real-time updates

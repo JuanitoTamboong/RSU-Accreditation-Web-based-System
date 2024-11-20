@@ -139,9 +139,9 @@ const deleteStudent = async (studentID) => {
         const querySnapshot = await getDocs(studentRef);
         if (!querySnapshot.empty) {
             const studentDoc = querySnapshot.docs[0];
-            const storagePath = studentDoc.data().storagePath;  // Get the image storage path
-            await deleteStudentFileFromStorage(storagePath);  // Delete the file from Firebase Storage
-            await deleteStudentFromFirestore(studentID);  // Delete the student document from Firestore
+            const storagePath = studentDoc.data().storagePath; 
+            await deleteStudentFileFromStorage(storagePath);  
+            await deleteStudentFromFirestore(studentID);  
         }
 
         // Remove the student row from the table
@@ -162,14 +162,14 @@ const updateStudentStatusInTable = (studentID, newStatus) => {
     const rows = document.querySelectorAll("#student-table-body tr");
     rows.forEach(row => {
         if (row.cells[1].textContent === studentID) {
-            row.cells[2].textContent = newStatus;  // Update status column
+            row.cells[2].textContent = newStatus; 
             
             // Conditionally hide the "View" button only if the status is "verified"
             const viewButton = row.querySelector(".view-btn");
             if (newStatus === "verified") {
-                viewButton.style.display = "none";  // Hide the button if the student is verified
+                viewButton.style.display = "block";  
             } else {
-                viewButton.style.display = "inline-block"; // Ensure the "View" button is visible if not verified
+                viewButton.style.display = "inline-block"; 
             }
         }
     });
