@@ -193,10 +193,10 @@ const sendEmailButton = document.getElementById('send-email-button');
 
 // Function to send email
 async function sendEmail(applicantId) {
-    // Disable the send button and show a loading message
     sendEmailButton.disabled = true;
     sendEmailButton.innerHTML = '<span class="spinner"></span> Sending...';
 
+    // Adjust custom message based on the application status
     const customMessage = applicationStatus === 'Approved'
         ? ' Please submit 4 copies of your documents.'
         : '';
@@ -213,29 +213,34 @@ async function sendEmail(applicantId) {
     };
 
     try {
-        // Send the email
         const response = await emailjs.send('service_vsx36ej', 'template_7y6pol8', emailParams);
         console.log('Email sent successfully:', response);
+        const currentDateTime = new Date();
+        const formattedDateApproved = currentDateTime.toLocaleString('en-US', { 
+            month: '2-digit', day: '2-digit', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit', hour12: true 
+        });
 
-        // Update button to show success
+        const docRef = doc(db, 'student-org-applications', applicantId);
+        await updateDoc(docRef, {
+            applicationStatus: applicationStatus,
+            formattedDateApproved: formattedDateApproved,
+        });
         sendEmailButton.innerHTML = 'Email Sent!';
         sendEmailButton.style.color = 'white';
     } catch (error) {
         console.error('Error sending email:', error);
 
-        // Update button to show failure message
         sendEmailButton.innerHTML = 'Send Failed. Try Again';
         sendEmailButton.style.color = 'red';
     } finally {
-        // Re-enable the send button after a delay and reset text
         setTimeout(() => {
             sendEmailButton.disabled = false;
-            sendEmailButton.innerHTML = 'Send Email'; // Reset button text
-            sendEmailButton.style.color = ''; // Reset color
-        }, 3000); // Adjust delay as needed
+            sendEmailButton.innerHTML = 'Send Email';
+            sendEmailButton.style.color = '';
+        }, 3000);
     }
 }
-
 // Attach the sendEmail function to the button click
 sendEmailButton.addEventListener('click', () => {
     const applicantId = getQueryParameter('id');
@@ -255,17 +260,17 @@ document.getElementById('send-email-button').addEventListener('click', function(
     sendEmail(applicantId);
 });
 document.getElementById('closeEmailModal').addEventListener('click', closeModal);
-
-// Approve or reject buttons
+//approved
 document.getElementById('approve-button').addEventListener('click', function() {
     applicationStatus = 'Approved';
     showModal();
 });
-
+//pending
 document.getElementById('pending-button').addEventListener('click', function() {
     applicationStatus = 'Pending';
     showModal();
 });
+
 
 // Initial data fetch
 fetchApplicantDetails();

@@ -38,10 +38,10 @@ async function fetchAllApplicationData(schoolYear) {
                 icon: 'error',
                 title: 'Invalid Input',
                 text: 'Please provide a valid school year.',
+                customClass: 'swal-pop-up'
             });
             return; // Exit the function if schoolYear is invalid
         }
-
         const applicationsCollection = collection(db, 'student-org-applications');
 
         // Listen for real-time updates
@@ -129,25 +129,26 @@ async function fetchAllApplicationData(schoolYear) {
     }
 }
 
+// Format School Year dynamically as YYYY-YYYY
+window.formattedSchoolYear = function (event) {
+    const input = event.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    let formattedSchoolYear = input;
+
+    if (input.length > 4) {
+        formattedSchoolYear = input.substring(0, 4) + '-' + input.substring(4, 8); // Add dash after the first 4 digits
+    }
+
+    if (formattedSchoolYear.length > 9) {
+        formattedSchoolYear = formattedSchoolYear.substring(0, 9); // Limit total length to 9 characters
+    }
+
+    event.target.value = formattedSchoolYear; // Update the input field with formatted value
+};
+
 // Form submission event listener
 document.getElementById('applicationReportForm').addEventListener('submit', function (event) {
     event.preventDefault();
     const schoolYearInput = document.getElementById('school-year').value.trim();
-    
-    console.log("School Year Input:", schoolYearInput); // Debugging log
-
-    // Format the school year input (e.g., 2024-2025)
-    if (!schoolYearInput) {
-        console.error("School year input is empty.");
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Input',
-            text: 'Please provide a school year.',
-            customClass:'swal-pop-up'
-        });
-        return; // Exit if input is empty
-    }
-
     // Format to automatically add dash if needed
     const formattedSchoolYear = formatSchoolYear(schoolYearInput);
     fetchAllApplicationData(formattedSchoolYear);
@@ -167,12 +168,11 @@ function formatSchoolYear(input) {
             icon: 'error',
             title: 'Invalid Format',
             text: 'Please enter the school year in the format YYYY-YYYY.',
-            customClass:'swal-pop-up',
+            customClass: 'swal-pop-up',
         });
         return ''; // Return empty string if format is incorrect
     }
 }
-
 // Function to create or update the total applications chart
 function createTotalApplicationsChart(totalApplications) {
     const ctx = document.getElementById('totalApplicationsChart').getContext('2d');
@@ -407,9 +407,33 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
         }
     });
 }
+
 function generatePDFReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+
+    // Check if there is at least one chart to generate the report
+    const charts = [
+        { chart: applicantsOverTimeChart, title: "Applicants Over Time" },
+        { chart: totalApplicationsChart, title: "Total Applications" },
+        { chart: totalAccreditedChart, title: "Total Accredited Applications" },
+        { chart: totalReAccreditedChart, title: "Total Reaccredited Applications" },
+        { chart: totalPendingChart, title: "Total Pending Applications" }
+    ];
+
+    // Filter out charts that are not available
+    const availableCharts = charts.filter(item => item.chart);
+
+    // If no charts are available, show a SweetAlert message or return early
+    if (availableCharts.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No Report Data Available',
+            text: 'There are no charts or data to download a PDF report.',
+            customClass: 'swal-pop-up'
+        });
+        return;
+    }
 
     // Add centered title to the report with medium font size
     doc.setFontSize(16);
@@ -423,17 +447,8 @@ function generatePDFReport() {
     const imageYPosition = 40; // Starting Y position below title
     const borderPadding = 5; // Padding for the background border
 
-    // Array of charts and their titles
-    const charts = [
-        { chart: applicantsOverTimeChart, title: "Applicants Over Time" },
-        { chart: totalApplicationsChart, title: "Total Applications" },
-        { chart: totalAccreditedChart, title: "Total Accredited Applications" },
-        { chart: totalReAccreditedChart, title: "Total Reaccredited Applications" },
-        { chart: totalPendingChart, title: "Total Pending Applications" }
-    ];
-
     // Loop through each chart, adding each one with styling
-    charts.forEach((item, index) => {
+    availableCharts.forEach((item, index) => {
         const { chart, title } = item;
         if (chart) {
             const chartImage = chart.toBase64Image(); // Convert chart to base64 image

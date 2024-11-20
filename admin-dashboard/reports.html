@@ -71,12 +71,12 @@
                         </div>                    
                     </div>
                 </div>
-                
+                <span id="applicant-count" hidden>0</span>
                 <!-- Report Section -->
                 <div class="report-container">
                     <form id="applicationReportForm" class="report-form">
-                        <label for="school-year">Enter School Year (e.g., 2024 2025):</label>
-                        <input type="text" id="school-year" required placeholder="2024-2025" />
+                        <label for="school-year">Enter School Year (e.g., 2024-2025):</label>
+                        <input type="text" id="school-year" required placeholder="2024-2025" maxlength="9" oninput="formattedSchoolYear(event)" />
                         <button type="submit">Generate Report</button>
                         <div class="chart-image">
                             <img src="../assets/chart-people.png" alt="">
