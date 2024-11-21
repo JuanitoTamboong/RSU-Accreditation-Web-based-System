@@ -127,7 +127,7 @@ function displayNotifications(querySnapshot, statusCounts) {
     // Render notifications
     notificationsArray.forEach(({ orgName, repName, email, formattedDate, formattedTime, docId, isViewed, status }) => {
         const notificationItem = document.createElement('li');
-        notificationItem.innerHTML = `
+        notificationItem.innerHTML = ` 
             <span>${orgName} submitted by ${repName} (Email: ${email}) - Status: ${status}</span>
             <br><small>Filed on: ${formattedDate} at ${formattedTime}</small>
         `;
@@ -150,6 +150,7 @@ function displayNotifications(querySnapshot, statusCounts) {
 
     // Play sound effect if new notifications are found and sound hasn't been played
     if (newNotificationsCount > 0 && !notificationSoundPlayed) {
+        console.log("Playing notification sound"); // Debug log
         notificationSound.play().catch(error => console.error("Error playing notification sound:", error));
         notificationSoundPlayed = true; // Mark sound as played
         localStorage.setItem('notificationSoundPlayed', JSON.stringify(notificationSoundPlayed)); // Update localStorage
@@ -159,7 +160,7 @@ function displayNotifications(querySnapshot, statusCounts) {
 // Update status counts displayed on the dashboard
 function updateStatusCounts(statusCounts) {
     const approvedCountElement = document.querySelector('#approved-count');
-    const pendingCountElement = document.querySelector('#pending-count'); // Updated: Old pending count now shows the new 'pending' status
+    const pendingCountElement = document.querySelector('#pending-count');
     const inProgressCountElement = document.querySelector('#in-progress-count'); // Updated: New in progress count
 
     if (approvedCountElement) {
