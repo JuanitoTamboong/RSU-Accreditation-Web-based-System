@@ -186,6 +186,7 @@ function captureImageWithCamera(studentID) {
             currentStream = null;
         }
     }
+
     // Function to start the camera with the provided facing mode
     async function startCamera(facingMode) {
         stopStream(); // Stop any previous stream before starting a new one
@@ -198,6 +199,13 @@ function captureImageWithCamera(studentID) {
             currentStream = stream;
             const video = document.getElementById('video');
             video.srcObject = stream;
+
+            // Apply flip to the front camera stream (when 'user' mode is selected)
+            if (facingMode === 'user') {
+                video.style.transform = 'scaleX(-1)'; // Flip horizontally
+            } else {
+                video.style.transform = 'none'; // No transformation for back camera
+            }
         } catch (error) {
             Swal.fire({
                 title: 'Error',
@@ -206,6 +214,7 @@ function captureImageWithCamera(studentID) {
             });
         }
     }
+
     Swal.fire({
         title: 'Capture ID with Camera',
         html: `
@@ -280,7 +289,6 @@ function captureImageWithCamera(studentID) {
         }
     });
 }
-
 // Validate student ID format (xxx-xxxx-xxxxxx)
 function isValidStudentIdFormat(studentID) {
     const idPattern = /^\d{3}-\d{4}-\d{6}$/;
