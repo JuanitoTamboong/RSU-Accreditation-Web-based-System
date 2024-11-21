@@ -247,7 +247,16 @@ function captureImageWithCamera(studentID) {
                 const context = canvas.getContext('2d');
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // If the front camera is used, flip the captured image horizontally
+                if (facingMode === 'user') {
+                    context.save(); // Save the current state
+                    context.scale(-1, 1); // Flip horizontally
+                    context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height); // Draw flipped image
+                    context.restore(); // Restore to original state
+                } else {
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height); // Normal drawing for back camera
+                }
 
                 // Convert canvas to Blob for further processing
                 canvas.toBlob((blob) => { resolve(blob); }, 'image/jpeg');
