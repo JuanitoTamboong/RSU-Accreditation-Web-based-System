@@ -1,82 +1,24 @@
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-image: url('https://www.dropbox.com/scl/fi/w6vta72jdk505q6vb4b7x/admin.jpg?rlkey=9ar0ytks6xw520l3gw6b2uzma&st=i9d71hme&dl=1');
-        background-size: cover; /* Cover the entire body */
-        background-repeat: no-repeat; /* No repeating of the image */
-        background-position: center; /* Center the image */
-    }
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: rgba(0, 35, 64, 0.905); /* Darker background for readability */
-        color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-    .header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .header img {
-        height: 50px;
-        width: 50px;
-        object-fit: contain;
-    }
-    .footer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
-        border-top: 1px solid #fff;
-        padding-top: 10px;
-    }
-    .footer div {
-        margin: 5px 0;
-        text-align: center;
-    }
-    .footer img {
-      object-fit: contain;
-        height: auto; /* Maintain aspect ratio */
-        width: 30px; /* Set fixed width for icons */
-        margin: 5px; /* Space between icons */
-    }
-    a {
-        text-decoration: none;
-        color: #fff;
-    }
-</style>
-<div class="container">
-    <div class="header">
-        <img src="https://www.dropbox.com/scl/fi/g7ihdhuutv62efgm6xlr4/rsu-logo.png?rlkey=alay9nipumhm7dubvm1dqr7re&amp;dl=1" alt="Logo">
-    </div>
-    <p>Hello <strong style="color: #007bff;">{{to_name}}</strong>,</p>
-    <p>You have received a new message from <strong>{{from_name}}</strong>:</p>
-    <p>Dear Applicant,</p>
-    <p>We inform you that your application for <strong>{{typeOfAccreditation}}</strong> with the organization has been <span style="color: {{status_color}};"><strong>{{application_status}}</strong></span>.</p>
-    {{ custom_message }}
-    <p>Additional Information:</p>
-    <p>{{additional_message}}</p>
-    <p>Best wishes,<br><strong style="color: #007bff;">Osas Admin</strong></p>
-    <div class="footer">
-        <div>
-            <div style="font-size: 10px; color: #05a532; text-align: center;">
-                <p>Romblon State University 2024</p>
-            </div>
+<div style="font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-image: url('https://www.dropbox.com/scl/fi/w6vta72jdk505q6vb4b7x/admin.jpg?rlkey=9ar0ytks6xw520l3gw6b2uzma&st=i9d71hme&dl=1'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: rgba(0, 35, 64, 0.905); color: #fff; padding: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://www.dropbox.com/scl/fi/5yqmbd8tmjpjl54j6jnss/email-template-logo.png?rlkey=g49215rte7pa9ffwu4q2x2tt9&st=kzsuefz4&dl=1" alt="Logo" style="max-width: 100%; height: 50px; object-fit: contain;">
         </div>
-        <div>
-            <br></br>
-            <a href="https://www.facebook.com/yourfacebookpage" target="_blank" rel="noopener">
-                <img src="https://www.dropbox.com/scl/fi/0p24ge84mui0p6i9clr7u/facebook.png?rlkey=v5ez4ke5yl611rjpv3xyckxyk&amp;dl=1" alt="Facebook">
-            </a>
-            <a href="https://www.google.com" target="_blank" rel="noopener">
-                <img src="https://www.dropbox.com/scl/fi/tw4b0owrn1bly0qs8y16y/social.png?rlkey=1r6ex1methxdgekcs09qzuzib&amp;dl=1" alt="Google">
-            </a>
+        <p style="font-size: 16px; margin-bottom: 10px;">Hello <strong style="color: #007bff;">{{to_name}}</strong>,</p>
+        <p style="font-size: 16px; margin-bottom: 10px;">You have received a new message from <strong>{{from_name}}</strong>:</p>
+        <p style="font-size: 16px; margin-bottom: 10px;">Dear Applicant,</p>
+        <p style="font-size: 16px; margin-bottom: 10px;">We inform you that your application for <strong>{{typeOfService}}</strong> with the organization has been <span style="color: {{status_color}};"><strong>{{application_status}}</strong></span>.</p>
+        {{ custom_message }}
+        <p style="font-size: 16px; margin-bottom: 10px;"><strong>Additional Information:</strong></p>
+        <p style="font-size: 16px; margin-bottom: 20px;">{{additional_message}}</p>
+        <p style="font-size: 16px;">Best wishes,<br><strong style="color: #007bff;">Osas Admin</strong></p>
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px; border-top: 1px solid #fff; padding-top: 10px;">
+            <div style="margin: 5px 0; text-align: center;">
+                <div style="font-size: 12px; color: #05a532; text-align: center;">
+                    <p>Romblon State University 2024</p>
+                </div>
+            </div>
+            <div>
+            </div>
         </div>
     </div>
 </div>

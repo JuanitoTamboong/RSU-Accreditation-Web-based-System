@@ -177,32 +177,29 @@ async function uploadIDImage(file, studentID) {
 // Capture image with camera
 function captureImageWithCamera(studentID) {
     let currentStream;
-    let currentDeviceId = 'environment';  // Default to back camera
+    let facingMode = 'environment'; // Default to back camera
 
     // Function to stop the current video stream
     function stopStream() {
         if (currentStream) {
-            const tracks = currentStream.getTracks();
-            tracks.forEach(track => track.stop()); // Stop any previous stream
+            currentStream.getTracks().forEach(track => track.stop());
             currentStream = null;
         }
     }
 
-    // Function to start the camera with the provided deviceId
-    async function startCamera(deviceId) {
-        stopStream();  // Stop any previous stream before starting a new one
+    // Function to start the camera with the provided facing mode
+    async function startCamera(facingMode) {
+        stopStream(); // Stop any previous stream before starting a new one
 
         try {
-            // Request new stream with the current facing mode (front/back)
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: deviceId }
+                video: { facingMode: facingMode }
             });
 
             currentStream = stream;
             const video = document.getElementById('video');
             video.srcObject = stream;
         } catch (error) {
-            // If error occurs, show an alert
             Swal.fire({
                 title: 'Error',
                 text: 'Unable to access the camera. Please make sure camera permissions are granted.',
@@ -213,7 +210,7 @@ function captureImageWithCamera(studentID) {
 
     Swal.fire({
         title: 'Capture ID with Camera',
-        html: `  
+        html: `
             <video id="video" width="100%" autoplay></video>
             <canvas id="canvas" style="display: none;"></canvas>
             <button id="flip-button" style="position: absolute; top: 10px; right: 10px; padding: 10px; background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 5px;">Flip Camera</button>
@@ -223,29 +220,18 @@ function captureImageWithCamera(studentID) {
         cancelButtonText: 'Cancel',
         willOpen: async () => {
             const flipButton = document.getElementById('flip-button');
-            const video = document.getElementById('video');
 
             // Start with the back camera by default
-            await startCamera(currentDeviceId);
+            await startCamera(facingMode);
 
-            // Check available media devices to confirm front camera exists
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const hasFrontCamera = devices.some(device => device.kind === 'videoinput' && device.facing === 'user');
-
-            if (!hasFrontCamera) {
-                flipButton.disabled = true; // Disable the flip button if no front camera
-            }
-
-            // Toggle the camera between front and back
             flipButton.addEventListener('click', async () => {
-                // Toggle between 'environment' (back) and 'user' (front)
-                currentDeviceId = (currentDeviceId === 'environment') ? 'user' : 'environment';
-                await startCamera(currentDeviceId);
+                // Toggle between 'user' (front) and 'environment' (back)
+                facingMode = facingMode === 'environment' ? 'user' : 'environment';
+                await startCamera(facingMode);
             });
         },
         willClose: () => {
-            // Stop camera when the popup closes (either through cancel or any other closure)
-            stopStream();
+            stopStream(); // Stop camera when the popup closes
         },
         preConfirm: () => {
             return new Promise((resolve) => {
@@ -269,7 +255,6 @@ function captureImageWithCamera(studentID) {
             reader.onload = function (e) {
                 img.src = e.target.result;
                 img.onload = function () {
-                    // Show the captured image in Swal to the user before proceeding
                     Swal.fire({
                         title: 'Captured Image',
                         html: `<img src="${e.target.result}" style="width: 100%; height: auto;">`,
@@ -278,24 +263,20 @@ function captureImageWithCamera(studentID) {
                         cancelButtonText: 'Retake'
                     }).then((uploadResult) => {
                         if (uploadResult.isConfirmed) {
-                            // Proceed with uploading the image if it's confirmed
                             uploadIDImage(file, studentID);
                         } else {
-                            // Retake image by reopening the camera capture
-                            captureImageWithCamera(studentID); // Restart the process
+                            captureImageWithCamera(studentID);
                         }
                     });
                 };
             };
-            reader.readAsDataURL(file); // Load the image into the img element
+            reader.readAsDataURL(file);
         } else if (result.isDismissed) {
-            // If the user cancels, show a reminder to re-enter the student ID
             Swal.fire({
                 title: 'Reminder',
-                text: 'Please re-enter the Student ID to re open the verification process.',
+                text: 'Please re-enter the Student ID to reopen the verification process.',
                 icon: 'info'
             }).then(() => {
-                // Here you can reset the student ID input field or prompt the user again
                 document.getElementById('representative-id').value = '';
             });
         }
