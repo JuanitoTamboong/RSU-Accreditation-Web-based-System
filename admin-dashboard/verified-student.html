@@ -10,7 +10,7 @@
     <!-- fonts-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- css-->
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="verified.css">
@@ -35,7 +35,7 @@
             <i class="fa-solid fa-xmark close-btn"></i>
             <ul class="side-container">
                 <li><a href="admin-dashboard.html"><i class="fa-solid fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                <li><a href="in-progress.html"><i class="fa-solid fa-clock"></i><span>In Progress</span></a></li> <!-- Changed to In Progress -->
+                <li><a href="in-progress.html"><i class="fa-solid fa-clock"></i><span>In Progress</span></a></li>
                 <li><a href="accredited.html"><i class="fa-solid fa-check-circle"></i><span>Accredited</span></a></li>
                 <li><a href="verified-student.html"><i class="fa-solid fa-user-check verified-icon"></i><span>Verified Student</span></a></li>
                 <li><a href="reports.html"><i class="fa-solid fa-file"></i><span>Reports</span></a></li>
@@ -43,6 +43,7 @@
             </ul>
             <i class="fa-solid fa-bars menu-btn"></i>
         </div>
+
         <div class="section">
             <div class="main-container">
                 <div class="top-container">
@@ -67,50 +68,36 @@
                         </div>                    
                     </div>
                 </div>
-                <span id="applicant-count" hidden>0</span>
-                <div class="verified-container">
-                    <!-- Add Student ID Section -->
-                  <!---  <div class="add-verified-student">
-                        <input type="text" id="student-name" placeholder="Enter Student Name" maxlength="50">
-                        <div class="input-with-icon">
-                            <input type="text" id="student-id" placeholder="Enter Student ID" maxlength="15" oninput="formatStudentId(event)">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <button onclick="addStudent()">
-                            <i class="fas fa-plus"></i> Add
-                        </button>
-                    </div>-->
-                
-                    <!-- Import List Section -->
-                   <!--<div class="import-student-list">
-                        <input type="file" id="file-input" accept=".csv">
-                        <button onclick="importStudentList()">
-                            <i class="fas fa-file-import"></i> Import List
-                        </button>
-                    </div>-->
-                    <h2>List of Student IDs that need to be verified</h2>
-                    <!-- Verified Students Table -->
-                    <div class="table-container">
-                        <table id="student-table">
-                            <thead>
-                                <tr>
-                                    <th>Student ID Image</th>
-                                    <th>Student ID</th>
-                                    <th>Status</th>
-                                    <th>View ID</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div class="list-of-verified">
-                            <table class="student-verified">
-                                <tbody id="student-table-body">
-                                    <!-- Dynamically added rows will appear here -->
-                                </tbody>
-                            </table>
-                        </div>
+
+                <div class="verified-id">
+                    <div class="verified-container">
+                        <h2>List of Student IDs that need to be verified</h2>
+                        <img src="../assets/Id Card.png" alt="ID Card Image" class="verified-image">
                     </div>
-                </div>  
+                </div>
+
+                <!-- Verified Students Table -->
+                <div class="table-container">
+                    <table id="student-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID Image</th>
+                                <th>Student ID</th>
+                                <th>Status</th>
+                                <th>View ID</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="list-of-verified">
+                        <table class="student-verified">
+                            <tbody id="student-table-body">
+                                <!-- Dynamically added rows will appear here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

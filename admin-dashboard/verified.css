@@ -4,14 +4,45 @@ body {
     padding: 0;
     background-color: #f4f7fc;
 }
+.verified-id {
+    align-items: center; /* Ensures vertical alignment */
+    justify-content: flex-start; /* Aligns content to the left */
+}
 
 .verified-container {
+    display: flex;
+    flex-direction: row; /* Ensures the content and image are aligned horizontally */
     width: 100%;
-    margin: 20px auto;
-    padding: 10px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    margin: 10px 0px;
+    align-items: center; /* Vertically align the image and text */
+}
+
+.verified-container h2 {
+    background-color: rgb(12, 32, 44);
+    padding: 20px;
+    padding-bottom: 20px;
+    margin-right: 20px; /* Space between text and image */
+    border-radius: 50px;
+    color: #fff;
+    font-size: 18px;
+   
+}
+
+.verified-container img {
+    max-width: 100px; 
+    height: auto;
+    object-fit: contain;
+    margin-left: 20px; 
+    animation: id 1.5s alternate infinite;
+}
+@keyframes id{
+0%{transform: rotate(20deg);}
+100%{transform: rotate(-20deg);}
+}
+.list-of-verified {
+    overflow-y: auto;
+    height: 600px;
 }
 
 table {
@@ -36,11 +67,6 @@ table th {
 
 table thead th {
     width: 25%;
-}
-
-.list-of-verified {
-    overflow-y: auto;
-    height: 600px;
 }
 
 table tbody tr:hover {

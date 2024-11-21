@@ -40,14 +40,20 @@
         </div>        
         <form id="application-form">
             <div class="form-group">
-                <label for="representative-id">Representative  Student ID Number:</label>
+                <label for="representative-id">Representative Student ID Number:</label>
                 <p>Ensure that your student ID is verified by the admin. If it hasn't been verified, please enter your student ID to complete the verification</p>
-                <input type="text" id="representative-id" placeholder="Enter your  Student ID number" required maxlength="15" oninput=" formatStudentId(event)">
+                <div class="input-container">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="representative-id" placeholder="Enter your Student ID number" required maxlength="15" oninput="formatStudentId(event)">
+                </div>
                 <div id="verification-status"></div>   
-            </div>
+            </div>   
             <div class="form-group">
                 <label for="representative-name">Name of Representative:</label>
-                <input type="text" id="representative-name" placeholder="Enter your name" required>
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="representative-name" placeholder="Enter your name" required>
+                </div>
             </div>
             <div class="form-group">
                 <label for="representative-position">Position:</label>
@@ -61,10 +67,15 @@
                     </select>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="school-year">School Year:</label>
-                <input type="text" id="school-year" placeholder="Enter your school year" required readonly>
+                <div class="input-container">
+                    <i class="fas fa-calendar-alt"></i>
+                    <input type="text" id="school-year" placeholder="Enter your school year" required readonly>
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="course">Representative Course:</label>
                 <div class="dropdown-container">
@@ -94,18 +105,28 @@
                         <option value="CASSO">CASSO</option>
                         <option value="CCMADI">CCMADISO</option>
                     </select>
-                    <button type="button" id="add-organization" class="add-btn">+Add Organization</button>
+                    
+                    <button type="button" id="add-organization" class="add-btn">+ Add Organization</button>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="email-address">Email Address:</label>
                 <p>You may provide an alternative email address if you have one. This email will be used by the admin to send your request.</p>
-                <input type="email" id="email-address" placeholder="Enter email address" required>
+                <div class="input-container">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email-address" placeholder="Enter email address" required>
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="date-filing">Date of Filing:</label>
-                <input type="date" id="date-filing" required>
+                <div class="input-container">
+                    <i class="fas fa-calendar-day"></i>
+                    <input id="date-filing" class="flatpickr-input" type="text" readonly />
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="requirement-documents">Upload Requirement Documents:</label>
                 <p>(Only accepts PDF file)</p>

@@ -203,82 +203,24 @@ form {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
-/* Checklist Section */
-.checklist-container {
-  margin-top: 20px;
+/* Ensure that the parent input container has relative positioning */
+.input-container {
+  position: relative;
 }
 
-.checklist-container h3 {
-  font-size: 18px; /* 1.125rem = 18px */
-  color: var(--signIn-Color);
-  margin-bottom: 10px;
+/* Position the icon on the right side of the input field */
+.input-container i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #3742649d; /* Icon color */
 }
 
-.checklist-container div {
-  margin-bottom: 10px;
-}
-
-.checklist-container input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-.preview-btn{
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--box-shadow);
-  float:right;
-}
-
-.swal-pdf-viewer{
-  width: 50%;
-  max-height: 500px;
-  overflow-y: auto;
-  font-size: 13px;
-}
 .swal2-title {
   font-size:23px; /* Larger font size */
 }
-iframe {
-  width: 100%; /* Ensure iframe takes full width */
- 
-}
-#uploaded-documents-list {
-  padding: 20px; /* Adds space around the list */
-  margin-top: 10px; /* Space above the list */
-  margin-bottom: 10px; /* Space below the list */
-  list-style-type: none; /* Removes bullets */
-  overflow-y: auto; /* Adds scroll if content exceeds the height */
-  max-height: 200px; /* Set a maximum height for the list */
-  background-color: rgba(255, 255, 255, 0.8); /* Optional: background for better visibility */
-  border-radius: 5px; /* Optional: round corners */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for depth */
-}
 
-#uploaded-documents-list li { /* Targeting list items */
-  margin: 5px 0; /* Space between list items */
-}
-
-#uploaded-documents-list a {
-  display: block; /* Makes the link fill the list item */
-  text-decoration: none; /* No underline for links */
-  background-color: rgba(206, 206, 206, 0.37); /* Background color for links */
-  padding: 10px; /* Padding inside the links */
-  border-radius: 5px; /* Rounded corners */
-}
-
-.remove-doc-button {
-  padding: 7px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background-color: var(--box-shadow);
-  color: var(--font-color);
-  font-size: 10px;
-  margin: 10px;
-}
 .camera-container {
         position: relative;
         width: 100%;
@@ -325,38 +267,10 @@ iframe {
     font-size: 16px; /* Same as before */
   }
 
-  .checklist-container,
-  #uploaded-documents {
-    margin-top: 15px;
-  }
-  .swal-pdf-viewer {
-    width: 100%; /* Adjust the width for mobile */
-    max-height: 400px;
-    margin: auto; /* Center the modal */
-}
-.swal2-title {
-  font-size:17px; /* Larger font size */
-}
-
-iframe {
-    width: 100%; /* Full width of the modal */
-    height: 100vh; /* Full height of the viewport */
-}
-
 }
 @media (max-width: 600px) {
-  .swal-pdf-viewer {
-    width: 100%; /* Adjust the width for mobile */
-    margin: auto; /* Center the modal */
-    height: auto; /* Allow height to adjust */
-    max-height: 400px;
-}
 .swal2-title {
   font-size:17px; /* Larger font size */
-}
-iframe {
-    width: 100%; /* Full width of the modal */
-    height: 100vh; /* Full height of the viewport */
 }
 #verification-status{
   font-size: 11px;
