@@ -13,6 +13,7 @@ body {
   background-position: center;
   background-size:cover; /* Ensures the width fits the viewport, adjusts height automatically */
   background-repeat: no-repeat;
+  
 }
 
 
@@ -339,7 +340,7 @@ input[type="password"]:focus {
 @media (max-width: 768px) {
   body{
     background-image: url('assets/mobile-size-bg.png');
-
+    background-attachment: fixed;
    
   }
   .container {

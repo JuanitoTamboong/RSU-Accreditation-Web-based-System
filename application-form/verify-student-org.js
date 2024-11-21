@@ -186,7 +186,6 @@ function captureImageWithCamera(studentID) {
             currentStream = null;
         }
     }
-
     // Function to start the camera with the provided facing mode
     async function startCamera(facingMode) {
         stopStream(); // Stop any previous stream before starting a new one
@@ -207,7 +206,6 @@ function captureImageWithCamera(studentID) {
             });
         }
     }
-
     Swal.fire({
         title: 'Capture ID with Camera',
         html: `

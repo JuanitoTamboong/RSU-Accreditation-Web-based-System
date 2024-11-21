@@ -81,7 +81,7 @@ const addStudentToTable = (studentID, storagePath, status) => {
     const tableBody = document.getElementById("student-table-body");
     const storageBaseUrl = "https://firebasestorage.googleapis.com/v0/b/student-org-5d42a.appspot.com/o/"; // Base URL for Firebase Storage
     const imageUrl = encodeURIComponent(storagePath); // Make sure the storage path is correctly encoded
-    const fullImageUrl = `${storageBaseUrl}${imageUrl}?alt=media`; // Construct the full URL
+    const fullImageUrl = `${storageBaseUrl}${imageUrl}?alt=media&${new Date().getTime()}`; // Add timestamp to prevent caching
 
     const newRow = document.createElement("tr");
     newRow.innerHTML = `
@@ -183,25 +183,13 @@ const uploadStudentFile = async (studentID, file) => {
     return fileUrl;
 };
 
-// Add student to Firestore and table
-const addStudent = async () => {
-    const studentID = document.getElementById("student-id").value.trim();
-    const fileInput = document.getElementById("file-upload");
-    const file = fileInput.files[0];
-
-    if (!studentID || !file || !isValidStudentID(studentID)) {
-        return showAlert("error", "Error", "Please enter a valid student ID and upload a file.");
-    }
-
-    try {
-        const storagePath = await uploadStudentFile(studentID, file);
-        await addStudentToFirestore(studentID, storagePath);  // Save student to Firestore
-        addStudentToTable(studentID, storagePath, "pending");  // Add student to table view
-
-        showAlert("success", "Success", "Student added successfully!");
-    } catch (error) {
-        console.error("Error adding student:", error);
-        showAlert("error", "Error", "There was an error adding the student. Please try again.");
+// Update Firestore document with new image path
+const updateStudentStoragePath = async (studentID, newStoragePath) => {
+    const studentRef = query(collection(db, "unverified-requests"), where("studentID", "==", studentID));
+    const querySnapshot = await getDocs(studentRef);
+    if (!querySnapshot.empty) {
+        const studentDoc = querySnapshot.docs[0];
+        await updateDoc(studentDoc.ref, { storagePath: newStoragePath });
     }
 };
 
@@ -211,20 +199,15 @@ const listenForStudentUpdates = () => {
     onSnapshot(q, (querySnapshot) => {
         document.getElementById("student-table-body").innerHTML = "";  // Clear the table body first
         querySnapshot.forEach(doc => {
-            const studentData = doc.data();
-            addStudentToTable(studentData.studentID, studentData.storagePath, studentData.status);
+            const data = doc.data();
+            addStudentToTable(data.studentID, data.storagePath, data.status);
         });
     });
 };
-
-
-// Start listening for real-time updates
-window.onload = () => {
-    listenForStudentUpdates();  // Set up real-time listener for updates
-};
+// Initialize the listener
+listenForStudentUpdates();
 
 // Expose functions to global scope
-window.addStudent = addStudent;
 window.formatStudentId = formatStudentId;
 window.deleteStudent = deleteStudent;
 window.viewStudent = viewStudent;
