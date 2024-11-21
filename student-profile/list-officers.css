@@ -189,13 +189,12 @@ label.upload-label span {
   pointer-events: none;
   text-align: center;
 }
-
 /* Student ID Styles */
 .student-id {
   margin-top: 25px;
   display: flex;
   flex-direction: column;
-  width: 100%; /* Ensure Student ID section takes full width */
+  width: 100%; 
 }
 
 .student-id label {
@@ -203,15 +202,29 @@ label.upload-label span {
   margin-bottom: 5px;
 }
 
-.student-id input {
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-container input {
   width: 100%; /* Input field takes full width */
-  padding: 15px;
+  padding: 15px 15px 15px 40px; /* Add padding for the icon */
   border: 1px solid var(--box-shadow);
   border-radius: 25px;
   box-sizing: border-box;
   max-width: 100%; /* Ensure no overflow */
-
 }
+
+.input-container i {
+  position: absolute;
+  left: 15px; /* Position icon inside the input */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--box-shadow);
+}
+
 /* Student Info Styles */
 .student-info {
   display: flex;
@@ -226,13 +239,14 @@ label.upload-label span {
 }
 
 .student-info input {
-  padding: 15px;
+  padding: 15px 15px 15px 40px; /* Add padding for the icon */
   border: 1px solid var(--box-shadow);
   border-radius: 25px;
   width: 100%; /* Ensure input takes full width */
   box-sizing: border-box;
   max-width: 100%; /* Prevent overflow */
 }
+
 /* Position Container Styling */
 .position-container {
   display: flex;
