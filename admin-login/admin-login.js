@@ -23,7 +23,7 @@ document.getElementById('submit').addEventListener('click', (e) => {
   const email = document.getElementById('admin').value;
   const password = document.getElementById('admin-pass').value;
 
-  // Get reCAPTCHA response
+  // Get hCAPTCHA response
   const recaptchaResponse = grecaptcha.getResponse();
 
   // Validate input
@@ -43,7 +43,7 @@ document.getElementById('submit').addEventListener('click', (e) => {
   if (!recaptchaResponse) {
     Swal.fire({
       icon: 'warning',
-      title: 'reCAPTCHA verification failed',
+      title: 'hCAPTCHA verification failed',
       text: 'Please verify that you are not a robot.',
       customClass: {
         popup: 'swal-modal' // Applies the custom background and font class
@@ -119,7 +119,7 @@ document.getElementById('forgot-password-link').addEventListener('click', (e) =>
   e.preventDefault();
 
   // Show Swal input prompt for email
-  Swal.fire({
+  swal.fire({
     title: 'Reset Password',
     input: 'email',
     inputLabel: 'Enter your email address',
@@ -127,7 +127,7 @@ document.getElementById('forgot-password-link').addEventListener('click', (e) =>
     showCancelButton: true,
     confirmButtonText: 'Send Reset Link',
     customClass: {
-      popup: 'swal-modal' // Applies the custom background and font class
+      popup: 'swal-modal'
     },
     inputValidator: (value) => {
       if (!value) {

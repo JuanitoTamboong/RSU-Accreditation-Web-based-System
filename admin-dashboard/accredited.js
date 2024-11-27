@@ -21,24 +21,24 @@ const storage = getStorage(app);
 // Function to format date strings
 function formatDateString(dateString, includeTime = false) {
     const date = new Date(dateString);
-    const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
+    
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
     };
+    let formattedDate = date.toLocaleDateString('en-US', options); // Format as "November 24, 2024"
     
-    let formattedDate = date.toLocaleDateString('en-US', options);
-
     if (includeTime) {
-        const timeOptions = {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true // Set to true to include AM/PM
+        const timeOptions = { 
+            hour: 'numeric', 
+            minute: '2-digit', 
+            hour12: true 
         };
-        const time = date.toLocaleTimeString('en-US', timeOptions);
-        formattedDate += `, ${time}`; // Append the formatted time to the date
+        const time = date.toLocaleTimeString('en-US', timeOptions); // Format as "12:52 AM"
+        formattedDate += `, ${time}`; // Append time to the formatted date
     }
-    
+
     return formattedDate;
 }
 
@@ -47,7 +47,6 @@ function renderRow(doc) {
     const data = doc.data();
     const applicantId = doc.id;
 
-    // Destructure necessary fields with default values
     const {
         applicationStatus = 'N/A',
         formattedDateApproved = 'N/A',
@@ -62,9 +61,8 @@ function renderRow(doc) {
         dateFiling = 'N/A',
     } = applicationDetails;
 
-    // Format the filing date and approval timestamp
-    const formattedDateFiling = formatDateString(dateFiling); // No time included
-    const formattedApprovedDate = formatDateString(formattedDateApproved, true); // Include time for approval
+    const formattedDateFiling = formatDateString(dateFiling); // Format for "Date of Filing"
+    const formattedApprovedDate = formatDateString(formattedDateApproved, true); // Format for "Date Approved"
 
     return `
         <tr data-id="${applicantId}">
@@ -82,30 +80,24 @@ function renderRow(doc) {
     `;
 }
 
-// Reference to the Firestore collection
+// Fetch data and render the table
 const applicantsRef = collection(db, 'student-org-applications');
-
-// Query for approved applications
 const approvedQuery = query(applicantsRef, where("applicationStatus", "==", "Approved"));
 
-// Fetch and display data in the table
 onSnapshot(approvedQuery, (snapshot) => {
     const applicantsTableBody = document.getElementById('applicants-table-body');
-    applicantsTableBody.innerHTML = ''; // Clear the table before populating
+    applicantsTableBody.innerHTML = ''; // Clear the table
 
     if (!snapshot.empty) {
         snapshot.forEach((doc) => {
-            const row = renderRow(doc); // Create the row HTML
-            applicantsTableBody.insertAdjacentHTML('beforeend', row); // Append the row to the table body
+            const row = renderRow(doc);
+            applicantsTableBody.insertAdjacentHTML('beforeend', row);
         });
-
-        // Attach event listeners to delete buttons
-        attachDeleteEventListeners();
+        attachDeleteEventListeners(); // Add delete functionality
     } else {
         applicantsTableBody.innerHTML = `<tr><td colspan="8">No accredited applicants found.</td></tr>`;
     }
 });
-
 // Function to delete files from Firebase Storage
 async function deleteFiles(fileUrls) {
     const promises = fileUrls.map(async (url) => {

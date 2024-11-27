@@ -22,7 +22,18 @@ const storage = getStorage(app);
 
 // Function to render a table row
 function renderRow(doc) {
-    const { emailAddress = 'N/A', representativeName = 'N/A', organizationName = 'N/A', typeOfService = 'N/A', dateFiling = 'N/A' } = doc.data().applicationDetails || {};
+    const {
+        emailAddress = 'N/A',
+        representativeName = 'N/A',
+        organizationName = 'N/A',
+        typeOfService = 'N/A',
+        dateFiling = 'N/A'
+    } = doc.data().applicationDetails || {};
+
+    // Format the date if it's not 'N/A'
+    const formattedDateFiling = dateFiling !== 'N/A'
+        ? new Date(dateFiling).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        : 'N/A';
 
     const applicationStatus = doc.data().applicationStatus || 'in-progress';
 
@@ -32,7 +43,7 @@ function renderRow(doc) {
             <td>${representativeName}</td>
             <td>${organizationName}</td>
             <td>${typeOfService}</td>
-            <td>${dateFiling}</td>
+            <td>${formattedDateFiling}</td>
             <td>${applicationStatus}</td>
             <td><a href="../admin-dashboard/view-request.html?id=${doc.id}" class="view-link" data-id="${doc.id}">View</a></td>
             <td><button class="delete-btn" data-id="${doc.id}">Delete</button></td>
@@ -68,7 +79,7 @@ function fetchApplications() {
         tableBody.innerHTML = '';
 
         if (snapshot.empty) {
-            tableBody.innerHTML = '<tr><td colspan="7">No in-progress requests found.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="8">No in-progress requests found.</td></tr>';
             return;
         }
 
@@ -123,22 +134,23 @@ function attachDeleteHandlers() {
                 // Delete Firestore document
                 await deleteDoc(docRef);
 
-              // Custom success alert
-              Swal.fire({
-                title: 'Deleted!',
-                text: 'The request and associated files have been deleted.',
-                icon: 'success',
-                confirmButtonColor: '#3085d6',
-                customClass: 'swal-delete',
-            });
-        } else {
-            throw new Error("Document not found");
+                // Custom success alert
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'The request and associated files have been deleted.',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    customClass: 'swal-delete',
+                });
+            } else {
+                throw new Error("Document not found");
+            }
+        } catch (error) {
+            console.error("Error deleting request:", error);
+            Swal.fire('Error!', 'Failed to delete the request. Please try again.', 'error');
         }
-    } catch (error) {
-        console.error("Error deleting request:", error);
-        Swal.fire('Error!', 'Failed to delete the request. Please try again.', 'error');
-    }
-});
+    });
 }
+
 // Initialize when the DOM is loaded
 window.addEventListener('DOMContentLoaded', fetchApplications);

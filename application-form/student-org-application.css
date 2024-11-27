@@ -156,25 +156,6 @@ form {
   background-color: var(--hover-color);
 }
 
- /* Flatpickr (Calendar Input) Styling */
- .flatpickr-input {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #333;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.flatpickr-input:focus {
-  border-color: #007BFF;
-  outline: none;
-  background-color: #fff;
-}
-
 /* Loading Spinner */
 .loading-spinner {
   position: fixed;

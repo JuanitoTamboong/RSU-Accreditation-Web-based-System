@@ -95,22 +95,19 @@ function setSchoolYear() {
     document.getElementById('school-year').value = `${currentYear}-${nextYear}`;
 }
 
+// Automatically set the current date for the 'date-filing' field in a readable format
+function setCurrentDate() {
+    const today = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }; // Formatting options
+    const formattedDate = today.toLocaleDateString('en-US', options); // Format as 'Month Day, Year'
+    document.getElementById('date-filing').value = formattedDate;
+}
+
+// Call the function to set the current date when the page loads
 window.addEventListener('load', () => {
-    setSchoolYear();
+    setSchoolYear(); // Set the school year
+    setCurrentDate(); // Set the current date
 });
-
-// Date picker initialization
-document.addEventListener('DOMContentLoaded', function() {
-    flatpickr("#date-filing", {
-        dateFormat: "Y-m-d",
-        defaultDate: new Date(),
-        allowInput: true,
-        altInput: true,
-        altFormat: "F j, Y",
-        disableMobile: "true"
-    });
-});
-
 // Validate required fields
 function validateFields() {
     const fields = [

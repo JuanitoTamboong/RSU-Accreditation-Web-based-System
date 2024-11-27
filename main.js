@@ -286,17 +286,17 @@ if (signInForm) {
 
     const email = signInForm.elements["email"].value;
     const password = signInForm.elements["password"].value;
-    const recaptchaResponse = grecaptcha.getResponse();  // Get the reCAPTCHA response
+    const recaptchaResponse = grecaptcha.getResponse();  
 
-    // Check if reCAPTCHA is verified
+    // Check if hCAPTCHA is verified
     if (recaptchaResponse.length === 0) {
       Swal.fire({
         icon: "error",
-        title: "reCAPTCHA verification failed",
+        title: "hCAPTCHA verification failed",
         text: "Please verify that you are not a robot.",
         customClass: "swal-wide",
       });
-      return; // Exit if reCAPTCHA is not completed
+      return; 
     }
 
     // Show loading spinner

@@ -108,7 +108,6 @@ async function addProfile() {
     const file = document.getElementById('img').files[0];
     const position = document.getElementById('position').value;
     // Validate Inputs
-     // Validate Inputs
      if (!studentId || !name || !address || !file || !position) {
         Swal.fire("Incomplete Input", "Please fill in all fields, including the image upload and position.", "warning");
         addButton.disabled = false; // Re-enable the button
@@ -507,20 +506,7 @@ async function submitAllProfiles() {
 
         // Get the current time
         const currentTime = getCurrentTime();
-
-        // Check for duplicate Student IDs in Firestore for the temporary profiles
-        for (const profile of tempProfiles) {
-            const { studentId } = profile;
-            const profilesRef = collection(db, "student-org-applications");
-            const q = query(profilesRef, where("studentId", "==", studentId));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                Swal.fire("Duplicate ID", `A profile with Student ID ${studentId} already exists in Firestore. Submission aborted.`, "error");
-                hideLoading();
-                submitting = false; // Reset the flag
-                return;
-            }
-        }
+        
 
         // Combine application data and profiles
         const combinedData = {

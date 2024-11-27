@@ -12,8 +12,6 @@
     <!--script-->
     <script type="module" src="app.js" defer></script>
     <script type="module" src="verify-student-org.js" defer></script>
-    <!-- Flatpickr date time picker-->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
@@ -107,7 +105,7 @@
                 <label for="date-filing">Date of Filing:</label>
                 <div class="input-container">
                     <i class="fas fa-calendar-day"></i>
-                    <input id="date-filing" class="flatpickr-input" type="text" readonly />
+                    <input type="text" id="date-filing" readonly>
                 </div>
             </div>
 
