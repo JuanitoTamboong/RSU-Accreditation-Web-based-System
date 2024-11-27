@@ -340,7 +340,6 @@ input[type="password"]:focus {
 @media (max-width: 768px) {
   body{
     background-image: url('assets/mobile-size-bg.png');
-    background-attachment: fixed;
   }
   .container {
     flex-direction: column;
