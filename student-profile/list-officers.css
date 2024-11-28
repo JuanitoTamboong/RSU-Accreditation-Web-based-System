@@ -208,12 +208,12 @@ label.upload-label span {
 }
 
 .input-container input {
-  width: 100%; /* Input field takes full width */
-  padding: 15px 15px 15px 40px; /* Add padding for the icon */
+  width: 100%; 
+  padding: 15px 15px 15px 40px; 
   border: 1px solid var(--box-shadow);
   border-radius: 25px;
   box-sizing: border-box;
-  max-width: 100%; /* Ensure no overflow */
+  max-width: 100%; 
 }
 
 .input-container i {
@@ -231,7 +231,7 @@ label.upload-label span {
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-  width: 100%; /* Take up full width of the container */
+  width: 100%; 
 }
 
 .student-info label {
@@ -239,19 +239,19 @@ label.upload-label span {
 }
 
 .student-info input {
-  padding: 15px 15px 15px 40px; /* Add padding for the icon */
+  padding: 15px 15px 15px 40px; 
   border: 1px solid var(--box-shadow);
   border-radius: 25px;
-  width: 100%; /* Ensure input takes full width */
+  width: 100%; 
   box-sizing: border-box;
-  max-width: 100%; /* Prevent overflow */
+  max-width: 100%;
 }
 
 /* Position Container Styling */
 .position-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between the dropdown and button */
+  gap: 10px; /
 }
 
 /* Styling for the dropdown */
@@ -265,7 +265,7 @@ select#position {
 }
 
 select#position:focus {
-  border-color:var(--box-shadow); /* Highlight border on focus */
+  border-color:var(--box-shadow); 
   outline: none;
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
 }
@@ -312,8 +312,8 @@ select#position:focus {
 .add-update {
   display: flex;
   gap: 10px;
-  margin-top: 25px; /* Adjust margin for spacing */
-  width: 100%; /* Fit buttons to container */
+  margin-top: 25px; 
+  width: 100%; 
 }
 
 .add-update button {
@@ -394,7 +394,6 @@ color: #000;;
   max-height: 300px; /* Set a maximum height for scrolling */
   overflow-y: auto; /* Enable vertical scrolling */ 
   background-color:rgb(255, 255, 255);
-  border-radius: 10px;
   box-shadow: 0px 0px 2px rgb(84, 83, 83) ;
  
 }

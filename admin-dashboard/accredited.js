@@ -27,7 +27,7 @@ function formatDateString(dateString, includeTime = false) {
         month: 'long', 
         day: 'numeric' 
     };
-    let formattedDate = date.toLocaleDateString('en-US', options); // Format as "November 24, 2024"
+    let formattedDate = date.toLocaleDateString('en-US', options); // Format sample "November 24, 2024"
     
     if (includeTime) {
         const timeOptions = { 
@@ -35,7 +35,7 @@ function formatDateString(dateString, includeTime = false) {
             minute: '2-digit', 
             hour12: true 
         };
-        const time = date.toLocaleTimeString('en-US', timeOptions); // Format as "12:52 AM"
+        const time = date.toLocaleTimeString('en-US', timeOptions); // Format sample  ganurnnn "12:52 AM"
         formattedDate += `, ${time}`; // Append time to the formatted date
     }
 

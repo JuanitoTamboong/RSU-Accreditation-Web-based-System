@@ -39,7 +39,7 @@ document.getElementById('submit').addEventListener('click', (e) => {
     return;
   }
 
-  // Check if reCAPTCHA is verified
+  // Check if hCAPTCHA is verified
   if (!recaptchaResponse) {
     Swal.fire({
       icon: 'warning',
@@ -114,7 +114,7 @@ togglePassword.addEventListener('click', () => {
     }
 });
 
-// Function to handle password reset with Swal input for email
+// Function to handle password reset with Swal input for email this is for forgot password
 document.getElementById('forgot-password-link').addEventListener('click', (e) => {
   e.preventDefault();
 
