@@ -435,16 +435,16 @@ button:hover {
   background-color:var(--button-hover-color);
 }
 #event-list {
-  max-width: 100%; /* Ensure the event list container takes full width */
-  overflow: hidden; /* Prevent overflow */
+  max-width: 100%; 
+  overflow: hidden; 
   overflow-y: auto;
   height: 200px;
 }
 
 #event-list li {
-  display: flex; /* Use flexbox to align items */
-  justify-content: space-between; /* Space between content and button */
-  align-items: center; /* Center items vertically */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
   background: #e9ecef;
   margin: 5px 0;
   padding: 5px;
@@ -476,9 +476,9 @@ button:hover {
 
 
 /* Responsive Media Queries */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .left-content {
-    grid-template-columns: 1fr; /* Switch to a single column */
+    grid-template-columns: 1fr;
   }
 
   .bottom-container {
@@ -489,6 +489,5 @@ button:hover {
 
   .bottom-container p {
     text-align: center;
-    letter-spacing: 0.5px; /* Improved letter spacing */
-  }
-}
+    letter-spacing: 0.5px;
+}*/

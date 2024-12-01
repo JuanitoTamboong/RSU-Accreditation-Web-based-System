@@ -35,7 +35,7 @@
 .in-progress-requests th, .in-progress-requests td {
     padding: 12px;
     border: 1px solid var(--input-border-color);
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     overflow: hidden;
     text-overflow: ellipsis;
 }

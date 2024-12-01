@@ -310,7 +310,7 @@ document.getElementById('add-course').addEventListener('click', () => {
             option.value = result.value;
             option.textContent = result.value;
             courseDropdown.appendChild(option);
-            courseDropdown.value = result.value; // Set it as selected
+            courseDropdown.value = result.value; 
         }
     });
 });
@@ -329,8 +329,7 @@ function loadOrganizationData() {
 
     // Extract applicationDetails from orgData
     const appDetails = orgData.applicationDetails;
-    console.log(orgData); // Debug log for entire organization data
-
+    console.log(orgData); 
     // Check if appDetails exists
     if (!appDetails) {
         console.error("Application details not found in orgData.");
@@ -339,7 +338,7 @@ function loadOrganizationData() {
 
     // Check for applicationStatus in orgData
     const applicationStatus = orgData.applicationStatus; 
-    console.log("Application Status Retrieved:", applicationStatus); // Debug log for application status
+    console.log("Application Status Retrieved:", applicationStatus); 
 
     // Set form fields with data or default to empty strings
     setFieldValue('representative-id',appDetails.representativeId);

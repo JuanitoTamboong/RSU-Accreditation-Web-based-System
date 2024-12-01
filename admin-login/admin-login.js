@@ -46,7 +46,7 @@ document.getElementById('submit').addEventListener('click', (e) => {
       title: 'hCAPTCHA verification failed',
       text: 'Please verify that you are not a robot.',
       customClass: {
-        popup: 'swal-modal' // Applies the custom background and font class
+        popup: 'swal-modal' 
       }
     });
     return;

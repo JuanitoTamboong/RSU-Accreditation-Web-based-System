@@ -353,7 +353,7 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
     // Group applications by organization and status
     const organizationData = filteredApplications.reduce((acc, application) => {
         const organization = application.applicationDetails.organizationName || 'Unknown Organization'; // Default value
-        const status = application.applicationStatus ? application.applicationStatus.toLowerCase().trim() : 'in progress'; // Default value
+        const status = application.applicationStatus ? application.applicationStatus.toLowerCase().trim() : 'In-Progress'; // Default value
 
         // Create a unique key for each organization-status combination
         const key = `${organization} (${status})`; // Create unique key
@@ -362,7 +362,7 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
         if (!acc[key]) {
             acc[key] = 0;
         }
-        acc[key] += 1; // Count applications for each organization and status
+        acc[key] += 1; 
         return acc;
     }, {});
 
@@ -382,14 +382,14 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
 
     // Destroy previous chart instance if it exists
     if (applicantsOverTimeChart instanceof Chart) {
-        applicantsOverTimeChart.destroy(); // Destroy previous chart instance
+        applicantsOverTimeChart.destroy(); 
     }
 
     // Create the new pie chart
     applicantsOverTimeChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: labels.length > 0 ? labels : ['No Data'], // Ensure there's a label
+            labels: labels.length > 0 ? labels : ['No Data'],
             datasets: [{
                 label: `Applications by Organization - SY ${schoolYear}`,
                 data: data.length > 0 ? data : [1], // Provide a default data value if empty
@@ -407,7 +407,7 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
         }
     });
 }
-
+//this is for generating report 
 function generatePDFReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();

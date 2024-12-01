@@ -373,7 +373,7 @@ input[type="password"]:focus {
     font-size: 13px;
   }
   .swal2-title {
-    font-size:17px; /* Larger font size */
+    font-size:17px; 
   }
 
   .login-container {

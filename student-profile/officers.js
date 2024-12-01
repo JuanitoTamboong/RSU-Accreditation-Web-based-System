@@ -187,7 +187,7 @@ async function updateProfile() {
     }
 
     // Validate Student ID Format
-    const idFormat = /^\d{3}-\d{4}-\d{6}$/; // Adjust this pattern based on your ID format
+    const idFormat = /^\d{3}-\d{4}-\d{6}$/; 
     if (!idFormat.test(studentId)) {
         Swal.fire("Invalid ID Format", "Please use the format XXX-XXXX-XXXXXX.", "warning");
         return;
@@ -226,7 +226,7 @@ async function updateProfile() {
     setTimeout(() => {
         Swal.close();
         Swal.fire("Success", "Profile updated successfully!", "success");
-    }, 500); // Shorter delay before showing success message
+    }, 500); 
 
     clearStudentProfileForm();
 }

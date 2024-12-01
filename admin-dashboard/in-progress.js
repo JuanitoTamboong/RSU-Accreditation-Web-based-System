@@ -3,6 +3,7 @@ import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.
 import { getFirestore, collection, onSnapshot, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 import { getStorage, ref, deleteObject } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js';
 import { getDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js'; // Make sure to import getDoc
+import { query, orderBy } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -35,14 +36,14 @@ function renderRow(doc) {
         ? new Date(dateFiling).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
         : 'N/A';
 
-    const applicationStatus = doc.data().applicationStatus || 'in-progress';
+    const applicationStatus = doc.data().applicationStatus || 'In-Progress';
 
     return `
         <tr data-id="${doc.id}">
             <td>${emailAddress}</td>
             <td>${representativeName}</td>
-            <td>${organizationName}</td>
             <td>${typeOfService}</td>
+            <td>${organizationName}</td>
             <td>${formattedDateFiling}</td>
             <td>${applicationStatus}</td>
             <td><a href="../admin-dashboard/view-request.html?id=${doc.id}" class="view-link" data-id="${doc.id}">View</a></td>
@@ -75,24 +76,40 @@ async function deleteFiles(fileUrls) {
 function fetchApplications() {
     const tableBody = document.getElementById('in-progress-table-body');
 
-    onSnapshot(collection(db, 'student-org-applications'), (snapshot) => {
-        tableBody.innerHTML = '';
+    // Query the collection and order by dateFiling in descending order
+    const applicationQuery = query(
+        collection(db, 'student-org-applications'),
+        orderBy('applicationDetails.dateFiling', 'desc') // Order by dateFiling
+    );
+
+    onSnapshot(applicationQuery, (snapshot) => {
+        tableBody.innerHTML = ''; // Clear the table body before rendering
 
         if (snapshot.empty) {
-            tableBody.innerHTML = '<tr><td colspan="8">No in-progress requests found.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="8">No in-progress or pending requests found.</td></tr>';
             return;
         }
 
+        // Filter documents with "in-progress" or "pending" status
+        let hasData = false;
         snapshot.forEach((doc) => {
-            tableBody.innerHTML += renderRow(doc);
+            const applicationStatus = doc.data().applicationStatus || 'in-progress';
+            if (applicationStatus === 'in-progress' || applicationStatus === 'Pending') {
+                tableBody.innerHTML += renderRow(doc);
+                hasData = true;
+            }
         });
 
-        attachDeleteHandlers();
+        // If no matching data is found
+        if (!hasData) {
+            tableBody.innerHTML = '<tr><td colspan="8">No in-progress or pending requests found.</td></tr>';
+        }
+
+        attachDeleteHandlers(); // Attach delete event handlers after rendering rows
     }, (error) => {
         console.error("Error fetching real-time updates:", error);
     });
 }
-
 // Function to handle document and associated files deletion
 function attachDeleteHandlers() {
     const tableBody = document.getElementById('in-progress-table-body');

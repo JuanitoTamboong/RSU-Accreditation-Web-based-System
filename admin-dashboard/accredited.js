@@ -89,15 +89,25 @@ onSnapshot(approvedQuery, (snapshot) => {
     applicantsTableBody.innerHTML = ''; // Clear the table
 
     if (!snapshot.empty) {
-        snapshot.forEach((doc) => {
+        // Extract documents and sort them by 'formattedDateApproved'
+        const sortedDocs = [...snapshot.docs].sort((a, b) => {
+            const dateA = new Date(a.data().formattedDateApproved || 0);
+            const dateB = new Date(b.data().formattedDateApproved || 0);
+            return dateB - dateA; // Descending order
+        });
+
+        // Render sorted rows
+        sortedDocs.forEach((doc) => {
             const row = renderRow(doc);
             applicantsTableBody.insertAdjacentHTML('beforeend', row);
         });
+
         attachDeleteEventListeners(); // Add delete functionality
     } else {
         applicantsTableBody.innerHTML = `<tr><td colspan="8">No accredited applicants found.</td></tr>`;
     }
 });
+
 // Function to delete files from Firebase Storage
 async function deleteFiles(fileUrls) {
     const promises = fileUrls.map(async (url) => {
