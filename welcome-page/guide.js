@@ -107,6 +107,17 @@ function reAccreditationFormHTML() {
                 <label style="display: block; margin-bottom: 5px;">Search Organization by Name:</label>
                 <input type="text" id="organization-name" class="swal2-input" placeholder="Enter organization name" required 
                        style="width: 100%; padding: 8px; box-sizing: border-box; text-transform: uppercase;">
+                <div id="error-message" 
+                     style="
+                        margin-top: 20px; 
+                        color: white; 
+                        background-color: #ff4d4d; 
+                        padding: 8px; 
+                        border-radius: 5px; 
+                        font-weight: bold; 
+                        font-size: 13px; 
+                        display: none;"> 
+                </div>
             </div>
         </div>`;
 }
@@ -114,9 +125,15 @@ function reAccreditationFormHTML() {
 // Search for organization data in Firestore
 async function searchOrganizationData(uid) {
     const organizationName = document.getElementById('organization-name').value.trim().toUpperCase(); // Convert to uppercase for case-insensitive search
+    const errorContainer = document.getElementById('error-message'); // Ensure there's an element with this ID
+
+    // Clear and hide any previous error messages
+    errorContainer.textContent = '';
+    errorContainer.style.display = 'none';
 
     if (!organizationName) {
-        Swal.showValidationMessage('Please fill out the organization name');
+        errorContainer.textContent = 'Please fill out the organization name';
+        errorContainer.style.display = 'block'; // Show the error message
         return false;
     }
 
@@ -137,7 +154,11 @@ async function searchOrganizationData(uid) {
             localStorage.setItem('orgData', JSON.stringify(orgData)); // Store all organization data
             localStorage.setItem('filingDate', orgData.applicationDetails.dateFiling);
             console.log('Organization Data:', orgData);
-            
+
+            // Clear and hide any error messages on success
+            errorContainer.textContent = '';
+            errorContainer.style.display = 'none';
+
             // Show a success alert with the date of filing
             await Swal.fire({
                 icon: 'success',
@@ -150,16 +171,17 @@ async function searchOrganizationData(uid) {
             });
             return { orgData, filingDate: orgData.applicationDetails.dateFiling };
         } else {
-            Swal.showValidationMessage('Organization not found or you do not have access');
+            errorContainer.textContent = 'Organization not found or you do not have access';
+            errorContainer.style.display = 'block'; // Show the error message
             return false;
         }
     } catch (error) {
         console.error("Error fetching organization data:", error); // Log error to console
-        Swal.showValidationMessage('Error accessing Firestore: ' + error.message);
+        errorContainer.textContent = 'Error accessing Firestore: ' + error.message;
+        errorContainer.style.display = 'block'; // Show the error message
         return false;
     }
 }
-
 
 // Display guide items based on selected accreditation type
 function displayGuideItems(items) {
