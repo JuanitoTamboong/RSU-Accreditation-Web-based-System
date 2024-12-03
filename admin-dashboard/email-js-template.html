@@ -1,23 +1,34 @@
 <div style="font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-image: url('https://www.dropbox.com/scl/fi/w6vta72jdk505q6vb4b7x/admin.jpg?rlkey=9ar0ytks6xw520l3gw6b2uzma&st=i9d71hme&dl=1'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-    <div style="max-width: 600px; margin: 0 auto; background-color: rgba(0, 35, 64, 0.905); color: #fff; padding: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden;">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://www.dropbox.com/scl/fi/5yqmbd8tmjpjl54j6jnss/email-template-logo.png?rlkey=g49215rte7pa9ffwu4q2x2tt9&st=kzsuefz4&dl=1" alt="Logo" style="max-width: 100%; height: 50px; object-fit: contain;">
+    <div style="max-width: 600px; margin: 40px auto; background-color: rgba(0, 35, 64, 0.85); color: #fff; padding: 40px; border-radius: 0px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); position: relative; overflow: hidden;">
+        
+        <!-- Header Section -->
+        <div style="text-align: center; margin-bottom: 25px;">
+            <img src="https://www.dropbox.com/scl/fi/5yqmbd8tmjpjl54j6jnss/email-template-logo.png?rlkey=g49215rte7pa9ffwu4q2x2tt9&st=kzsuefz4&dl=1" alt="OSAS Logo" style="max-width: 120px; height: auto; border-radius: 10px;">
         </div>
-        <p style="font-size: 16px; margin-bottom: 10px;">Hello <strong style="color: #007bff;">{{to_name}}</strong>,</p>
-        <p style="font-size: 16px; margin-bottom: 10px;">You have received a new message from <strong>{{from_name}}</strong>:</p>
-        <p style="font-size: 16px; margin-bottom: 10px;">Dear Applicant,</p>
-        <p style="font-size: 16px; margin-bottom: 10px;">We inform you that your application for <strong>{{typeOfService}}</strong> with the organization has been <span style="color: {{status_color}};"><strong>{{application_status}}</strong></span>.</p>
-        {{ custom_message }}
-        <p style="font-size: 16px; margin-bottom: 10px;"><strong>Additional Information:</strong></p>
-        <p style="font-size: 16px; margin-bottom: 20px;">{{additional_message}}</p>
-        <p style="font-size: 16px;">Best wishes,<br><strong style="color: #007bff;">Osas Admin</strong></p>
-        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px; border-top: 1px solid #fff; padding-top: 10px;">
+        
+        <!-- Greeting Section -->
+        <p style="font-size: 16px; margin-bottom: 15px; text-indent: 20px; line-height: 1.8;">Dear <strong style="color: #007bff;">{{to_name}}</strong>,</p>
+        <p style="font-size: 14px; margin-bottom: 12px; text-indent: 20px; line-height: 1.6;">This message is being sent to inform you that a notification has been issued by <strong>{{from_name}}</strong> for your attention.</p>
+        
+        <!-- Application Status Section -->
+        <p style="font-size: 14px; margin-bottom: 15px; text-indent: 20px; line-height: 1.6;">We would like to notify you that your application for <strong>{{typeOfService}}</strong> with the Office of Student Affairs and Services has been <span style="color: {{status_color}};"><strong>{{application_status}}</strong></span>.</p>
+        
+        <!-- Custom Message Section -->
+        <p style="font-size: 14px; margin-bottom: 15px; text-indent: 20px; line-height: 1.6;">{{ custom_message }}</p>
+
+        <!-- Additional Information Section -->
+        <p style="font-size: 14px; margin-bottom: 15px; text-indent: 20px; line-height: 1.6;"><strong>Additional Information:</strong></p>
+        <p style="font-size: 14px; margin-bottom: 25px; text-indent: 20px; line-height: 1.6;">{{additional_message}}</p>
+        
+        <!-- Footer Section -->
+        <p style="font-size: 14px; text-indent: 20px; line-height: 1.6;">Yours sincerely, <br><strong style="color: #007bff;">Office of Student Affairs and Services 🏫</strong></p>
+
+        <!-- Disclaimer Section -->
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 30px; border-top: 1px solid #fff; padding-top: 15px;">
             <div style="margin: 5px 0; text-align: center;">
-                <div style="font-size: 12px; color: #05a532; text-align: center;">
-                    <p>Romblon State University 2024</p>
+                <div style="font-size: 12px; color: #aaa; text-align: center;">
+                    <p>&copy; Romblon State University 2024. All Rights Reserved. 🎓</p>
                 </div>
-            </div>
-            <div>
             </div>
         </div>
     </div>

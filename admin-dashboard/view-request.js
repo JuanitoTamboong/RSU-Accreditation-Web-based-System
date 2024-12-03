@@ -193,6 +193,9 @@ const sendEmailButton = document.getElementById('send-email-button');
 
 // Function to send email
 async function sendEmail(applicantId) {
+    // Check if the button is already disabled (i.e., if email is being sent)
+    if (sendEmailButton.disabled) return;
+
     sendEmailButton.disabled = true;
     sendEmailButton.innerHTML = '<span class="spinner"></span> Sending...';
 
@@ -241,8 +244,9 @@ async function sendEmail(applicantId) {
         }, 3000);
     }
 }
-// Attach the sendEmail function to the button click
-sendEmailButton.addEventListener('click', () => {
+
+// Remove duplicate event listener code
+sendEmailButton.addEventListener('click', function () {
     const applicantId = getQueryParameter('id');
     if (applicantId) {
         sendEmail(applicantId);
