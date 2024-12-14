@@ -407,12 +407,12 @@ function createApplicantsOverTimeByOrganizationChart(filteredApplications, schoo
         }
     });
 }
+
 //this is for generating report 
 function generatePDFReport() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Check if there is at least one chart to generate the report
     const charts = [
         { chart: applicantsOverTimeChart, title: "Applicants Over Time" },
         { chart: totalApplicationsChart, title: "Total Applications" },
@@ -421,10 +421,8 @@ function generatePDFReport() {
         { chart: totalPendingChart, title: "Total Pending Applications" }
     ];
 
-    // Filter out charts that are not available
     const availableCharts = charts.filter(item => item.chart);
 
-    // If no charts are available, show a SweetAlert message or return early
     if (availableCharts.length === 0) {
         Swal.fire({
             icon: 'warning',
@@ -435,91 +433,169 @@ function generatePDFReport() {
         return;
     }
 
-    // Add centered title to the report with medium font size
-    doc.setFontSize(16);
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    doc.text("Applications Report", pageWidth / 2, 22, { align: 'center' });
+    // Show loading indicator before the user is prompted for their name
+    document.getElementById('loadingIndicator').style.display = 'block';
 
-    // Define sizes for chart images and styles
-    const imageWidth = pageWidth * 0.7; // 70% of page width for a balanced look
-    const imageXPosition = (pageWidth - imageWidth) / 2; // Center horizontally
-    const imageYPosition = 40; // Starting Y position below title
-    const borderPadding = 5; // Padding for the background border
-
-    // Loop through each chart, adding each one with styling
-    availableCharts.forEach((item, index) => {
-        const { chart, title } = item;
-        if (chart) {
-            const chartImage = chart.toBase64Image(); // Convert chart to base64 image
-
-            // Calculate the aspect ratio of the chart to maintain the image's proportions
-            const aspectRatio = chart.width / chart.height;
-            const imageHeight = imageWidth / aspectRatio; // Adjust height based on aspect ratio
-
-            // Add a new page for each chart after the first
-            if (index > 0) {
-                doc.addPage();
+    Swal.fire({
+        title: 'Enter Your Name',
+        input: 'text',
+        inputLabel: 'Who is generating this report?',
+        customClass: 'swal-pop-up',
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Please enter your name!';
             }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const generatedBy = result.value;
+            const dateTime = new Date().toLocaleString();
 
-            // Draw a background rectangle for each chart image for framing
-            doc.setFillColor(240, 240, 240); // Light gray background
-            doc.rect(imageXPosition - borderPadding, imageYPosition - borderPadding, imageWidth + 2 * borderPadding, imageHeight + 2 * borderPadding, 'F');
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
 
-            // Add a border around the chart image
-            doc.setDrawColor(0, 0, 0); // Black border color
-            doc.rect(imageXPosition - borderPadding, imageYPosition - borderPadding, imageWidth + 2 * borderPadding, imageHeight + 2 * borderPadding);
+            const headerHeight = 30;
+            const footerHeight = 20;
+            const logoWidth = 15;
+            const logoHeight = 15;
 
-            // Add the chart title centered above the image
-            doc.setFontSize(14);
-            doc.text(title, pageWidth / 2, imageYPosition - 10, { align: 'center' });
+            const logoX = 10;
+            const logoY = (headerHeight - logoHeight) / 2;
 
-            // Add the chart image itself, ensuring it maintains its aspect ratio
-            doc.addImage(chartImage, 'PNG', imageXPosition, imageYPosition, imageWidth, imageHeight);
+            const footerX = 10;
+            const footerY = pageHeight - footerHeight + 10;
+
+            const imageWidth = pageWidth * 0.6;
+            const imageXPosition = (pageWidth - imageWidth) / 2;
+            const imageYPosition = headerHeight + 35;
+            const borderPadding = 5;
+
+            const logoSrc = '../assets/rsu-logo.png'; // Update the logo path
+            const logoImage = new Image();
+            logoImage.src = logoSrc;
+
+            logoImage.onload = function () {
+                function addHeaderFooter(pageNum) {
+                    doc.setFillColor(34, 49, 63); // Dark background (deep grayish blue)
+                    doc.rect(0, 0, pageWidth, headerHeight, 'F');
+            
+                    doc.addImage(logoImage, 'PNG', logoX, logoY, logoWidth, logoHeight);
+            
+                    const textXPosition = logoX + logoWidth + 5; // Position text next to the logo
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(255, 255, 255); // White text for "Romblon State University"
+                    
+                    // Adjust the Y position to center the text vertically with the logo
+                    const textHeight = doc.getTextDimensions("Romblon State University").h; // Get the height of the text
+                    const textYPosition = (headerHeight - textHeight) / 2 + 5; // Center the text vertically
+            
+                    doc.text("Romblon State University", textXPosition, textYPosition);
+            
+                    if (pageNum === 1) {
+                        doc.setFontSize(14);
+                        doc.setTextColor(0, 0, 0); // Black text for "Applications Report"
+                        doc.text("Applications Report", pageWidth / 2, headerHeight + 10, { align: 'center' });
+                    }
+            
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal'); // Footer not bold
+                    doc.setTextColor(0, 0, 0); 
+                    doc.text(`Generated by: ${generatedBy}`, footerX, pageHeight - footerHeight);
+                    doc.text(`Generated on: ${dateTime}`, pageWidth - 10, pageHeight - footerHeight, { align: 'right' });
+                }
+            
+                addHeaderFooter(1);
+
+                availableCharts.forEach((item, index) => {
+                    const { chart, title } = item;
+                    if (chart) {
+                        const chartImage = chart.toBase64Image();
+                        const aspectRatio = chart.width / chart.height;
+                        const imageHeight = imageWidth / aspectRatio;
+
+                        if (index > 0) {
+                            doc.addPage();
+                            addHeaderFooter(index + 1);
+                        }
+                    
+                        doc.setFillColor(255,255, 255); // Changed background color for charts
+                        doc.rect(imageXPosition - borderPadding, imageYPosition - borderPadding, imageWidth + 2 * borderPadding, imageHeight + 2 * borderPadding, 'F');
+
+                        doc.setDrawColor(0, 0, 0);
+                        doc.rect(imageXPosition - borderPadding, imageYPosition - borderPadding, imageWidth + 2 * borderPadding, imageHeight + 2 * borderPadding);
+
+                        doc.setFontSize(12);
+                        doc.setFont('helvetica', 'bold');
+                        doc.text(title, pageWidth / 2, imageYPosition - 10, { align: 'center' });
+
+                        doc.addImage(chartImage, 'PNG', imageXPosition, imageYPosition, imageWidth, imageHeight);
+                    }
+                });
+
+                // Ensure footer is always added at the end of the report
+                addHeaderFooter(availableCharts.length + 1);
+
+                // Add Applications Summary page
+                doc.addPage();
+                addHeaderFooter(availableCharts.length + 2);
+
+                doc.setFontSize(14);
+                doc.setTextColor(0, 0,0);
+                doc.setFont('helvetica', 'normal');
+                const titleYPosition = headerHeight + 10;
+                doc.text("Applications Summary", pageWidth / 2, titleYPosition, { align: 'center' });
+
+                let yPosition = titleYPosition + 10;
+
+                const pieChartData = applicantsOverTimeChart?.data.datasets[0].data.map((value, index) => {
+                    return {
+                        label: applicantsOverTimeChart.data.labels[index],
+                        value: value
+                    };
+                }) || [];
+
+                const totalApplications = totalApplicationsChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
+                const totalAccredited = totalAccreditedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
+                const totalReAccredited = totalReAccreditedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
+                const totalPending = totalPendingChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
+
+                const tableData = [
+                    { label: 'Total Applications', value: totalApplications },
+                    { label: 'Accredited Applications', value: totalAccredited },
+                    { label: 'Reaccredited Applications', value: totalReAccredited },
+                    { label: 'Pending Applications', value: totalPending }
+                ].concat(pieChartData);
+
+                doc.autoTable({
+                    head: [['Category', 'Applications']],
+                    body: tableData.map(item => [item.label, item.value]),
+                    startY: yPosition,
+                    theme: 'grid',
+                    margin: { top: yPosition },
+                });
+
+                // Hide loading indicator after the PDF is generated
+                document.getElementById('loadingIndicator').style.display = 'none';
+
+                doc.save(`Applications_Report_${new Date().toLocaleDateString()}.pdf`);
+
+                // Show success notification
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Report Downloaded',
+                    text: 'Your report has been successfully downloaded.',
+                    customClass: 'swal-pop-up'
+                });
+            };
+        } else {
+            // Hide the loading indicator if user cancels the input
+            document.getElementById('loadingIndicator').style.display = 'none';
         }
     });
-
-    // Add a new page for the data table after the images
-    doc.addPage();
-    doc.setFontSize(12);
-    doc.text("Data Table", pageWidth / 2, 20, { align: 'center' });
-    let yPosition = 30; // Set y position for table below title
-
-    // Prepare data for the table (including pie chart data)
-    const pieChartData = applicantsOverTimeChart?.data.datasets[0].data.map((value, index) => {
-        return {
-            label: applicantsOverTimeChart.data.labels[index],
-            value: value
-        };
-    }) || [];
-
-    // Gather total applications data
-    const totalApplications = totalApplicationsChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
-    const totalAccredited = totalAccreditedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
-    const totalReAccredited = totalReAccreditedChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
-    const totalPending = totalPendingChart?.data.datasets[0]?.data.reduce((a, b) => a + b, 0) || 0;
-
-    const tableData = [
-        { label: 'Total Applications', value: totalApplications },
-        { label: 'Accredited Applications', value: totalAccredited },
-        { label: 'Reaccredited Applications', value: totalReAccredited },
-        { label: 'Pending Applications', value: totalPending }
-    ].concat(pieChartData);  // Combine existing table data with pie chart data
-
-    // Add table with jsPDF autoTable plugin
-    doc.autoTable({
-        head: [['Category', 'Applications']],
-        body: tableData.map(item => [item.label, item.value]),
-        startY: yPosition,
-        theme: 'grid',
-        margin: { top: yPosition },
-    });
-
-    // Save the PDF
-    doc.save(`Applications_Report_${new Date().toLocaleDateString()}.pdf`);
 }
 
-// Attach event listener to download button
 document.getElementById('downloadReport').addEventListener('click', function () {
     generatePDFReport();
 });

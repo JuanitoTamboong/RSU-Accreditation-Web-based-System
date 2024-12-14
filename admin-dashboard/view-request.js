@@ -265,10 +265,81 @@ document.getElementById('send-email-button').addEventListener('click', function(
 });
 document.getElementById('closeEmailModal').addEventListener('click', closeModal);
 //approved
-document.getElementById('approve-button').addEventListener('click', function() {
-    applicationStatus = 'Approved';
-    showModal();
+document.getElementById('approve-button').addEventListener('click', function () {
+    // Check for any missing requirements
+    if (uncheckedDocuments.length > 0) {
+        // Show a popup listing the missing requirements
+        showMissingDocumentsPopup(uncheckedDocuments);
+        return;
+    }
+
+    // If all requirements are met, proceed with approval
+    proceedWithApproval();
 });
+
+// Function to display a popup for missing documents
+function showMissingDocumentsPopup(missingDocuments) {
+    const uncheckedListHTML = missingDocuments
+        .map(doc => `
+            <li style="margin-bottom: 8px; display: flex; align-items: center;">
+                <span style="color: #e74c3c; margin-right: 10px;">&#x2716;</span>
+                ${doc}
+            </li>`)
+        .join('');
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Approval Blocked',
+        html: `
+            <div style="text-align: left;">
+                <p style="margin-bottom: 10px; font-size: 16px;">The following required documents are missing:</p>
+                <ul style="padding-left: 20px; list-style: none; font-size: 14px; color: #2c3e50;">
+                    ${uncheckedListHTML}
+                </ul>
+            </div>
+        `,
+        confirmButtonText: 'OK, I will review',
+        confirmButtonColor: '#e74c3c',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-button',
+        },
+    });
+}
+
+// Function to proceed with approval
+function proceedWithApproval() {
+    Swal.fire({
+        icon: 'success',
+        title: 'Requirements Complete',
+        text: 'All requirements have been met. Do you want to proceed with the approval?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Approve',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#2ecc71',
+        cancelButtonColor: '#e74c3c',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-button',
+        },
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Finalize the approval
+            finalizeApproval();
+        }
+    });
+}
+
+// Function to finalize approval
+function finalizeApproval() {
+    applicationStatus = 'Approved';
+
+    // Simulate showing an email modal or sending a notification
+    showModal(); // Function to display your email/modal
+}
+
 //pending
 document.getElementById('pending-button').addEventListener('click', function() {
     applicationStatus = 'Pending';
