@@ -1,6 +1,8 @@
 # RSU-Accreditation-Web-based-System
 The system focuses on accrediting documents to reduce paper-based processes.
 # Student Org Sign in
-![Sign in](https://github.com/JuanitoTamboong/RSU-Accreditation-Web-based-System/blob/main/assets/login.png?raw=true|width=50)
+![Sign in](https://github.com/JuanitoTamboong/RSU-Accreditation-Web-based-System/blob/main/assets/login.png?raw=true =250x250)
+)
 # Admin Dashboard Overview
-![Admin](https://github.com/JuanitoTamboong/RSU-Accreditation-Web-based-System/blob/main/assets/admin-dashboard-overview.png?raw=true|width=50)
+![Admin](https://github.com/JuanitoTamboong/RSU-Accreditation-Web-based-System/blob/main/assets/admin-dashboard-overview.png?raw=true =250x250)
+)
